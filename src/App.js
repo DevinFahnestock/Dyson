@@ -1,33 +1,41 @@
 import "./App.css"
 import PlanetTile from "./components/PlanetTile/PlanetTile"
 
+import { useState, useEffect} from 'react'
+
+import io from 'socket.io-client'
+
+const socket = io("http://localhost:3001", { transports: ["websocket", "polling"] })
+
 function App() {
-  const planets = [
-    {
-      id: 1,
-      imgsrc: "assets/planets/Baren.png",
-      type: "Baren",
-      level: 1,
-    },
-    {
-      id: 2,
-      imgsrc: "assets/planets/Ice.png",
-      type: "Ice",
-      level: 1,
-    },
-    {
-      id: 3,
-      imgsrc: "assets/planets/Lava.png",
-      type: "Lava",
-      level: 1,
-    },
-    {
-      id: 4,
-      imgsrc: "assets/planets/Terran.png",
-      type: "Terran",
-      level: 1,
-    },
-  ]
+
+  const [planets, setPlanets] = useState([])
+
+  const updatePlanet = planetData => {
+    setPlanets(planets => {
+      let copy = [...planets]
+      copy[planetData.id] = planetData
+      return copy 
+    })
+  }
+ 
+  useEffect(() => {
+    socket.on("connect", () => {
+      socket.emit("newConnection", this)
+    })
+
+    socket.on("planets", planetData => {
+      setPlanets(planetData)
+    })
+    
+    socket.on("planetUpdate", updatePlanet)
+
+    return () => {
+      socket.off("planets")
+      socket.off("planetUpdate")
+    }
+
+  }, [])
 
   return (
     <div className="App">
@@ -42,7 +50,7 @@ function App() {
         <div className="Planetgrid">
           {planets.map((planet) => (
             <PlanetTile key={planet.id} planet={planet} upgradeClick={() => {
-              
+              socket.emit("upgradePlanet", planet)
             }}/>
           ))}
         </div>
