@@ -1,11 +1,16 @@
 import React from "react"
+import UpgradeButton from "./Buttons/UpgradeButton"
 
-const PlanetTile = ({ planet }) => {
+const PlanetTile = ({ planet, upgradeClick}) => {
   return (
     <div className="PlanetTile">
       <div className="Definition">
         <img src={planet.imgsrc} alt="Planet" />
-        {planet.type}
+        <h3>{planet.type}</h3>
+        <p>
+          Level {planet.level}<br />
+          <UpgradeButton text="Upgrade" onClick={upgradeClick} />
+        </p>
       </div>
     </div>
   )
