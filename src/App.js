@@ -1,25 +1,44 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css"
+import PlanetTile from "./components/PlanetTile/PlanetTile"
 
 function App() {
+  const planets = [
+    {
+      imgsrc: "assets/planets/Baren.png",
+      type: "Baren",
+    },
+    {
+      imgsrc: "assets/planets/Ice.png",
+      type: "Ice",
+    },
+    {
+      imgsrc: "assets/planets/Lava.png",
+      type: "Lava",
+    },
+    {
+      imgsrc: "assets/planets/Terran.png",
+      type: "Terran",
+    },
+  ]
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+      <nav>
+        <a href="">Home</a>
+      </nav>
+      <header>
+        <h1>Dyson</h1>
       </header>
+      <div className="Planetview">
+        <h3>Planets:</h3>
+        <div className="Planetgrid">
+          {planets.map((planet) => (
+            <PlanetTile planet={planet} />
+          ))}
+        </div>
+      </div>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
