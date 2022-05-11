@@ -5,7 +5,8 @@ import { useState, useEffect } from "react"
 
 import io from "socket.io-client"
 
-import { useSignInWithGoogle, useUser, useSignOut } from "./lib/firebase"
+
+import NavBar from "./components/NavBar/NavBar"
 
 const socket = io("http://localhost:3001", { transports: ["websocket", "polling"] })
 
@@ -37,25 +38,9 @@ function App() {
     }
   }, [])
 
-  const user = useUser()
-  const signOut = useSignOut()
-
-  const { signInWithPopup, loading, error } = useSignInWithGoogle()
-
   return (
     <div className="App">
-      <nav>
-        <a href="http://localhost:3000/">Home</a>
-        {!user && (<a onClick={() => signInWithPopup()}>Sign in</a>)}
-        {user && <div className="profile">
-        {user.displayName}
-        <img src={user.photoURL} alt="Profile" />  
-        <a onClick={() => signOut()}>Sign out</a>
-        </div>}
-      </nav>
-      <header>
-        <h1>Dyson</h1>
-      </header>
+      <NavBar />
       <div className="Planetview">
         <h3>Planets:</h3>
         <div className="Planetgrid">

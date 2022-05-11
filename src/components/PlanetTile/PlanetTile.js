@@ -1,4 +1,5 @@
 import React from "react"
+import './styles.css'
 import UpgradeButton from "./Buttons/UpgradeButton"
 
 const PlanetTile = ({ planet, upgradeClick}) => {

@@ -1,0 +1,14 @@
+.PlanetTile {
+  border: thick double blanchedalmond;
+  border-radius: 0.6em;
+  margin: 0.5em;
+}
+
+.Definition {
+  margin: 1em;
+  color: blanchedalmond;
+  display: flex;
+  align-items: center;
+  gap: 1.5em;
+  justify-content: space-around;
+}
