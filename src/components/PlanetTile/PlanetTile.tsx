@@ -1,7 +1,7 @@
 import React from "react"
 import UpgradeButton from "./Buttons/UpgradeButton"
 
-const PlanetTile = ({ planet, upgradeClick}) => {
+const PlanetTile = ({ planet, upgradeClick}: any) => {
   return (
     <div className="PlanetTile">
       <div className="Definition">
