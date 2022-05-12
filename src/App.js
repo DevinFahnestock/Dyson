@@ -5,6 +5,7 @@ import { useState, useEffect } from "react"
 
 import io from "socket.io-client"
 
+import { useUser } from "./lib/firebase"
 
 import NavBar from "./components/NavBar/NavBar"
 
@@ -12,6 +13,8 @@ const socket = io("http://localhost:3001", { transports: ["websocket", "polling"
 
 function App() {
   const [planets, setPlanets] = useState([])
+
+  const user = useUser()
 
   const updatePlanet = (planetData) => {
     setPlanets((planets) => {
@@ -23,11 +26,12 @@ function App() {
 
   useEffect(() => {
     socket.on("connect", () => {
-      socket.emit("newConnection", this)
+      console.log("Successfully connected to server")
     })
 
-    socket.on("planets", (planetData) => {
-      setPlanets(planetData)
+    socket.on("updateAllGameData", (gameData) => {
+      console.log(gameData)
+      setPlanets(gameData)
     })
 
     socket.on("planetUpdate", updatePlanet)
@@ -37,6 +41,10 @@ function App() {
       socket.off("planetUpdate")
     }
   }, [])
+
+  useEffect(() => {
+    user && socket.emit("userStateChanged", user)
+  }, [user?.uid])
 
   return (
     <div className="App">
@@ -49,7 +57,7 @@ function App() {
               key={planet.id}
               planet={planet}
               upgradeClick={() => {
-                socket.emit("upgradePlanet", planet)
+                socket.emit("upgradePlanet", {planet, userUID: user.uid})
               }}
             />
           ))}
