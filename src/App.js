@@ -29,12 +29,13 @@ function App() {
       console.log("Successfully connected to server")
     })
 
-    socket.on("updateAllGameData", (gameData) => {
-      console.log(gameData)
+    socket.on("updateAllGameData", gameData => {
       setPlanets(gameData)
     })
 
     socket.on("planetUpdate", updatePlanet)
+
+    
 
     return () => {
       socket.off("planets")
@@ -43,8 +44,11 @@ function App() {
   }, [])
 
   useEffect(() => {
-    user && socket.emit("userStateChanged", user)
-  }, [user?.uid])
+    user && socket.emit("userStateChanged", user.uid)
+    
+    socket.on("NoUserExists", () => { 
+      user && socket.emit("CreateNewUserData", user)}) 
+  }, [user, user?.uid])
 
   return (
     <div className="App">
