@@ -5,12 +5,18 @@ import { useState, useEffect } from "react"
 
 import io from "socket.io-client"
 
-import { useSignInWithGoogle, useUser, useSignOut } from "./lib/firebase"
+import { useUser } from "./lib/firebase"
+
+import NavBar from "./components/NavBar/NavBar"
+import PlanetView from "./components/PlanetView/PlanetView"
+import SignInScreen from "./components/SignInScreen/SignInScreen"
 
 const socket = io("http://localhost:3001", { transports: ["websocket", "polling"] })
 
 function App() {
   const [planets, setPlanets] = useState([])
+
+  const user = useUser()
 
   const updatePlanet = (planetData) => {
     setPlanets((planets) => {
@@ -22,14 +28,16 @@ function App() {
 
   useEffect(() => {
     socket.on("connect", () => {
-      socket.emit("newConnection", this)
+      console.log("Successfully connected to server")
     })
 
-    socket.on("planets", (planetData) => {
-      setPlanets(planetData)
+    socket.on("updateAllGameData", gameData => {
+      setPlanets(gameData)
     })
 
     socket.on("planetUpdate", updatePlanet)
+
+    
 
     return () => {
       socket.off("planets")
@@ -37,39 +45,21 @@ function App() {
     }
   }, [])
 
-  const user = useUser()
-  const signOut = useSignOut()
+  useEffect(() => {
 
-  const { signInWithPopup, loading, error } = useSignInWithGoogle()
+    !user && setPlanets([])
+
+    user && socket.emit("userStateChanged", user.uid)
+    
+    socket.on("NoUserExists", () => { 
+      user && socket.emit("CreateNewUserData", user)}) 
+  }, [user, user?.uid])
 
   return (
     <div className="App">
-      <nav>
-        <a href="http://localhost:3000/">Home</a>
-        {!user && (<a onClick={() => signInWithPopup()}>Sign in</a>)}
-        {user && <div className="profile">
-        {user.displayName}
-        <img src={user.photoURL} alt="Profile" />  
-        <a onClick={() => signOut()}>Sign out</a>
-        </div>}
-      </nav>
-      <header>
-        <h1>Dyson</h1>
-      </header>
-      <div className="Planetview">
-        <h3>Planets:</h3>
-        <div className="Planetgrid">
-          {planets.map((planet) => (
-            <PlanetTile
-              key={planet.id}
-              planet={planet}
-              upgradeClick={() => {
-                socket.emit("upgradePlanet", planet)
-              }}
-            />
-          ))}
-        </div>
-      </div>
+      <NavBar />
+      {user && (<PlanetView socket={socket} user={user} planets={planets} />)}
+      {!user && <SignInScreen />}
     </div>
   )
 }
