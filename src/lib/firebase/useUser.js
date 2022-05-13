@@ -13,7 +13,7 @@ const useUser = () => {
         onAuthStateChanged(auth, (user) => {
             setUser(user)
         })
-    })
+    }, [user])
 
   return user 
 }

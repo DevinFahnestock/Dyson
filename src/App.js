@@ -8,6 +8,8 @@ import io from "socket.io-client"
 import { useUser } from "./lib/firebase"
 
 import NavBar from "./components/NavBar/NavBar"
+import PlanetView from "./components/PlanetView/PlanetView"
+import SignInScreen from "./components/SignInScreen/SignInScreen"
 
 const socket = io("http://localhost:3001", { transports: ["websocket", "polling"] })
 
@@ -44,6 +46,9 @@ function App() {
   }, [])
 
   useEffect(() => {
+
+    !user && setPlanets([])
+
     user && socket.emit("userStateChanged", user.uid)
     
     socket.on("NoUserExists", () => { 
@@ -53,20 +58,8 @@ function App() {
   return (
     <div className="App">
       <NavBar />
-      <div className="Planetview">
-        <h3>Planets:</h3>
-        <div className="Planetgrid">
-          {planets.map((planet) => (
-            <PlanetTile
-              key={planet.id}
-              planet={planet}
-              upgradeClick={() => {
-                socket.emit("upgradePlanet", {planet, userUID: user.uid})
-              }}
-            />
-          ))}
-        </div>
-      </div>
+      {user && (<PlanetView socket={socket} user={user} planets={planets} />)}
+      {!user && <SignInScreen />}
     </div>
   )
 }

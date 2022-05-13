@@ -24,7 +24,9 @@ const NavBar = () => {
           <div className="profile">
             <div className="profile name">
               {user.displayName}
-              <a onClick={() => signOut()}>Sign out</a>
+              <a onClick={() => {
+                signOut()
+                }}>Sign out</a>
             </div>
             <img src={user.photoURL} alt="Profile" />
           </div>
