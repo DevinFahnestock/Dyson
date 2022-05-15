@@ -10,8 +10,9 @@ import { useUser } from "./lib/firebase"
 import NavBar from "./components/NavBar/NavBar"
 import PlanetView from "./components/PlanetView/PlanetView"
 import SignInScreen from "./components/SignInScreen/SignInScreen"
+const address = "192.168.50.138"
 
-const socket = io("http://localhost:3001", { transports: ["websocket", "polling"] })
+const socket = io(`http://${address}:25145`, { transports: ["websocket", "polling"] })
 
 function App() {
   const [planets, setPlanets] = useState([])
@@ -21,7 +22,7 @@ function App() {
   const updatePlanet = (planetData) => {
     setPlanets((planets) => {
       let copy = [...planets]
-      copy[planetData.id] = planetData
+      copy[copy.findIndex(planet => planet.id === planetData.id)] = planetData
       return copy
     })
   }
@@ -35,7 +36,9 @@ function App() {
       setPlanets(gameData)
     })
 
-    socket.on("planetUpdate", updatePlanet)
+    socket.on("planetUpdate", (data) => {
+      updatePlanet(data)
+    })
 
     
 
@@ -43,7 +46,7 @@ function App() {
       socket.off("planets")
       socket.off("planetUpdate")
     }
-  }, [])
+  }, [planets])
 
   useEffect(() => {
 
