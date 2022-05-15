@@ -19,6 +19,8 @@ export default class BasePlanet implements CelestialBody {
   public rotation: number;
 
   protected planetGroup: Group;
+  protected planetMaterial: ShaderMaterial;
+  protected layers: Layer[] = [];
 
   constructor(
     seed: number,
@@ -53,10 +55,9 @@ export default class BasePlanet implements CelestialBody {
   }
 
   update(delta: number): void {
-    this.planetGroup.children.forEach((layer: any) => {
-      if (layer.material.uniforms["time"]) {
-        layer.material.uniforms["time"].value = delta;
-      }
+    this.planetMaterial.uniforms["time"].value = delta;
+    this.layers.forEach((layer) => {
+      layer.update(delta);
     });
   }
 
@@ -66,11 +67,13 @@ export default class BasePlanet implements CelestialBody {
     const planetGeometry = new PlaneGeometry(1, 1);
     const planetMaterial = new ShaderMaterial(configuration);
 
+    this.planetMaterial = planetMaterial;
     this.planetGroup.add(new Mesh(planetGeometry, planetMaterial));
   }
 
   addLayer(layer: Layer): void {
     this.planetGroup.add(layer.createNode());
+    this.layers.push(layer);
   }
 
   createNode(): Object3D {
