@@ -6,7 +6,7 @@ const PlanetView = ({ socket, user, planets }) => {
     <div className="Planetview">
         <h3>Planets:</h3>
         <div className="Planetgrid">
-          {planets.map((planet) => (
+          {planets && planets.map((planet) => (
             <PlanetTile
               key={planet.id}
               planet={planet}
@@ -15,6 +15,7 @@ const PlanetView = ({ socket, user, planets }) => {
               }}
             />
           ))}
+          {!planets && (<>You have no Planets!</>)}
         </div>
       </div>
   )
