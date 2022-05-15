@@ -29,7 +29,8 @@ export default class WetPlanet extends BasePlanet {
           color3: new Color(47, 86, 82),
           color4: new Color(40, 52, 63),
         },
-        this.light
+        this.light,
+        this.rotation
       )
     );
 
@@ -42,7 +43,8 @@ export default class WetPlanet extends BasePlanet {
           color3: new Color(93, 112, 165),
           color4: new Color(63, 73, 114),
         },
-        this.light
+        this.light,
+        this.rotation
       )
     );
 

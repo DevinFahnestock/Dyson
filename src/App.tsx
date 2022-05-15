@@ -7,7 +7,8 @@ import CelestialBodyRenderer from "./components/PlanetTile/CelestialBodyRenderer
 
 import { useSignInWithGoogle, useUser, useSignOut } from "./lib/firebase";
 // import WetPlanet from "./lib/pixelPlanets/bodies/planets/prototypes/WetPlanet";
-import AtmospherelessPlanet from "./lib/pixelPlanets/bodies/planets/prototypes/AtmospherelessPlanet";
+// import AtmospherelessPlanet from "./lib/pixelPlanets/bodies/planets/prototypes/AtmospherelessPlanet";
+import LavaPlanet from "./lib/pixelPlanets/bodies/planets/prototypes/LavaPlanet";
 
 const socket = io("http://localhost:3001", {
   transports: ["websocket", "polling"],
@@ -46,7 +47,7 @@ function App() {
 
   const { signInWithPopup } = useSignInWithGoogle();
 
-  const planet = new AtmospherelessPlanet(12345);
+  const planet = new LavaPlanet(123345);
 
   return (
     <div className="App">
