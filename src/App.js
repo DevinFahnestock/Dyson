@@ -10,8 +10,9 @@ import { useUser } from "./lib/firebase"
 import NavBar from "./components/NavBar/NavBar"
 import PlanetView from "./components/PlanetView/PlanetView"
 import SignInScreen from "./components/SignInScreen/SignInScreen"
+const address = "192.168.50.138"
 
-const socket = io("http://localhost:25145", { transports: ["websocket", "polling"] })
+const socket = io(`http://${address}:25145`, { transports: ["websocket", "polling"] })
 
 function App() {
   const [planets, setPlanets] = useState([])
