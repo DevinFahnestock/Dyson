@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from "react";
 import io from "socket.io-client";
-import { Vector2 } from "three";
 
 import "./App.css";
 import PlanetTile from "./components/PlanetTile/PlanetTile";
 import CelestialBodyRenderer from "./components/PlanetTile/CelestialBodyRenderer";
 
 import { useSignInWithGoogle, useUser, useSignOut } from "./lib/firebase";
-import BasePlanet from "./lib/pixelPlanets/bodies/planets/BasePlanet";
-import { Color } from "./lib/pixelPlanets/core";
+// import WetPlanet from "./lib/pixelPlanets/bodies/planets/prototypes/WetPlanet";
+import AtmospherelessPlanet from "./lib/pixelPlanets/bodies/planets/prototypes/AtmospherelessPlanet";
 
 const socket = io("http://localhost:3001", {
   transports: ["websocket", "polling"],
@@ -47,15 +46,7 @@ function App() {
 
   const { signInWithPopup } = useSignInWithGoogle();
 
-  const planet = new BasePlanet(
-    12345,
-    {
-      color1: new Color(155, 158, 184),
-      color2: new Color(71, 97, 124),
-      color3: new Color(53, 57, 85),
-    },
-    { position: new Vector2(), intensity: 0.1 }
-  );
+  const planet = new AtmospherelessPlanet(12345);
 
   return (
     <div className="App">

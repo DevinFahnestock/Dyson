@@ -1,4 +1,11 @@
-import { Group, Mesh, Object3D, PlaneGeometry, ShaderMaterial } from "three";
+import {
+  Group,
+  Mesh,
+  Object3D,
+  PlaneGeometry,
+  ShaderMaterial,
+  ShaderMaterialParameters,
+} from "three";
 
 import { CelestialBody, Layer, LightSource, ColorPalette } from "../../core";
 import vertexShader from "../../shaders/vertex/mainShader.glsl";
@@ -11,14 +18,14 @@ export default class BasePlanet implements CelestialBody {
   public rotationSpeed: number;
   public rotation: number;
 
-  private planetGroup: Group;
+  protected planetGroup: Group;
 
   constructor(
     seed: number,
     colors: ColorPalette,
     light: LightSource,
-    rotationSpeed: number = 0.1,
-    rotation: number = 0.0
+    rotation: number = 0.0,
+    rotationSpeed: number = 0.1
   ) {
     this.seed = seed;
     this.colors = colors;
@@ -26,24 +33,7 @@ export default class BasePlanet implements CelestialBody {
     this.rotationSpeed = rotationSpeed;
     this.rotation = rotation;
 
-    this.initalize();
-  }
-
-  update(delta: number): void {
-    this.planetGroup.children.forEach((layer: any) => {
-      if (layer.material.uniforms["time"]) {
-        layer.material.uniforms["time"].value = delta;
-      }
-    });
-  }
-
-  private initalize() {
-    this.planetGroup = new Group();
-    console.log(vertexShader);
-    console.log(basePlanetFramentShader);
-
-    const planetGeometry = new PlaneGeometry(1, 1);
-    const planetMaterial = new ShaderMaterial({
+    this.initalizeShaders({
       uniforms: {
         pixels: { value: 100.0 },
         color1: { value: this.colors.color1.toVector() },
@@ -60,6 +50,21 @@ export default class BasePlanet implements CelestialBody {
       fragmentShader: basePlanetFramentShader,
       transparent: true,
     });
+  }
+
+  update(delta: number): void {
+    this.planetGroup.children.forEach((layer: any) => {
+      if (layer.material.uniforms["time"]) {
+        layer.material.uniforms["time"].value = delta;
+      }
+    });
+  }
+
+  protected initalizeShaders(configuration: ShaderMaterialParameters) {
+    this.planetGroup = new Group();
+
+    const planetGeometry = new PlaneGeometry(1, 1);
+    const planetMaterial = new ShaderMaterial(configuration);
 
     this.planetGroup.add(new Mesh(planetGeometry, planetMaterial));
   }

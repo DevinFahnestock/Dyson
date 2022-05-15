@@ -7,14 +7,14 @@ type CelestialBodyRendererProps = {
   celestialBody: CelestialBody;
 };
 
-const CelestialBodyRendererP = ({
+const CelestialBodyRenderer = ({
   celestialBody,
 }: CelestialBodyRendererProps) => {
   const renderContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    let id: any = null;
     let rendererElement: any = null;
+    let animationFrameHandle: any = null;
     const containerElement = renderContainerRef?.current;
 
     if (containerElement) {
@@ -39,7 +39,7 @@ const CelestialBodyRendererP = ({
       camera.position.z = 1;
 
       function animate() {
-        id = window.requestAnimationFrame(animate);
+        animationFrameHandle = window.requestAnimationFrame(animate);
 
         celestialBody.update(clock.getElapsedTime());
 
@@ -55,17 +55,17 @@ const CelestialBodyRendererP = ({
 
     return () => {
       rendererElement && containerElement?.removeChild(rendererElement);
-      id && window.cancelAnimationFrame(id);
+      animationFrameHandle && window.cancelAnimationFrame(animationFrameHandle);
     };
   }, [renderContainerRef, celestialBody]);
 
   return (
     <div
       ref={renderContainerRef}
-      style={{ height: "300px", width: "300px" }}
+      style={{ height: "900px", width: "900px" }}
       className="renderer"
     ></div>
   );
 };
 
-export default CelestialBodyRendererP;
+export default CelestialBodyRenderer;
