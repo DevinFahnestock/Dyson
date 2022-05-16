@@ -1,87 +1,66 @@
-import React, { useState, useEffect } from "react";
-import io from "socket.io-client";
+import React, { useState, useEffect } from "react"
+import io from "socket.io-client"
 
-import "./App.css";
-import PlanetTile from "./components/PlanetTile/PlanetTile";
-import CelestialBodyRenderer from "./components/PlanetTile/CelestialBodyRenderer";
+import { useUser } from "./lib/firebase"
 
-import { useSignInWithGoogle, useUser, useSignOut } from "./lib/firebase";
-// import WetPlanet from "./lib/pixelPlanets/bodies/planets/prototypes/WetPlanet";
-// import AtmospherelessPlanet from "./lib/pixelPlanets/bodies/planets/prototypes/AtmospherelessPlanet";
-import LavaPlanet from "./lib/pixelPlanets/bodies/planets/prototypes/LavaPlanet";
+import "./App.css"
+import NavBar from "./components/NavBar/NavBar"
+import PlanetView from "./components/PlanetView/PlanetView"
+import SignInScreen from "./components/SignInScreen/SignInScreen"
 
-const socket = io("http://localhost:3001", {
-  transports: ["websocket", "polling"],
-});
+const address = "192.168.50.138"
+
+const socket = io(`http://${address}:25145`, { transports: ["websocket", "polling"] })
 
 function App() {
-  const [planets, setPlanets] = useState([]);
+  const [planets, setPlanets] = useState<any[]>([])
+
+  const user: any = useUser()
 
   const updatePlanet = (planetData: any) => {
     setPlanets((planets) => {
-      let copy: any = [...planets];
-      copy[planetData.id] = planetData;
-      return copy;
-    });
-  };
+      let copy: any[] = [...planets]
+      copy[copy.findIndex(planet => planet.id === planetData.id)] = planetData
+      return copy
+    })
+  }
 
   useEffect(() => {
     socket.on("connect", () => {
-      socket.emit("newConnection");
-    });
+      console.log("Successfully connected to server")
+    })
 
-    socket.on("planets", (planetData) => {
-      setPlanets(planetData);
-    });
+    socket.on("updateAllGameData", gameData => {
+      setPlanets(gameData)
+    })
 
-    socket.on("planetUpdate", updatePlanet);
+    socket.on("planetUpdate", (data) => {
+      updatePlanet(data)
+    })
 
     return () => {
-      socket.off("planets");
-      socket.off("planetUpdate");
-    };
-  }, []);
+      socket.off("planets")
+      socket.off("planetUpdate")
+    }
+  }, [planets])
 
-  const user: any = useUser();
-  const signOut = useSignOut();
+  useEffect(() => {
 
-  const { signInWithPopup } = useSignInWithGoogle();
+    !user && setPlanets([])
 
-  const planet = new LavaPlanet(123345);
+    user && socket.emit("userStateChanged", user.uid)
+    
+    socket.on("NoUserExists", () => { 
+      user && socket.emit("CreateNewUserData", user)}) 
+  }, [user, user?.uid])
 
   return (
     <div className="App">
-      <nav>
-        <a href="http://localhost:3000/">Home</a>
-        {!user && <a onClick={() => signInWithPopup()}>Sign in</a>}
-        {user && (
-          <div className="profile">
-            {user.displayName}
-            <img src={user.photoURL} alt="Profile" />
-            <a onClick={() => signOut()}>Sign out</a>
-          </div>
-        )}
-      </nav>
-      <header>
-        <h1>Dyson</h1>
-      </header>
-      <CelestialBodyRenderer celestialBody={planet} />
-      <div className="Planetview">
-        <h3>Planets:</h3>
-        <div className="Planetgrid">
-          {planets.map((planet: any) => (
-            <PlanetTile
-              key={planet.id}
-              planet={planet}
-              upgradeClick={() => {
-                socket.emit("upgradePlanet", planet);
-              }}
-            />
-          ))}
-        </div>
-      </div>
+      <NavBar />
+      {user && (<PlanetView socket={socket} user={user} planets={planets} />)}
+      {!user && <SignInScreen />}
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
