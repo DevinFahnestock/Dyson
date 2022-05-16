@@ -3,21 +3,56 @@ import "./styles.css"
 import UpgradeButton from "./Buttons/UpgradeButton"
 
 import utc from "dayjs/plugin/utc"
+import duration from "dayjs/plugin/duration"
+import relativeTime from "dayjs/plugin/relativeTime"
 import dayjs from "dayjs"
 
+dayjs.extend(duration)
 dayjs.extend(utc)
+dayjs.extend(relativeTime)
 
-const PlanetTile = ({ planet, upgradeClick }) => {
+const PlanetTile = ({ planet, upgradeClick, socket }) => {
   const upgradeFinishedTime = dayjs.utc(planet.upgradeFinishedTime)
 
-  const [upgradeTimeLeft, setUpgradeTimeLeft] = useState(upgradeFinishedTime.subtract(dayjs.utc()))
+  const [upgradeTimeLeft, setUpgradeTimeLeft] = useState()
+
+  const setTimerinfo = () => {
+    //planet.upgrading && console.log(upgradeFinishedTime.subtract(dayjs.utc()), dayjs.utc(), upgradeFinishedTime)
+
+    const durationLeft = dayjs.duration(upgradeFinishedTime.diff(dayjs.utc()))
+
+    const hoursLeft = durationLeft.get("hours")
+    const minutesLeft = durationLeft.get("minutes")
+    const secondsLeft = durationLeft.get("seconds")
+
+    let timerText = ""
+
+    if (durationLeft.asSeconds() > 0) {
+      if (hoursLeft > 0) {
+        timerText = durationLeft.format("H:mm:ss")
+      } else if (minutesLeft > 0) {
+        timerText = durationLeft.format("m:ss")
+      } else {
+        timerText = durationLeft.asSeconds() > 1 ? durationLeft.format("s") + " seconds" : durationLeft.format("s") + " second"
+      }
+    } else {
+      timerText = "Finished"
+    }
+
+    if (durationLeft.asSeconds() <= 0) {
+      // upgrade should be complete
+      socket.emit("checkCompleteUpgrade", planet.id)
+    }
+
+    return timerText
+  }
 
   useEffect(() => {
     let timer = null
-    console.log(planet)
     if (planet.upgrading) {
+      setUpgradeTimeLeft(setTimerinfo())
       timer = setInterval(() => {
-        setUpgradeTimeLeft(upgradeFinishedTime.subtract(dayjs.utc()))
+        setUpgradeTimeLeft(setTimerinfo())
       }, 1000)
     }
     return () => {
@@ -33,7 +68,7 @@ const PlanetTile = ({ planet, upgradeClick }) => {
         <p>
           Level {planet.level}
           <br />
-          <UpgradeButton text={!planet.upgrading ? "Upgrade" : upgradeTimeLeft.format("HH:mm:ss")} onClick={upgradeClick} />
+          <UpgradeButton text={!planet.upgrading ? "Upgrade" : upgradeTimeLeft} onClick={upgradeClick} />
         </p>
       </div>
     </div>

@@ -13,6 +13,7 @@ const PlanetView = ({ socket, user, planets }) => {
               upgradeClick={() => {
                 socket.emit("upgradePlanet", {planetID: planet.id, userUID: user.uid})
               }}
+              socket={socket}
             />
           ))}
           {!planets && (<>You have no Planets!</>)}
