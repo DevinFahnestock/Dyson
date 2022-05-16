@@ -1,27 +1,25 @@
-import "./App.css"
-import PlanetTile from "./components/PlanetTile/PlanetTile"
-
-import { useState, useEffect } from "react"
-
+import React, { useState, useEffect } from "react"
 import io from "socket.io-client"
 
 import { useUser } from "./lib/firebase"
 
+import "./App.css"
 import NavBar from "./components/NavBar/NavBar"
 import PlanetView from "./components/PlanetView/PlanetView"
 import SignInScreen from "./components/SignInScreen/SignInScreen"
+
 const address = "192.168.50.138"
 
 const socket = io(`http://${address}:25145`, { transports: ["websocket", "polling"] })
 
 function App() {
-  const [planets, setPlanets] = useState([])
+  const [planets, setPlanets] = useState<any[]>([])
 
-  const user = useUser()
+  const user: any = useUser()
 
-  const updatePlanet = (planetData) => {
+  const updatePlanet = (planetData: any) => {
     setPlanets((planets) => {
-      let copy = [...planets]
+      let copy: any[] = [...planets]
       copy[copy.findIndex(planet => planet.id === planetData.id)] = planetData
       return copy
     })
@@ -39,8 +37,6 @@ function App() {
     socket.on("planetUpdate", (data) => {
       updatePlanet(data)
     })
-
-    
 
     return () => {
       socket.off("planets")
