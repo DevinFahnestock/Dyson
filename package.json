@@ -23,6 +23,6 @@
   "scripts": {
     "dev": "concurrently \"npm run -w=shared build\" \"npm run -w=dyson start\" \"npm run -w=dyson-server dev\"",
     "dev:server": "npm run -w=dyson-server dev",
-    "dev:client": "npm run -w=dyson dev"
+    "dev:client": "npm run -w=dyson start"
   }
 }

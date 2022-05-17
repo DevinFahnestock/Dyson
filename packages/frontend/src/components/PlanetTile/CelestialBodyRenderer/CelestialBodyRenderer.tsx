@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { Clock, Scene, WebGLRenderer, PerspectiveCamera } from "three";
 
-import type { CelestialBody } from "../../lib/pixelPlanets/core";
+import type { CelestialBody } from "../../../lib/pixelPlanets/core";
 
 type CelestialBodyRendererProps = {
   celestialBody: CelestialBody;
