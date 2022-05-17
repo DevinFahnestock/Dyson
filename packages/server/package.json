@@ -1,0 +1,29 @@
+{
+  "name": "dyson-server",
+  "version": "1.0.0",
+  "description": "server for dyson",
+  "main": "index.js",
+  "scripts": {
+    "build": "ttsc",
+    "dev": "concurrently \"ttsc --watch\" \"nodemon -q dist/index.js\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dayjs": "^1.11.2",
+    "dotenv": "^16.0.1",
+    "firebase": "^9.8.1",
+    "firebase-admin": "^10.2.0",
+    "firebase-functions": "^3.21.0",
+    "socket.io": "^4.5.0"
+  },
+  "devDependencies": {
+    "@types/node": "^17.0.23",
+    "concurrently": "^7.1.0",
+    "nodemon": "^2.0.16",
+    "ttypescript": "^1.5.13",
+    "typescript": "^4.6.3",
+    "typescript-transform-paths": "^3.3.1"
+  }
+}
