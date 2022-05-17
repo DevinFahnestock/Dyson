@@ -6,15 +6,18 @@ import utc from "dayjs/plugin/utc"
 import duration from "dayjs/plugin/duration"
 import relativeTime from "dayjs/plugin/relativeTime"
 import dayjs from "dayjs"
+import { Socket } from "socket.io-client"
 
 dayjs.extend(duration)
 dayjs.extend(utc)
 dayjs.extend(relativeTime)
 
-const PlanetTile = ({ planet, upgradeClick, socket }) => {
+interface PlanetTileProps {planet: any, upgradeClick: () => void, socket: Socket}
+
+const PlanetTile = ({ planet, upgradeClick, socket }:PlanetTileProps) => {
   const upgradeFinishedTime = dayjs.utc(planet.upgradeFinishedTime)
 
-  const [upgradeTimeLeft, setUpgradeTimeLeft] = useState()
+  const [upgradeTimeLeft, setUpgradeTimeLeft] = useState<string>()
 
   const setTimerinfo = () => {
     //planet.upgrading && console.log(upgradeFinishedTime.subtract(dayjs.utc()), dayjs.utc(), upgradeFinishedTime)
@@ -23,7 +26,6 @@ const PlanetTile = ({ planet, upgradeClick, socket }) => {
 
     const hoursLeft = durationLeft.get("hours")
     const minutesLeft = durationLeft.get("minutes")
-    const secondsLeft = durationLeft.get("seconds")
 
     let timerText = ""
 
@@ -48,7 +50,7 @@ const PlanetTile = ({ planet, upgradeClick, socket }) => {
   }
 
   useEffect(() => {
-    let timer = null
+    let timer: null|NodeJS.Timer = null
     if (planet.upgrading) {
       setUpgradeTimeLeft(setTimerinfo())
       timer = setInterval(() => {
@@ -56,7 +58,7 @@ const PlanetTile = ({ planet, upgradeClick, socket }) => {
       }, 1000)
     }
     return () => {
-      clearInterval(timer)
+      timer && clearInterval(timer)
     }
   }, [planet?.upgradeFinishedTime])
 
