@@ -26,7 +26,7 @@ const CelestialBodyRenderer = ({
 
       scene.add(celestialBody.createNode());
 
-      const renderer = new WebGLRenderer();
+      const renderer = new WebGLRenderer( {alpha: true } );
 
       renderer.setSize(
         containerElement.clientWidth,
@@ -35,7 +35,7 @@ const CelestialBodyRenderer = ({
 
       renderer.setPixelRatio(window.devicePixelRatio);
 
-      const camera = new PerspectiveCamera(75, aspect, 0.1, 100000);
+      const camera = new PerspectiveCamera(55, aspect, 0.1, 100000);
       camera.position.z = 1;
 
       function animate() {
@@ -62,10 +62,10 @@ const CelestialBodyRenderer = ({
   return (
     <div
       ref={renderContainerRef}
-      style={{ height: "900px", width: "900px" }}
+      style={{ height: "100px", width: "100px" }}
       className="renderer"
     ></div>
   );
 };
 
-export default CelestialBodyRenderer;
+export default React.memo(CelestialBodyRenderer);

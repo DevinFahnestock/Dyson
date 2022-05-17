@@ -8,18 +8,30 @@ import NavBar from "./components/NavBar/NavBar"
 import PlanetView from "./components/PlanetView/PlanetView"
 import SignInScreen from "./components/SignInScreen/SignInScreen"
 
-const address = "192.168.50.138"
+const address = process.env.SERVER_ADDRESS || "localhost:25145"
 
-const socket = io(`http://${address}:25145`, { transports: ["websocket", "polling"] })
+const socket = io(`${address}`, { transports: ["websocket", "polling"] })
 
 function App() {
   const [planets, setPlanets] = useState<any[]>([])
 
   const user: any = useUser()
 
+
+
   const updatePlanet = (planetData: any) => {
+    // if other info changed
     setPlanets((planets) => {
       let copy: any[] = [...planets]
+      copy[copy.findIndex(planet => planet.id === planetData.id)] = planetData
+      
+      return copy
+    })
+
+    // if just level changed
+
+    setPlanets((planets) => {
+      let copy: any[] = planets
       copy[copy.findIndex(planet => planet.id === planetData.id)] = planetData
       return copy
     })

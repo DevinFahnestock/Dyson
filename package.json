@@ -14,13 +14,14 @@
   "homepage": "https://github.com/DevinFahnestock/Dyson#readme",
   "workspaces": [
     "packages/frontend",
-    "packages/server"
+    "packages/server",
+    "packages/shared"
   ],
   "dependencies": {
     "concurrently": "^7.2.0"
   },
   "scripts": {
-    "dev": "concurrently \"npm run -w=dyson start\" \"npm run -w=dyson-server dev\"",
+    "dev": "concurrently \"npm run -w=shared build\" \"npm run -w=dyson start\" \"npm run -w=dyson-server dev\"",
     "dev:server": "npm run -w=dyson-server dev",
     "dev:client": "npm run -w=dyson dev"
   }

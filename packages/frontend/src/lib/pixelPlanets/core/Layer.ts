@@ -23,7 +23,7 @@ export abstract class Layer implements SceneNode {
   }
 
   update(delta: number): void {
-    if (this.layerMesh.material.uniforms) {
+    if (this.layerMesh.material.uniforms["time"]) {
       this.layerMesh.material.uniforms["time"].value = delta;
     }
   }

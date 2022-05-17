@@ -1,47 +1,53 @@
-import planetNames from '../../resources/planet-names.json'
-import utc from 'dayjs/plugin/utc'
-import dayjs from 'dayjs'
+import planetNames from "../../resources/planet-names.json"
+import utc from "dayjs/plugin/utc"
+import dayjs from "dayjs"
+
+import { PlanetType } from "../../lib/shared"
 
 const starterPlanets = [
   {
     id: null,
-    imgsrc: "assets/planets/3064649268.gif",
     name: null,
     level: 0,
     owner: null,
     created: null,
     upgrading: false,
     upgradeFinishedTime: null,
+    type: PlanetType.Lava,
+    seed: 8,
   },
   {
     id: null,
-    imgsrc: "assets/planets/3445279529.gif",
     name: null,
     level: 0,
     owner: null,
     created: null,
     upgrading: false,
     upgradeFinishedTime: null,
+    type: PlanetType.NoAtmosphere,
+    seed: 8,
   },
   {
     id: null,
-    imgsrc: "assets/planets/3847122958.gif",
     name: null,
     level: 0,
     owner: null,
     created: null,
     upgrading: false,
     upgradeFinishedTime: null,
+    type: PlanetType.Wet,
+    seed: 8,
   },
   {
     id: null,
-    imgsrc: "assets/planets/1143784589.gif",
     name: null,
     level: 0,
     owner: null,
     created: null,
     upgrading: false,
     upgradeFinishedTime: null,
+    type: PlanetType.Lava,
+    seed: 8,
   },
 ]
 
@@ -55,7 +61,7 @@ const createNewUserStarterPlanets = async (admin, userUID) => {
 
     const writeData = planet
     writeData.id = docref.id
-    writeData.name = planetNames[Math.floor(Math.random()*planetNames.length)]
+    writeData.name = planetNames[Math.floor(Math.random() * planetNames.length)]
     writeData.owner = userUID
     writeData.created = dayjs().utc().toISOString()
     batch.set(docref, writeData)

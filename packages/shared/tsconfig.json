@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "outDir": "./dist",
+    // "rootDir": ".",
+    "target": "es2017",
+    "esModuleInterop": true,
+    "baseUrl": ".",
+    "jsx": "preserve",
+    "paths": {
+      "shared": ["./"]
+    },
+    "resolveJsonModule": true,
+    // "paths": {
+    //   "@server/*": ["server/*"],
+    //   "@cli/*": ["cli/*"]
+    // },
+    "plugins": [{ "transform": "typescript-transform-paths" }]
+  },
+  "exclude": ["dist", "node_modules"]
+}

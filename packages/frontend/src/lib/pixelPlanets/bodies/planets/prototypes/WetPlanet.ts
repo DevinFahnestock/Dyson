@@ -38,9 +38,9 @@ export default class WetPlanet extends BasePlanet {
       new CloudLayer(
         this.seed,
         {
-          color1: new Color(255, 242, 1),
-          color2: new Color(191, 226, 1),
-          color3: new Color(93, 112, 165),
+          color1: new Color(224, 240, 255),
+          color2: new Color(191, 226, 255),
+          color3: new Color(186, 220, 241), //91, 117, 165
           color4: new Color(63, 73, 114),
         },
         this.light,

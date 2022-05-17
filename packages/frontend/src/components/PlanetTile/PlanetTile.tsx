@@ -1,77 +1,56 @@
-import React, { useEffect, useState } from "react"
+import React, { useRef, useEffect } from "react"
 import "./styles.css"
 import UpgradeButton from "./Buttons/UpgradeButton"
 
-import utc from "dayjs/plugin/utc"
-import duration from "dayjs/plugin/duration"
-import relativeTime from "dayjs/plugin/relativeTime"
-import dayjs from "dayjs"
-import { Socket } from "socket.io-client"
+import { PlanetType } from "../../lib/shared"
 
-dayjs.extend(duration)
-dayjs.extend(utc)
-dayjs.extend(relativeTime)
+import CelestialBodyRenderer from "./CelestialBodyRenderer"
+import LavaPlanet from "src/lib/pixelPlanets/bodies/planets/prototypes/LavaPlanet"
+import { CelestialBody } from "src/lib/pixelPlanets/core"
+import WetPlanet from "src/lib/pixelPlanets/bodies/planets/prototypes/WetPlanet"
+import AtmospherelessPlanet from "src/lib/pixelPlanets/bodies/planets/prototypes/AtmospherelessPlanet"
 
-interface PlanetTileProps {planet: any, upgradeClick: () => void, socket: Socket}
+interface PlanetTileProps {
+  planet: any
+  upgradeClick: () => void
+  onUpgradeTimeComplete: () => void
+}
 
-const PlanetTile = ({ planet, upgradeClick, socket }:PlanetTileProps) => {
-  const upgradeFinishedTime = dayjs.utc(planet.upgradeFinishedTime)
+const getPlanet = (planet: any): CelestialBody => {
 
-  const [upgradeTimeLeft, setUpgradeTimeLeft] = useState<string>()
+  switch (planet.type) {
+    case PlanetType.Wet:
+      return new WetPlanet(planet.seed)
 
-  const setTimerinfo = () => {
-    //planet.upgrading && console.log(upgradeFinishedTime.subtract(dayjs.utc()), dayjs.utc(), upgradeFinishedTime)
+    case PlanetType.Lava:
+      return new LavaPlanet(planet.seed)
 
-    const durationLeft = dayjs.duration(upgradeFinishedTime.diff(dayjs.utc()))
+    case PlanetType.NoAtmosphere:
+      return new AtmospherelessPlanet(planet.seed)
 
-    const hoursLeft = durationLeft.get("hours")
-    const minutesLeft = durationLeft.get("minutes")
-
-    let timerText = ""
-
-    if (durationLeft.asSeconds() > 0) {
-      if (hoursLeft > 0) {
-        timerText = durationLeft.format("H:mm:ss")
-      } else if (minutesLeft > 0) {
-        timerText = durationLeft.format("m:ss")
-      } else {
-        timerText = durationLeft.asSeconds() > 1 ? durationLeft.format("s") + " seconds" : durationLeft.format("s") + " second"
-      }
-    } else {
-      timerText = "Finished"
-    }
-
-    if (durationLeft.asSeconds() <= 0) {
-      // upgrade should be complete
-      socket.emit("checkCompleteUpgrade", planet.id)
-    }
-
-    return timerText
+    default:
+      return new AtmospherelessPlanet(planet.seed)
   }
+}
+
+const PlanetTile = ({ planet, upgradeClick, onUpgradeTimeComplete }: PlanetTileProps) => {
+
+  const planetRef = useRef<CelestialBody>()
 
   useEffect(() => {
-    let timer: null|NodeJS.Timer = null
-    if (planet.upgrading) {
-      setUpgradeTimeLeft(setTimerinfo())
-      timer = setInterval(() => {
-        setUpgradeTimeLeft(setTimerinfo())
-      }, 1000)
-    }
-    return () => {
-      timer && clearInterval(timer)
-    }
-  }, [planet?.upgradeFinishedTime])
+    planetRef.current = getPlanet(planet)
+  })
 
   return (
     <div className="PlanetTile">
       <div className="Definition">
-        <img src={planet.imgsrc} alt="Planet" />
+        {planetRef.current && (<CelestialBodyRenderer celestialBody={planetRef.current} />)}
         <h3>{planet.name}</h3>
-        <p>
+        <div>
           Level {planet.level}
           <br />
-          <UpgradeButton text={!planet.upgrading ? "Upgrade" : upgradeTimeLeft} onClick={upgradeClick} />
-        </p>
+          <UpgradeButton onClick={upgradeClick} onUpgradeTimeComplete={onUpgradeTimeComplete} planet={planet} />
+        </div>
       </div>
     </div>
   )
