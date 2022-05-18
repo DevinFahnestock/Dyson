@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react"
-import io from "socket.io-client"
+import React, { useState, useEffect, useRef } from "react"
+import io, { Socket }  from "socket.io-client"
 
 import { useUser } from "./lib/firebase"
 
@@ -10,49 +10,49 @@ import SignInScreen from "./components/SignInScreen/SignInScreen"
 
 const address = process.env.SERVER_ADDRESS || "localhost:25145"
 
-const socket = io(`${address}`, { transports: ["websocket", "polling"] })
-
 function App() {
   const [planets, setPlanets] = useState<any[]>([])
 
   const user: any = useUser()
 
+  const socketRef = useRef<Socket | null>(null)
 
+  useEffect(() => {
+    if (!socketRef.current) {
+      socketRef.current = io(`${address}`, { transports: ["websocket", "polling"] })
+    }
+  })
+
+
+  useEffect(() => {
+    setPlanets([])
+  }, [user])
 
   const updatePlanet = (planetData: any) => {
-    // if other info changed
     setPlanets((planets) => {
       let copy: any[] = [...planets]
       copy[copy.findIndex(planet => planet.id === planetData.id)] = planetData
       
       return copy
     })
-
-    // if just level changed
-
-    setPlanets((planets) => {
-      let copy: any[] = planets
-      copy[copy.findIndex(planet => planet.id === planetData.id)] = planetData
-      return copy
-    })
   }
 
   useEffect(() => {
-    socket.on("connect", () => {
+    socketRef?.current?.on("connect", () => {
       console.log("Successfully connected to server")
     })
 
-    socket.on("updateAllGameData", gameData => {
+    socketRef?.current?.on("updateAllGameData", gameData => {
       setPlanets(gameData)
     })
 
-    socket.on("planetUpdate", (data) => {
+    socketRef?.current?.on("planetUpdate", (data) => {
       updatePlanet(data)
     })
 
     return () => {
-      socket.off("planets")
-      socket.off("planetUpdate")
+      socketRef?.current?.off("planets")
+      socketRef?.current?.off("planetUpdate")
     }
   }, [planets])
 
@@ -60,16 +60,16 @@ function App() {
 
     !user && setPlanets([])
 
-    user && socket.emit("userStateChanged", user.uid)
+    user && socketRef?.current?.emit("userStateChanged", user.uid)
     
-    socket.on("NoUserExists", () => { 
-      user && socket.emit("CreateNewUserData", user)}) 
+    socketRef?.current?.on("NoUserExists", () => { 
+      user && socketRef?.current?.emit("CreateNewUserData", user)}) 
   }, [user, user?.uid])
 
   return (
     <div className="App">
       <NavBar />
-      {user && (<PlanetView socket={socket} user={user} planets={planets} />)}
+      {user && (<PlanetView socket={socketRef.current} user={user} planets={planets} />)}
       {!user && <SignInScreen />}
     </div>
   )
