@@ -1,5 +1,5 @@
 
-interface UserRepository {
+export interface IUserRepository {
 
   createNewUser(user: any): Promise<void>
 

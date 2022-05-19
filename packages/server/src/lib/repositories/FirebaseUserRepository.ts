@@ -1,6 +1,7 @@
 import { app } from "firebase-admin"
+import { IUserRepository } from './IUserRepository'
 
-class FirebaseUserRepository implements UserRepository {
+class FirebaseUserRepository implements IUserRepository {
   protected readonly admin: app.App
 
   constructor(admin: app.App) {
