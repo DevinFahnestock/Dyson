@@ -3,7 +3,7 @@ import { IPlanetRepository } from './IPlanetRepository'
 import { Planet } from '../Planet'
 
 
-class FirebasePlanetRepository implements IPlanetRepository {
+export class FirebasePlanetRepository implements IPlanetRepository {
   protected readonly admin: app.App
 
   constructor(admin: app.App) {

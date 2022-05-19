@@ -1,5 +1,8 @@
+import { type } from "os"
 import { Planet } from "../Planet"
 import { PlanetType } from "../shared"
+
+type nullablePlanet = Planet | null
 
 export interface IPlanetService {
 
@@ -11,4 +14,9 @@ export interface IPlanetService {
 
   createPlanet(userID: string, type: PlanetType): Promise<Planet>
 
+  checkForUpgradeCompleted(userID: string, PlanetID: string): Promise<Planet>
+
+  startPlanetUpgrade(planetID: string, userID: string): Promise<Planet>
+
 }
+

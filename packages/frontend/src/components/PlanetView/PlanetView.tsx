@@ -14,7 +14,7 @@ const PlanetView = ({ socket, user, planets }: any) => {
                 socket.emit("upgradePlanet", {planetID: planet.id, userUID: user.uid})
               }}
               onUpgradeTimeComplete={() => {
-                socket.emit("checkCompleteUpgrade", planet.id)
+                socket.emit("checkCompleteUpgrade", {planetID: planet.id, userID: user.uid})
               }}
             />
           ))}

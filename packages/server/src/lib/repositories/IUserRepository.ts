@@ -1,8 +1,8 @@
 
 export interface IUserRepository {
 
-  createNewUser(user: any): Promise<void>
+  createNewUser(user: User): Promise<User>
 
-  fetchUserData(userID: string): Promise<any>
+  fetchUserData(userID: string): Promise<User>
 
 }
