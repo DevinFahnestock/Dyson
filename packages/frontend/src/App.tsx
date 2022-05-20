@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react"
-import io, { Socket }  from "socket.io-client"
+import io, { Socket } from "socket.io-client"
 
 import { useUser } from "./lib/firebase"
 
@@ -23,16 +23,18 @@ function App() {
     }
   })
 
-
   useEffect(() => {
     setPlanets([])
   }, [user])
 
   const updatePlanet = (planetData: any) => {
+    if (!planetData) {
+      return
+    }
     setPlanets((planets) => {
       let copy: any[] = [...planets]
-      copy[copy.findIndex(planet => planet.id === planetData.id)] = planetData
-      
+      copy[copy.findIndex((planet) => planet.id === planetData.id)] = planetData
+
       return copy
     })
   }
@@ -42,7 +44,7 @@ function App() {
       console.log("Successfully connected to server")
     })
 
-    socketRef?.current?.on("updateAllGameData", gameData => {
+    socketRef?.current?.on("updateAllPlanets", (gameData) => {
       setPlanets(gameData)
     })
 
@@ -57,19 +59,15 @@ function App() {
   }, [planets])
 
   useEffect(() => {
-
     !user && setPlanets([])
 
-    user && socketRef?.current?.emit("userStateChanged", user.uid)
-    
-    socketRef?.current?.on("NoUserExists", () => { 
-      user && socketRef?.current?.emit("CreateNewUserData", user)}) 
+    user && socketRef?.current?.emit("userStateChanged", user)
   }, [user, user?.uid])
 
   return (
     <div className="App">
       <NavBar />
-      {user && (<PlanetView socket={socketRef.current} user={user} planets={planets} />)}
+      {user && <PlanetView setPlanets={setPlanets} socket={socketRef.current} user={user} planets={planets} />}
       {!user && <SignInScreen />}
     </div>
   )

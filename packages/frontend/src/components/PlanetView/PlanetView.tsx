@@ -2,6 +2,7 @@ import React from 'react'
 import PlanetTile from '../PlanetTile/PlanetTile'
 
 const PlanetView = ({ socket, user, planets }: any) => {
+
   return (
     <div className="Planetview">
         <h3>Planets:</h3>
@@ -11,10 +12,10 @@ const PlanetView = ({ socket, user, planets }: any) => {
               key={planet.id}
               planet={planet}
               upgradeClick={() => {
-                socket.emit("upgradePlanet", {planetID: planet.id, userUID: user.uid})
+                socket.emit("upgradePlanet", {planetID: planet.id, userID: user.uid})
               }}
               onUpgradeTimeComplete={() => {
-                socket.emit("checkCompleteUpgrade", planet.id)
+                socket.emit("checkCompleteUpgrade", {planetID: planet.id, userID: user.uid})
               }}
             />
           ))}
