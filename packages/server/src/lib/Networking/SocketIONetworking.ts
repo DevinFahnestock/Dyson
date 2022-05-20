@@ -58,7 +58,9 @@ export class SocketIONetworking implements INetworking {
 
   private onStartPlanetUpgrade(socket: Socket) {
     socket.on("upgradePlanet",async ({ planetID, userID }) => {
-      socket.emit("planetUpdate", await this.planetService.startPlanetUpgrade(planetID, userID))
+      const data = await this.planetService.startPlanetUpgrade(planetID, userID)
+      socket.emit("planetUpdate", data)
+      console.log('sent data', data)
     })
   }
 }
