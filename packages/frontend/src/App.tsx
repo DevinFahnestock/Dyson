@@ -1,76 +1,82 @@
-import React, { useState, useEffect, useRef } from "react"
-import io, { Socket } from "socket.io-client"
+import React, { useEffect, useRef } from "react";
+import io, { Socket } from "socket.io-client";
 
-import { useUser } from "./lib/firebase"
+import { useUser } from "./lib/firebase";
 
-import "./App.css"
-import NavBar from "./components/NavBar/NavBar"
-import PlanetView from "./components/PlanetView/PlanetView"
-import SignInScreen from "./components/SignInScreen/SignInScreen"
+import "./App.css";
+import NavBar from "./components/NavBar/NavBar";
+import PlanetView from "./components/PlanetView/PlanetView";
+import SignInScreen from "./components/SignInScreen/SignInScreen";
+import usePlanets from "./lib/gameData/usePlanets";
 
-const address = process.env.SERVER_ADDRESS || "localhost:25145"
+const address = process.env.SERVER_ADDRESS || "localhost:25145";
 
 function App() {
-  const [planets, setPlanets] = useState<any[]>([])
+  const user: any = useUser();
+  const { planets, updatePlanet, updateAllPlanets, clearPlanets }: any =
+    usePlanets();
+  const socketRef = useRef<Socket | null>(null);
 
-  const user: any = useUser()
-
-  const socketRef = useRef<Socket | null>(null)
+  useEffect(() => {
+    !user && clearPlanets();
+    user && socketRef?.current?.emit("userStateChanged", user);
+  }, [user, user?.uid, clearPlanets]);
 
   useEffect(() => {
     if (!socketRef.current) {
-      socketRef.current = io(`${address}`, { transports: ["websocket", "polling"] })
+      socketRef.current = io(`${address}`, {
+        transports: ["websocket", "polling"],
+      });
     }
-  })
 
-  useEffect(() => {
-    setPlanets([])
-  }, [user])
+    socketRef.current.on("connect", () => {
+      console.log("Successfully connected to server");
+    });
 
-  const updatePlanet = (planetData: any) => {
-    if (!planetData) {
-      return
-    }
-    setPlanets((planets) => {
-      let copy: any[] = [...planets]
-      copy[copy.findIndex((planet) => planet.id === planetData.id)] = planetData
+    socketRef.current.on("updateAllPlanets", (data) => {
+      updateAllPlanets(data);
+    });
 
-      return copy
-    })
-  }
-
-  useEffect(() => {
-    socketRef?.current?.on("connect", () => {
-      console.log("Successfully connected to server")
-    })
-
-    socketRef?.current?.on("updateAllPlanets", (gameData) => {
-      setPlanets(gameData)
-    })
-
-    socketRef?.current?.on("planetUpdate", (data) => {
-      updatePlanet(data)
-    })
+    socketRef.current.on("planetUpdate", (data) => {
+      updatePlanet(data);
+    });
 
     return () => {
-      socketRef?.current?.off("planets")
-      socketRef?.current?.off("planetUpdate")
-    }
-  }, [planets])
+      socketRef?.current?.off("connect");
+      socketRef?.current?.off("updateAllPlanets");
+      socketRef?.current?.off("planetUpdate");
+    };
+  }, [updateAllPlanets, updatePlanet]);
 
-  useEffect(() => {
-    !user && setPlanets([])
+  const upgradeClick = (planetID: string) => {
+    socketRef?.current?.emit("upgradePlanet", {
+      planetID: planetID,
+      userID: user.uid,
+    });
+  };
 
-    user && socketRef?.current?.emit("userStateChanged", user)
-  }, [user, user?.uid])
+  const onUpgradeTimeComplete = (planetID: string) => {
+    console.log('checking')
+    socketRef?.current?.emit("checkCompleteUpgrade", {
+      planetID: planetID,
+      userID: user.uid,
+    });
+  };
 
   return (
     <div className="App">
       <NavBar />
-      {user && <PlanetView setPlanets={setPlanets} socket={socketRef.current} user={user} planets={planets} />}
-      {!user && <SignInScreen />}
+      {user ? (
+        <PlanetView
+          planets={planets}
+          upgradeClick={upgradeClick}
+          onUpgradeTimeComplete={onUpgradeTimeComplete}
+        />
+      ) : (
+        <SignInScreen />
+      )}
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

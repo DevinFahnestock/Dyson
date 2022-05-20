@@ -1,7 +1,7 @@
 import React from 'react'
 import PlanetTile from '../PlanetTile/PlanetTile'
 
-const PlanetView = ({ socket, user, planets }: any) => {
+const PlanetView = ({ onUpgradeTimeComplete, upgradeClick, planets }: any) => {
 
   return (
     <div className="Planetview">
@@ -11,12 +11,9 @@ const PlanetView = ({ socket, user, planets }: any) => {
             <PlanetTile
               key={planet.id}
               planet={planet}
-              upgradeClick={() => {
-                socket.emit("upgradePlanet", {planetID: planet.id, userID: user.uid})
-              }}
-              onUpgradeTimeComplete={() => {
-                socket.emit("checkCompleteUpgrade", {planetID: planet.id, userID: user.uid})
-              }}
+              upgradeClick={() => upgradeClick(planet.id)}
+              onUpgradeTimeComplete={() => onUpgradeTimeComplete(planet.id)
+              }
             />
           ))}
           {!planets && (<>You have no Planets!</>)}
