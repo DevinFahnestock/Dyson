@@ -16,7 +16,7 @@ export class PlanetService implements IPlanetService {
 
   async startPlanetUpgrade(planetID: string, userID: string): Promise<Planet> {
     const planetToUpgrade = await this.getPlanet(planetID)
-
+    
     if (!planetToUpgrade) {
       return null
     }
@@ -33,10 +33,16 @@ export class PlanetService implements IPlanetService {
       .toISOString()
 
     this.updatePlanet(planetToUpgrade, userID)
+
+    return planetToUpgrade
   }
 
   async checkForUpgradeCompleted(userID: string, PlanetID: string): Promise<Planet> {
     const planetToCheck = await this.getPlanet(PlanetID)
+
+    if (!planetToCheck) {
+      return null
+    }
 
     if (planetToCheck.owner !== userID) {
       return null
@@ -56,7 +62,8 @@ export class PlanetService implements IPlanetService {
     if (durationLeft.asSeconds() <= 0) {
       planetToCheck.upgradeFinishedTime = null
       planetToCheck.level++
-      this.updatePlanet(planetToCheck, userID)
+      return this.updatePlanet(planetToCheck, userID)
+      
     }
   }
 
@@ -70,12 +77,12 @@ export class PlanetService implements IPlanetService {
 
   async updatePlanet(planet: Planet, userID: string): Promise<Planet> {
     const planetToUpdate = await this.planetRepository.fetchPlanet(planet.id)
-
+    
     if (planetToUpdate.owner !== userID) {
       return null
     }
 
-    this.planetRepository.updatePlanet(planet)
+    await this.planetRepository.updatePlanet(planet)
     return planet
   }
 

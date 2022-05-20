@@ -18,14 +18,7 @@ const UpgradeButton = ( { onClick, planet, onUpgradeTimeComplete }: any ) => {
 
   const [upgradeTimeLeft, setUpgradeTimeLeft] = useState<string>()
 
-  //let rerenderflag = false
-  
-  // const toggleRerender = () => {
-  //   if (rerenderflag) rerenderflag = true
-  // }
-
   const setTimerinfo = () => {
-    //planet.upgrading && console.log(upgradeFinishedTime.subtract(dayjs.utc()), dayjs.utc(), upgradeFinishedTime)
 
     const durationLeft = dayjs.duration(upgradeFinishedTime.diff(dayjs.utc()))
 
@@ -52,8 +45,9 @@ const UpgradeButton = ( { onClick, planet, onUpgradeTimeComplete }: any ) => {
   }
 
   useEffect(() => {
+
     let timer: null | NodeJS.Timer = null
-    if (planet.upgrading) {
+    if (planet.upgradeFinishedTime) {
       setUpgradeTimeLeft(setTimerinfo())
       timer = setInterval(() => {
         setUpgradeTimeLeft(setTimerinfo())
@@ -65,7 +59,7 @@ const UpgradeButton = ( { onClick, planet, onUpgradeTimeComplete }: any ) => {
   }, [planet?.upgradeFinishedTime])
 
   return (
-    <button type="button" className='UpgradeButton' onClick={onClick}>{!planet.upgrading ? "Upgrade" : upgradeTimeLeft}</button>
+    <button type="button" className='UpgradeButton' onClick={onClick}>{!planet.upgradeFinishedTime ? "Upgrade" : upgradeTimeLeft}</button>
   )
 }
 

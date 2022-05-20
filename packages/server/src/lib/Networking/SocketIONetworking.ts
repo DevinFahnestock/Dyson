@@ -20,6 +20,7 @@ export class SocketIONetworking implements INetworking {
     console.log('waiting on connection')
     this.server.on("connection", (socket) => {
       console.log("Connection established with socket ID: ", socket.handshake.address)
+
       this.onUpgradePlanet(socket)
       this.onUserStateChange(socket)
       this.onStartPlanetUpgrade(socket)
@@ -27,9 +28,9 @@ export class SocketIONetworking implements INetworking {
   }
 
   private onUpgradePlanet(socket: Socket) {
-    socket.on("checkCompleteUpgrade", async (planetID: string, userID: string) => {
-      const newPlanetData = await this.planetService.checkForUpgradeCompleted(planetID, userID)
-
+    socket.on("checkCompleteUpgrade", async ({ planetID, userID }) => {
+      const newPlanetData = await this.planetService.checkForUpgradeCompleted(userID, planetID)
+      
       if (newPlanetData) {
         socket.emit("planetUpdate", newPlanetData)
       }
@@ -56,8 +57,8 @@ export class SocketIONetworking implements INetworking {
   }
 
   private onStartPlanetUpgrade(socket: Socket) {
-    socket.on("upgradePlanet",async (planetID: string, userID: string) => {
-      this.planetService.startPlanetUpgrade(planetID, userID)
+    socket.on("upgradePlanet",async ({ planetID, userID }) => {
+      socket.emit("planetUpdate", await this.planetService.startPlanetUpgrade(planetID, userID))
     })
   }
 }

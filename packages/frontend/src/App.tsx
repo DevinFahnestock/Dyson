@@ -28,6 +28,9 @@ function App() {
   }, [user])
 
   const updatePlanet = (planetData: any) => {
+    if (!planetData) {
+      return
+    }
     setPlanets((planets) => {
       let copy: any[] = [...planets]
       copy[copy.findIndex((planet) => planet.id === planetData.id)] = planetData
