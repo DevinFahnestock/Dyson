@@ -57,8 +57,10 @@ export class SocketIONetworking implements INetworking {
 
       if (userData) {
         socket.emit(
-          "updateAllPlanets",
-          await this.planetService.getUserPlanets(user.uid)
+          "updateAll", {
+          planets: await this.planetService.getUserPlanets(user.uid),
+          resources: await this.warehouseService.getWarehouse(user.uid)
+          }
         );
 
         return userData;
@@ -73,10 +75,14 @@ export class SocketIONetworking implements INetworking {
       //create warehouse
       const warehouseID = await this.warehouseService.createWarehouse(user.uid)
 
-      console.log(await this.warehouseService.getWarehouse(warehouseID, user.uid))
+      console.log()
+
+
       socket.emit(
-        "updateAllPlanets",
-        await this.planetService.getUserPlanets(user.uid)
+        "updateAll", {
+        planets: await this.planetService.getUserPlanets(user.uid),
+        resources: await this.warehouseService.getWarehouse(warehouseID, user.uid)
+      }
       );
     });
   }

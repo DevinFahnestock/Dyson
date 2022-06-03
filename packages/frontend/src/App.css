@@ -34,3 +34,10 @@ body {
   justify-content: center;
   margin: 0.2em;
 }
+
+.UIdisplay {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 100px
+}

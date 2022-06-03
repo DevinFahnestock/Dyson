@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import io, { Socket } from "socket.io-client";
 
 import { useUser } from "./lib/firebase";
@@ -8,6 +8,7 @@ import NavBar from "./components/NavBar/NavBar";
 import PlanetView from "./components/PlanetView/PlanetView";
 import SignInScreen from "./components/SignInScreen/SignInScreen";
 import usePlanets from "./lib/gameData/usePlanets";
+import ResourceDisplay from "./components/ResourceDisplay/ResourceDisplay";
 
 const address = process.env.SERVER_ADDRESS || "localhost:25145";
 
@@ -15,6 +16,9 @@ function App() {
   const user: any = useUser();
   const { planets, updatePlanet, updateAllPlanets, clearPlanets }: any =
     usePlanets();
+
+  const [warehouse, setWarehouse] = useState();
+
   const socketRef = useRef<Socket | null>(null);
 
   useEffect(() => {
@@ -33,8 +37,9 @@ function App() {
       console.log("Successfully connected to server");
     });
 
-    socketRef.current.on("updateAllPlanets", (data) => {
-      updateAllPlanets(data);
+    socketRef.current.on("updateAll", ({ planets, resources }) => {
+      updateAllPlanets(planets);
+      setWarehouse(resources)
     });
 
     socketRef.current.on("planetUpdate", (data) => {
@@ -43,7 +48,7 @@ function App() {
 
     return () => {
       socketRef?.current?.off("connect");
-      socketRef?.current?.off("updateAllPlanets");
+      socketRef?.current?.off("updateAll");
       socketRef?.current?.off("planetUpdate");
     };
   }, [updateAllPlanets, updatePlanet]);
@@ -56,7 +61,7 @@ function App() {
   };
 
   const onUpgradeTimeComplete = (planetID: string) => {
-    console.log('checking')
+    console.log("checking");
     socketRef?.current?.emit("checkCompleteUpgrade", {
       planetID: planetID,
       userID: user.uid,
@@ -67,11 +72,14 @@ function App() {
     <div className="App">
       <NavBar />
       {user ? (
-        <PlanetView
-          planets={planets}
-          upgradeClick={upgradeClick}
-          onUpgradeTimeComplete={onUpgradeTimeComplete}
-        />
+        <div className="UIdisplay">
+          <ResourceDisplay warehouse={warehouse} />
+          <PlanetView
+            planets={planets}
+            upgradeClick={upgradeClick}
+            onUpgradeTimeComplete={onUpgradeTimeComplete}
+          />
+        </div>
       ) : (
         <SignInScreen />
       )}

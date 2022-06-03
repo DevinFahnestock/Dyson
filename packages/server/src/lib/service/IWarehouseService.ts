@@ -6,6 +6,6 @@ export interface IWarehouseService {
 
     createWarehouse(userID: string): Promise<string>
 
-    getWarehouse(warehouseID: string, userID: string): Promise<Warehouse>
+    getWarehouse(userID: string, warehouseID?: string): Promise<Warehouse>
 
 }

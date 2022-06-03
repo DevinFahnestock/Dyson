@@ -25,8 +25,15 @@ export class WarehouseService implements IWarehouseService {
         }, userID)
     }
 
-    getWarehouse(warehouseID: string, userID: string): Promise<Warehouse> {
-        return this.warehouseRepository.fetchWarehouse(userID, warehouseID)
+    async getWarehouse(userID: string, warehouseID?: string): Promise<Warehouse> {
+        if (warehouseID) {
+            return await this.warehouseRepository.fetchWarehouseByID(userID, warehouseID)
+        } else {
+            const warehouse = await this.warehouseRepository.fetchWarehousesByUser(userID)
+            return warehouse[0]
+        }
     }
+
+    
 
 }

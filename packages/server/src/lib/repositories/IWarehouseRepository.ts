@@ -1,4 +1,5 @@
 import { ResourceType } from "../shared";
+import { Warehouse } from "../Warehouse";
 
 export interface IWarehouseRepository {
 
@@ -8,7 +9,9 @@ export interface IWarehouseRepository {
 
     updateResource(resourceType: ResourceType, warehouseID: string, userID: string): Promise<void>
 
-    fetchWarehouse(userID: string, warehouseID?: string): Promise<any>
+    fetchWarehouseByID(userID: string, warehouseID?: string): Promise<Warehouse>
+
+    fetchWarehousesByUser(userID: string): Promise<Array<Warehouse>>
 
     createWarehouse(warehouse: any, userID: string): Promise<string>
 

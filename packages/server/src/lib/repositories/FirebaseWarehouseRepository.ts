@@ -22,11 +22,21 @@ export class FirebaseWarehouseRepository implements IWarehouseRepository {
         this.admin.firestore().collection("admin").doc("gameData").collection("warehouseData").doc(warehouseID) //find the resource and update its value to the number passed
     }
 
-    async fetchWarehouse(userID: string, warehouseID?: string): Promise<Warehouse> {
+    async fetchWarehouseByID(userID: string, warehouseID: string): Promise<Warehouse> {
         const warehousesRef = this.admin.firestore().collection("admin").doc("gameData").collection("warehouseData").doc(warehouseID)
         const warehouse: Warehouse = <Warehouse>(await warehousesRef.get()).data()
         if (userID === warehouse?.owner) { return warehouse }
         return null 
+    }
+
+    async fetchWarehousesByUser(userID: string): Promise<Array<Warehouse>> {
+        const warehouseQuery = await this.admin.firestore().collection("admin").doc("gameData").collection("warehouseData").where("owner", "==", userID).get()
+        const warehouses = []
+        warehouseQuery.forEach(warehouse => {
+            warehouses.push(warehouse.data())
+        })
+        return warehouses
+        
     }
 
     async createWarehouse(warehouse: Warehouse, userID: string): Promise<string> {
