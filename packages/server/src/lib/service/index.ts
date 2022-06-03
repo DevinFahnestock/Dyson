@@ -1,4 +1,6 @@
 export * from './IPlanetService'
 export * from './IUserService'
+export * from './IWarehouseService'
 export * from './PlanetService'
 export * from './UserService'
+export * from './warehouseService'

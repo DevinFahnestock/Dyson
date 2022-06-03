@@ -11,7 +11,7 @@ export class FirebasePlanetRepository implements IPlanetRepository {
   }
 
   async createPlanet(planet: Planet): Promise<Planet> {
-    const docRef = await this.admin.firestore().collection("admin").doc("gameData").collection("planetData").doc()
+    const docRef = this.admin.firestore().collection("admin").doc("gameData").collection("planetData").doc()
     
     planet.id = docRef.id
 

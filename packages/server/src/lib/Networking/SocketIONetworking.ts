@@ -1,6 +1,6 @@
 import { INetworking } from "./INetworking";
 import { Server, Socket } from "socket.io";
-import { IPlanetService, IUserService } from "../service";
+import { IPlanetService, IUserService, IWarehouseService } from "../service";
 import { PlanetType } from "../shared";
 
 export class SocketIONetworking implements INetworking {
@@ -8,16 +8,20 @@ export class SocketIONetworking implements INetworking {
   protected readonly server: Server;
   protected readonly planetService: IPlanetService;
   protected readonly userService: IUserService;
+  protected readonly warehouseService: IWarehouseService
+
 
   constructor(
     port: number,
     planetService: IPlanetService,
-    userService: IUserService
+    userService: IUserService,
+    warehouseService: IWarehouseService
   ) {
     this.port = port;
     this.server = new Server(this.port);
     this.planetService = planetService;
     this.userService = userService;
+    this.warehouseService = warehouseService
   }
 
   public listenForConnections() {
@@ -47,7 +51,7 @@ export class SocketIONetworking implements INetworking {
     });
   }
 
-  private async onUserStateChange(socket: Socket) {
+  private onUserStateChange(socket: Socket) {
     socket.on("userStateChanged", async (user: User) => {
       const userData = await this.userService.fetchUser(user);
 
@@ -66,6 +70,10 @@ export class SocketIONetworking implements INetworking {
       await this.planetService.createPlanet(user.uid, PlanetType.NoAtmosphere);
       await this.planetService.createPlanet(user.uid, PlanetType.Lava);
 
+      //create warehouse
+      const warehouseID = await this.warehouseService.createWarehouse(user.uid)
+
+      console.log(await this.warehouseService.getWarehouse(warehouseID, user.uid))
       socket.emit(
         "updateAllPlanets",
         await this.planetService.getUserPlanets(user.uid)
