@@ -1,8 +1,11 @@
 import { IWarehouseRepository } from "../repositories/IWarehouseRepository";
 import { Warehouse } from "../Warehouse";
 import { IWarehouseService } from "./IWarehouseService";
+import upgradeCosts from '../../resources/upgrade-costs.json'
 
 export class WarehouseService implements IWarehouseService {
+
+    
 
     private readonly warehouseRepository: IWarehouseRepository
 
@@ -10,7 +13,7 @@ export class WarehouseService implements IWarehouseService {
         this.warehouseRepository = warehouseRepository
     }
 
-    updateResources(): Promise<void> {
+    updateResources(warehouse: Warehouse): Promise<void> {
         throw new Error("Method not implemented.");
     }
 

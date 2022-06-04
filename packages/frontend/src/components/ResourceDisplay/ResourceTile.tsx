@@ -1,8 +1,9 @@
 import React from 'react'
+import './styles.css'
 
 const ResourceTile = ({ type, amount }: any ) => {
   return (
-    <div>
+    <div className='ResourceTile'>
         {type}: {amount}
     </div>
   )

@@ -2,6 +2,7 @@ import { INetworking } from "./INetworking";
 import { Server, Socket } from "socket.io";
 import { IPlanetService, IUserService, IWarehouseService } from "../service";
 import { PlanetType } from "../shared";
+import { Warehouse } from "../Warehouse";
 
 export class SocketIONetworking implements INetworking {
   protected readonly port: number;
@@ -75,9 +76,6 @@ export class SocketIONetworking implements INetworking {
       //create warehouse
       const warehouseID = await this.warehouseService.createWarehouse(user.uid)
 
-      console.log()
-
-
       socket.emit(
         "updateAll", {
         planets: await this.planetService.getUserPlanets(user.uid),
@@ -89,9 +87,14 @@ export class SocketIONetworking implements INetworking {
 
   private onStartPlanetUpgrade(socket: Socket) {
     socket.on("upgradePlanet", async ({ planetID, userID }) => {
+      const warehouse =  await this.warehouseService.getWarehouse(userID)
       const data = await this.planetService.startPlanetUpgrade(
         planetID,
-        userID
+        warehouse,
+        userID,
+        warehouse => {
+          this.warehouseService.updateResources(warehouse)
+        }
       );
 
       socket.emit("planetUpdate", data);

@@ -6,6 +6,8 @@ import { IPlanetService } from "./IPlanetService"
 import Time from "../Time/Time"
 import PlanetNames from "../../resources/planet-names.json"
 import upgradeTimes from "../../resources/upgrade-times.json"
+import upgradeCosts from '../../resources/upgrade-costs.json'
+import { Warehouse } from "../Warehouse"
 
 export class PlanetService implements IPlanetService {
   protected readonly planetRepository: IPlanetRepository
@@ -14,7 +16,7 @@ export class PlanetService implements IPlanetService {
     this.planetRepository = planetRepository
   }
 
-  async startPlanetUpgrade(planetID: string, userID: string): Promise<Planet> {
+  async startPlanetUpgrade(planetID: string, warehouse: Warehouse, userID: string, warehouseCalllback: (warehouse: Warehouse) => void): Promise<Planet> {
     const planetToUpgrade = await this.getPlanet(planetID)
     
     if (!planetToUpgrade) {
@@ -24,6 +26,23 @@ export class PlanetService implements IPlanetService {
     if (planetToUpgrade.upgradeFinishedTime) {
       return null
     }
+
+    const nextLevel = planetToUpgrade.level + 1
+    
+    const upgradeCost = upgradeCosts[nextLevel]
+
+    //think of a better way to do this that isnt a 3AM solution
+    if (upgradeCost.metal > warehouse.metal) {return null}
+    if (upgradeCost.organic > warehouse.organic) {return null}
+    if (upgradeCost.money > warehouse.money) {return null}
+    if (upgradeCost.food > warehouse.food) {return null}
+
+    warehouse.metal -= upgradeCost.metal
+    warehouse.organic -= upgradeCost.organic
+    warehouse.money -= upgradeCost.money
+    warehouse.food -= upgradeCost.food
+
+    warehouseCalllback(warehouse)
 
     const time = upgradeTimes[planetToUpgrade.level].split(":")
     planetToUpgrade.upgradeFinishedTime = Time.utc()

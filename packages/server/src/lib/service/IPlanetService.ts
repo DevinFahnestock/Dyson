@@ -1,6 +1,7 @@
 import { type } from "os"
 import { Planet } from "../Planet"
 import { PlanetType } from "../shared"
+import { Warehouse } from "../Warehouse"
 
 type nullablePlanet = Planet | null
 
@@ -16,7 +17,7 @@ export interface IPlanetService {
 
   checkForUpgradeCompleted(userID: string, PlanetID: string): Promise<Planet>
 
-  startPlanetUpgrade(planetID: string, userID: string): Promise<Planet>
+  startPlanetUpgrade(planetID: string,warehouse: Warehouse, userID: string, warehouseCalllback: (warehouse: Warehouse) => void): Promise<Planet>
 
 }
 
