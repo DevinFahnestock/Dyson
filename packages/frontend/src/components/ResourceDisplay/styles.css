@@ -1,0 +1,7 @@
+.ResourceGrid {
+    display: flex;
+    flex-direction: column;
+    align-content: flex-start;
+    border-top: solid salmon;
+    padding: 5px;
+}

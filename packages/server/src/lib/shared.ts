@@ -3,3 +3,10 @@ export enum PlanetType {
   Wet='wet',
   NoAtmosphere='noAtmosphere'
 }
+
+export enum ResourceType {
+  Metal='metal',
+  Organic='organic',
+  food='food',
+  energy='energy'
+}

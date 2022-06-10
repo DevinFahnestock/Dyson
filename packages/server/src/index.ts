@@ -2,9 +2,11 @@
 import admin from "firebase-admin"
 
 import { IUserRepository, IPlanetRepository, FirebasePlanetRepository, FirebaseUserRepository } from "./lib/repositories"
-import { IPlanetService, IUserService, PlanetService, UserService } from "./lib/service"
+import { IPlanetService, IUserService, IWarehouseService, PlanetService, UserService, WarehouseService } from "./lib/service"
 import { INetworking } from "./lib/Networking/INetworking"
 import { SocketIONetworking } from "./lib/Networking/SocketIONetworking"
+import { IWarehouseRepository } from "./lib/repositories/IWarehouseRepository"
+import { FirebaseWarehouseRepository } from "./lib/repositories/FirebaseWarehouseRepository"
 
 
 require("dotenv").config()
@@ -24,8 +26,11 @@ const userService: IUserService = new UserService(userRepository)
 const planetRepository: IPlanetRepository = new FirebasePlanetRepository(administrator)
 const planetService: IPlanetService = new PlanetService(planetRepository)
 
+const warehouseRepository: IWarehouseRepository = new FirebaseWarehouseRepository(administrator)
+const warehouseService: IWarehouseService = new WarehouseService(warehouseRepository)
+
 const port = 25145
 
-const network: INetworking = new SocketIONetworking(port, planetService, userService)
+const network: INetworking = new SocketIONetworking(port, planetService, userService, warehouseService)
 
 network.listenForConnections()
