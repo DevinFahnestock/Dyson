@@ -31,6 +31,8 @@ export class PlanetService implements IPlanetService {
     
     const upgradeCost = upgradeCosts[nextLevel]
 
+    console.log("upgradeCost", upgradeCost)
+
     //think of a better way to do this that isnt a 3AM solution
     if (upgradeCost.metal > warehouse.metal) {return null}
     if (upgradeCost.organic > warehouse.organic) {return null}

@@ -18,8 +18,12 @@ export class FirebaseWarehouseRepository implements IWarehouseRepository {
         throw new Error("Method not implemented.");
     }
 
-    async updateResource(resourceType: ResourceType, warehouseID: string, userID: string): Promise<void> {
-        this.admin.firestore().collection("admin").doc("gameData").collection("warehouseData").doc(warehouseID) //find the resource and update its value to the number passed
+    async updateResources(warehouse: Warehouse, userID: string): Promise<boolean> {
+        const warehouseRef = this.admin.firestore().collection("admin").doc("gameData").collection("warehouseData").doc(warehouse.id)
+        const warehouseData = (await warehouseRef.get()).data()
+        if (warehouseData.owner !== userID) { return false }
+        warehouseRef.update(warehouse)
+        return true
     }
 
     async fetchWarehouseByID(userID: string, warehouseID: string): Promise<Warehouse> {

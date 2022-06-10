@@ -7,7 +7,7 @@ export interface IWarehouseRepository {
 
     getResource(resourceType: ResourceType, warehouseID: string, userID: string): Promise<number>
 
-    updateResource(resourceType: ResourceType, warehouseID: string, userID: string): Promise<void>
+    updateResources(warehouse: Warehouse, userID: string): Promise<boolean>
 
     fetchWarehouseByID(userID: string, warehouseID?: string): Promise<Warehouse>
 

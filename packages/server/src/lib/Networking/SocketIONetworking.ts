@@ -87,13 +87,14 @@ export class SocketIONetworking implements INetworking {
 
   private onStartPlanetUpgrade(socket: Socket) {
     socket.on("upgradePlanet", async ({ planetID, userID }) => {
-      const warehouse =  await this.warehouseService.getWarehouse(userID)
+      const warehouse = await this.warehouseService.getWarehouse(userID)
       const data = await this.planetService.startPlanetUpgrade(
         planetID,
         warehouse,
         userID,
         warehouse => {
-          this.warehouseService.updateResources(warehouse)
+          this.warehouseService.updateResources(warehouse, userID)
+          socket.emit("warehouseUpdate", warehouse)
         }
       );
 

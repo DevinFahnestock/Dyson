@@ -2,7 +2,7 @@ import { Warehouse } from "../Warehouse"
 
 export interface IWarehouseService {
     
-    updateResources(warehouse: Warehouse): Promise<void>
+    updateResources(warehouse: Warehouse, userID: string): Promise<boolean>
 
     createWarehouse(userID: string): Promise<string>
 

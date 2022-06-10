@@ -46,10 +46,17 @@ function App() {
       updatePlanet(data);
     });
 
+    socketRef.current.on("warehouseUpdate", (data) => {
+      setWarehouse(data)
+      console.log("updateing warehouse", data)
+    })
+
+
     return () => {
       socketRef?.current?.off("connect");
       socketRef?.current?.off("updateAll");
       socketRef?.current?.off("planetUpdate");
+      socketRef?.current?.off("warehouseUpdate")
     };
   }, [updateAllPlanets, updatePlanet]);
 

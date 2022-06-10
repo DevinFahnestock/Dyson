@@ -13,8 +13,8 @@ export class WarehouseService implements IWarehouseService {
         this.warehouseRepository = warehouseRepository
     }
 
-    updateResources(warehouse: Warehouse): Promise<void> {
-        throw new Error("Method not implemented.");
+    updateResources(warehouse: Warehouse, userID: string): Promise<boolean> {
+        return this.warehouseRepository.updateResources(warehouse, userID)
     }
 
     createWarehouse(userID: string): Promise<string> {
@@ -36,7 +36,5 @@ export class WarehouseService implements IWarehouseService {
             return warehouse[0]
         }
     }
-
-    
 
 }

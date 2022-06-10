@@ -12,3 +12,13 @@
   gap: 1.5em;
   justify-content: space-around;
 }
+
+.UpgradeCost {
+  border-radius: 20px;
+  border: 2px solid beige;
+  background-color: rgb(78, 86, 87);
+  display: flex;
+  font-size: small;
+  padding: 20px;
+  text-align: center;
+}
