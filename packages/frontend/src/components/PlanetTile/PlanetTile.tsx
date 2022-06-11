@@ -12,6 +12,7 @@ interface PlanetTileProps {
   onUpgradeTimeComplete: () => void;
 }
 
+
 const PlanetTile = ({
   planet,
   upgradeClick,
@@ -22,7 +23,7 @@ const PlanetTile = ({
       <div className="Definition">
         <CelestialBodyRenderer type={planet.type} seed={planet.seed} />
         <h3>{planet.name}</h3>
-        <UpgradeCost planet={planet}/>
+        {!planet.upgradeFinishedTime && <UpgradeCost planet={planet}/>}
         <div>
           Level {planet.level}
           <br />
@@ -38,3 +39,4 @@ const PlanetTile = ({
 }; 
 
 export default PlanetTile;
+
