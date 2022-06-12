@@ -1,6 +1,7 @@
+
 .UpgradeButton {
     align-items: center;
-    background-image: linear-gradient(135deg, #6FD08C 40%, #5FAC76);
+    background-image: linear-gradient(135deg, #494949 40%, #3f3f3f);
     border: 0;
     border-radius: 10px;
     box-sizing: border-box;
@@ -18,4 +19,12 @@
     padding-left: 20px;
     padding-right: 20px;
     padding-top: 3px;
-  }
+}
+
+.UpgradeButton[data-upgradeable="true"] { 
+    background-image: linear-gradient(135deg, #6FD08C 40%, #5FAC76);
+}
+
+.UpgradeButton[data-upgrading="true"] {
+    background-image: linear-gradient(135deg, #00b5d4 40%, #006f83);
+}
