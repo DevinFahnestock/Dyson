@@ -8,7 +8,6 @@ import { SocketIONetworking } from "./lib/Networking/SocketIONetworking"
 import { IWarehouseRepository } from "./lib/repositories/IWarehouseRepository"
 import { FirebaseWarehouseRepository } from "./lib/repositories/FirebaseWarehouseRepository"
 
-
 require("dotenv").config()
 
 let administrator = admin.initializeApp({

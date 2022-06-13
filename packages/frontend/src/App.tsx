@@ -50,7 +50,6 @@ function App() {
 
     socketRef.current.on("warehouseUpdate", (data) => {
       updateWarehouse(data)
-      console.log("updateing warehouse", data)
     })
 
     return () => {
@@ -59,7 +58,7 @@ function App() {
       socketRef?.current?.off("planetUpdate")
       socketRef?.current?.off("warehouseUpdate")
     }
-  }, [updateAllPlanets, updatePlanet])
+  }, [updateAllPlanets, updatePlanet, updateWarehouse])
 
   const upgradeClick = (planetID: string) => {
     socketRef?.current?.emit("upgradePlanet", {
@@ -69,7 +68,6 @@ function App() {
   }
 
   const onUpgradeTimeComplete = (planetID: string) => {
-    console.log("checking")
     socketRef?.current?.emit("checkCompleteUpgrade", {
       planetID: planetID,
       userID: user.uid,

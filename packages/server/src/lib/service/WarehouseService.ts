@@ -3,9 +3,12 @@ import { Warehouse } from "../Warehouse";
 import { IWarehouseService } from "./IWarehouseService";
 import upgradeCosts from '../../resources/upgrade-costs.json'
 
+
+import config from '../../resources/config.json'
+
 export class WarehouseService implements IWarehouseService {
 
-    
+    private readonly starterResources = config.StarterResources
 
     private readonly warehouseRepository: IWarehouseRepository
 
@@ -21,10 +24,10 @@ export class WarehouseService implements IWarehouseService {
         return this.warehouseRepository.createWarehouse({
             id: null,
             owner: userID,
-            metal: 10,
-            organic: 10,
-            food: 10,
-            money: 0
+            metal: this.starterResources.metal,
+            organic: this.starterResources.organic,
+            food: this.starterResources.food,
+            money: this.starterResources.money
         }, userID)
     }
 
