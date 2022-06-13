@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from "react"
 import io, { Socket } from "socket.io-client"
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 
 import { useUser } from "./lib/firebase"
 
@@ -10,6 +11,7 @@ import SignInScreen from "./components/SignInScreen/SignInScreen"
 import usePlanets from "./lib/gameData/usePlanets"
 import ResourceDisplay from "./components/ResourceDisplay/ResourceDisplay"
 import useWarehouse from "./lib/gameData/useWarehouse"
+import LeaderBoard from "./components/Leaderboard/LeaderBoard"
 
 const address = process.env.SERVER_ADDRESS || "localhost:25145"
 
@@ -18,8 +20,7 @@ function App() {
   const { planets, updatePlanet, updateAllPlanets, clearPlanets }: any =
     usePlanets()
   //const { warehouse, clearWarehouse, updateResource, updateWarehouse }: any =
-  const { warehouse, updateWarehouse }: any =
-    useWarehouse()
+  const { warehouse, updateWarehouse }: any = useWarehouse()
 
   const socketRef = useRef<Socket | null>(null)
 
@@ -75,21 +76,31 @@ function App() {
   }
 
   return (
-    <div className='App'>
-      <NavBar />
-      {user ? (
-        <div className='UIdisplay'>
-          <ResourceDisplay warehouse={warehouse} />
-          <PlanetView
-            planets={planets}
-            upgradeClick={upgradeClick}
-            onUpgradeTimeComplete={onUpgradeTimeComplete}
+    <Router>
+      <div className='App'>
+        <NavBar />
+        <Routes>
+          <Route
+            path='/'
+            element={
+              user ? (
+                <div className='UIdisplay'>
+                  <ResourceDisplay warehouse={warehouse} />
+                  <PlanetView
+                    planets={planets}
+                    upgradeClick={upgradeClick}
+                    onUpgradeTimeComplete={onUpgradeTimeComplete}
+                  />
+                </div>
+              ) : (
+                <SignInScreen />
+              )
+            }
           />
-        </div>
-      ) : (
-        <SignInScreen />
-      )}
-    </div>
+          <Route path='/leaderboard' element={<LeaderBoard />} />
+        </Routes>
+      </div>
+    </Router>
   )
 }
 

@@ -18,7 +18,8 @@
     "packages/shared"
   ],
   "dependencies": {
-    "concurrently": "^7.2.0"
+    "concurrently": "^7.2.0",
+    "react-router-dom": "^6.3.0"
   },
   "scripts": {
     "dev": "concurrently \"npm run -w=shared build\" \"npm run -w=dyson start\" \"npm run -w=dyson-server dev\"",

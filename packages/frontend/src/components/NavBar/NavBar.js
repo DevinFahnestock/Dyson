@@ -2,6 +2,8 @@ import React from "react"
 import "./styles.css"
 
 import { useSignInWithGoogle, useUser, useSignOut } from "../../lib/firebase"
+import { Link } from "react-router-dom"
+
 
 const NavBar = () => {
   const user = useUser()
@@ -15,6 +17,8 @@ const NavBar = () => {
         <a href="/">
           <h1>Dyson</h1>
         </a>
+        <Link to="/leaderboard">leaderboard</Link>
+        <Link to="/">My Planets</Link>
         {!user && (
           <a className="SignInButton" onClick={() => signInWithPopup()}>
             Sign in
