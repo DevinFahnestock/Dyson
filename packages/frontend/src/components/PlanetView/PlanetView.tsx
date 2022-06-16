@@ -1,6 +1,8 @@
 import React from 'react'
 import PlanetTile from '../PlanetTile/PlanetTile'
 
+import './styles.css'
+
 const PlanetView = ({ onUpgradeTimeComplete, upgradeClick, planets }: any) => {
 
   return (
