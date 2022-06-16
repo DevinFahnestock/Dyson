@@ -1,23 +1,32 @@
 import React, { useContext, useState, useCallback } from "react"
+import { Planet } from "../Planet"
 
-export const PlanetsContext = React.createContext([])
+export const PlanetsContext = React.createContext<any>([])
 
-export const PlanetsProvider = ({ children }) => {
-  const [planets, setPlanets] = useState([])
+interface PlanetApi {
+  planets: Planet[],
+  clearPlanets: () => void,
+  updatePlanet: (planetData: Planet) => void,
+  updateAllPlanets: (data: Planet[]) => void,
+}
+
+
+export const PlanetsProvider = ({ children }: any) => {
+  const [planets, setPlanets] = useState<Planet[]>([])
 
   const clearPlanets = useCallback(() => {
     setPlanets([])
   }, [setPlanets])
 
   const updatePlanet = useCallback(
-    (planetData) => {
+    (planetData: Planet) => {
       if (!planetData) {
         return
       }
 
       setPlanets((planets) => {
         const planetIndex = planets.findIndex(
-          (planet) => planet.id === planetData.id
+          (planet: Planet) => planet.id === planetData.id
         )
 
         let copy = [...planets]
@@ -30,13 +39,13 @@ export const PlanetsProvider = ({ children }) => {
   )
 
   const updateAllPlanets = useCallback(
-    (data) => {
+    (data: Planet[]) => {
       setPlanets(data)
     },
     [setPlanets]
   )
 
-  const planetApi = {
+  const planetApi: PlanetApi = {
     planets,
     clearPlanets,
     updatePlanet,

@@ -1,8 +1,8 @@
 import React from 'react'
 import { Planet } from 'src/lib/Planet'
 
-import upgradeCosts from "../../lib/upgrade-costs.json"
-import upgradeTimes from "../../lib/upgrade-times.json"
+import upgradeCosts from "../../lib/gameData/upgrade-costs.json"
+import upgradeTimes from "../../lib/gameData/upgrade-times.json"
 
 
 interface props {

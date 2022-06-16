@@ -1,8 +1,9 @@
+import { Auth } from 'firebase/auth'
 import { useContext } from 'react'
 import { AuthenticationContext } from './authenticationProvider'
 
 
-const useAuthentication = () => {
+const useAuthentication = (): Auth | null => {
   return useContext(AuthenticationContext)
 }
 
