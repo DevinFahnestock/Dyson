@@ -1,0 +1,11 @@
+.Planetview {
+    display: flex;
+    margin: 20px;
+    flex-direction: column;
+    border: thick solid salmon;
+    background-image: linear-gradient(#414a4c, #3d4c51);
+}
+
+.Planetview h3 {
+    margin: 1% 1ch;
+}

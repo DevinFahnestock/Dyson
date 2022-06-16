@@ -3,8 +3,8 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 
 import "./App.css"
 import NavBar from "./components/NavBar/NavBar"
-import LeaderBoard from "./components/Leaderboard/LeaderBoard"
-import { SolarSystemView } from "./components/SolarSystemView/SolarSystemView"
+import LeaderBoard from "./pages/Leaderboard/LeaderBoard"
+import { SolarSystemView } from "./pages/SolarSystemView/SolarSystemView"
 
 function App() {
   return (
