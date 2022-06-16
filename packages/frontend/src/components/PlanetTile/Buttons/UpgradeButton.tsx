@@ -6,8 +6,10 @@ import duration from "dayjs/plugin/duration"
 import relativeTime from "dayjs/plugin/relativeTime"
 import dayjs from "dayjs"
 
-import UpgradeCosts from '../../../lib/upgrade-costs.json'
+import UpgradeCosts from "../../../lib/gameData/upgrade-costs.json"
 import useWarehouse from "src/lib/gameData/useWarehouse"
+
+import { resourcesMet, isUpgrading } from "./helpers/UpgradeValidations"
 
 dayjs.extend(duration)
 dayjs.extend(utc)
@@ -17,9 +19,9 @@ const UpgradeButton = ({ onClick, planet, onUpgradeTimeComplete }: any) => {
   const upgradeFinishedTime = dayjs.utc(planet.upgradeFinishedTime)
   const [upgradeTimeLeft, setUpgradeTimeLeft] = useState<string>()
 
-  const { warehouse }: any =useWarehouse()
+  const { warehouse }: any = useWarehouse()
 
-
+  const nextLevelReq = UpgradeCosts[planet.level + 1]
 
   const setTimerinfo = (timer: null | NodeJS.Timer) => {
     const durationLeft = dayjs.duration(upgradeFinishedTime.diff(dayjs.utc()))
@@ -36,9 +38,7 @@ const UpgradeButton = ({ onClick, planet, onUpgradeTimeComplete }: any) => {
         timerText = durationLeft.format("m:ss")
       } else {
         timerText =
-          durationLeft.asSeconds() > 1
-            ? durationLeft.format("s") + " seconds"
-            : durationLeft.format("s") + " second"
+          durationLeft.asSeconds() > 1 ? durationLeft.format("s") + " seconds" : durationLeft.format("s") + " second"
       }
     } else {
       timerText = "Finished"
@@ -46,23 +46,8 @@ const UpgradeButton = ({ onClick, planet, onUpgradeTimeComplete }: any) => {
       onUpgradeTimeComplete?.()
     }
 
-    return timerText;
+    return timerText
   }
-
-  const nextLevelReq = UpgradeCosts[planet.level + 1]
-
-  const resourcesMet = () => {
-    if (nextLevelReq.food >= warehouse.food) { return false }
-    if (nextLevelReq.metal >= warehouse.metal) { return false }
-    if (nextLevelReq.money >= warehouse.money) { return false }
-    if (nextLevelReq.organic >= warehouse.organic) { return false }
-    return true 
-  }
-
-    const upgrading = () => {
-      if (planet?.upgradeFinishedTime) {return true}
-      return false
-    }
 
   useEffect(() => {
     let timer: null | NodeJS.Timer = null
@@ -77,11 +62,17 @@ const UpgradeButton = ({ onClick, planet, onUpgradeTimeComplete }: any) => {
 
     return () => {
       timer && clearInterval(timer)
-    };
+    }
   }, [planet?.upgradeFinishedTime])
 
   return (
-    <button type="button" className="UpgradeButton" onClick={onClick} data-upgrading={upgrading()} data-upgradeable={resourcesMet()}>
+    <button
+      type='button'
+      className='UpgradeButton'
+      onClick={onClick}
+      data-upgrading={isUpgrading(planet)}
+      data-upgradeable={resourcesMet(nextLevelReq, warehouse)}
+    >
       {!planet.upgradeFinishedTime ? "Upgrade" : upgradeTimeLeft}
     </button>
   )

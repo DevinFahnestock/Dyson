@@ -3,13 +3,14 @@ import "./styles.css"
 
 import { useSignInWithGoogle, useUser, useSignOut } from "../../lib/firebase"
 import { Link } from "react-router-dom"
+import { User } from "firebase/auth"
 
 
 const NavBar = () => {
-  const user = useUser()
+  const user: User | null = useUser()
   const signOut = useSignOut()
 
-  const { signInWithPopup, loading, error } = useSignInWithGoogle()
+  const { signInWithPopup } = useSignInWithGoogle()
 
   return (
     <div className="container">
@@ -32,7 +33,7 @@ const NavBar = () => {
                 signOut()
                 }}>Sign out</a>
             </div>
-            <img src={user.photoURL} alt="Profile" />
+            <img src={user.photoURL!} alt="Profile" />
           </div>
         )}
       </nav>
