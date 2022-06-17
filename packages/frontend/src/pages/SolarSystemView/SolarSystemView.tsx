@@ -42,7 +42,7 @@ export const SolarSystemView = () => {
       {user ? (
         <div className='UIdisplay'>
           <ResourceDisplay warehouse={warehouse} />
-          <PlanetView planets={planets} upgradeClick={upgradeClick} onUpgradeTimeComplete={onUpgradeTimeComplete} />
+          <PlanetView planets={planets} upgradeClick={upgradeClick} onUpgradeTimeComplete={onUpgradeTimeComplete} socket={socketRef.current} user={user}/>
         </div>
       ) : (
         <SignInScreen />

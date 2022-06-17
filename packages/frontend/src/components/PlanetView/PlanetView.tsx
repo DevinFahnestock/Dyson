@@ -3,7 +3,9 @@ import PlanetTile from '../PlanetTile/PlanetTile'
 
 import './styles.css'
 
-const PlanetView = ({ onUpgradeTimeComplete, upgradeClick, planets }: any) => {
+const PlanetView = ({ onUpgradeTimeComplete, upgradeClick, planets, user, socket }: any) => {
+
+console.log(user, socket)
 
   return (
     <div className="Planetview">
@@ -13,8 +15,8 @@ const PlanetView = ({ onUpgradeTimeComplete, upgradeClick, planets }: any) => {
             <PlanetTile
               key={planet.id}
               planet={planet}
-              upgradeClick={() => upgradeClick(planet.id)}
-              onUpgradeTimeComplete={() => onUpgradeTimeComplete(planet.id)
+              upgradeClick={() => upgradeClick(planet.id, socket, user)}
+              onUpgradeTimeComplete={() => onUpgradeTimeComplete(planet.id, socket, user)
               }
             />
           ))}
