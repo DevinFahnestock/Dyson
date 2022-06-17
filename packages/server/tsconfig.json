@@ -1,18 +1,8 @@
 {
+  "extends": "../../tsconfig.build.json",
   "compilerOptions": {
-    "module": "commonjs",
     "outDir": "./dist",
-    // "rootDir": ".",
-    "target": "es2017",
-    "esModuleInterop": true,
-    "baseUrl": ".",
-    "jsx": "preserve",
-    "resolveJsonModule": true,
-    // "paths": {
-    //   "@server/*": ["server/*"],
-    //   "@cli/*": ["cli/*"]
-    // },
-    "plugins": [{ "transform": "typescript-transform-paths" }]
   },
+  "include": ["./**/*.ts"],
   "exclude": ["dist", "node_modules"]
 }

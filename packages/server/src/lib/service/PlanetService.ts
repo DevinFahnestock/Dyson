@@ -3,7 +3,7 @@ import { IPlanetRepository } from "../repositories/IPlanetRepository"
 import { PlanetType } from "../shared"
 import { IPlanetService } from "./IPlanetService"
 
-import Time from "../Time/Time"
+import Time from   "@dyson/shared/src/Time/Time" 
 import PlanetNames from "../../resources/planet-names.json"
 import upgradeTimes from "../../resources/upgrade-times.json"
 import upgradeCosts from '../../resources/upgrade-costs.json'
