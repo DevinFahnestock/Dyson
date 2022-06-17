@@ -1,6 +1,6 @@
 import { app } from "firebase-admin";
-import { ResourceType } from "../shared";
-import { Warehouse } from "../Warehouse";
+import { ResourceType } from "@dyson/shared/src/shared";
+import { Warehouse } from "@dyson/shared/src/Warehouse";
 import { IWarehouseRepository as IWarehouseRepository } from "./IWarehouseRepository";
 
 export class FirebaseWarehouseRepository implements IWarehouseRepository {

@@ -1,9 +1,6 @@
-import { type } from "os"
-import { Planet } from "../Planet"
-import { PlanetType } from "../shared"
-import { Warehouse } from "../Warehouse"
-
-type nullablePlanet = Planet | null
+import { Planet } from "@dyson/shared/src/Planet"
+import { PlanetType } from "@dyson/shared/src/shared"
+import { Warehouse } from "@dyson/shared/src/Warehouse"
 
 export interface IPlanetService {
 

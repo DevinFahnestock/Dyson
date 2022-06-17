@@ -1,4 +1,4 @@
-import { Planet } from "../Planet"
+import { Planet } from "@dyson/shared/src/Planet"
 
 export interface IPlanetRepository {
 

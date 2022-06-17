@@ -1,3 +1,5 @@
+import type { User } from "@dyson/shared/src/User"
+
 import { app } from "firebase-admin"
 import { IUserRepository } from './IUserRepository'
 

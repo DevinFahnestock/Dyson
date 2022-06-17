@@ -1,4 +1,4 @@
-import { Warehouse } from "../Warehouse"
+import { Warehouse } from "@dyson/shared/src/Warehouse"
 
 export interface IWarehouseService {
     
