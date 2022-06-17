@@ -6,3 +6,6 @@ dayjs.extend(utc)
 dayjs.extend(duration)
 
 export default dayjs
+
+export { utc }
+export { duration }

@@ -1,4 +1,4 @@
-import type { User } from "@dyson/shared/src/User"
+import type { User } from "@dyson/shared/dist/User"
 
 export interface IUserService {
 

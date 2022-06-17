@@ -16,6 +16,5 @@
         "paths": {
             "@dyson/*": ["./packages/*/"]
         },
-        "plugins": [{ "transform": "typescript-transform-paths" }]
     }
 }

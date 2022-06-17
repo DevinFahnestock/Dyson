@@ -1,4 +1,4 @@
-import type { User } from "@dyson/shared/src/User"
+import type { User } from "@dyson/shared/dist/User"
  
 import { IUserRepository } from "../repositories/IUserRepository";
 import { IUserService } from "./IUserService";

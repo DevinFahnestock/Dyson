@@ -1,5 +1,5 @@
 import { IWarehouseRepository } from "../repositories/IWarehouseRepository";
-import { Warehouse } from "@dyson/shared/src/Warehouse";
+import { Warehouse } from "@dyson/shared/dist/Warehouse";
 import { IWarehouseService } from "./IWarehouseService";
 import upgradeCosts from '../../resources/upgrade-costs.json'
 

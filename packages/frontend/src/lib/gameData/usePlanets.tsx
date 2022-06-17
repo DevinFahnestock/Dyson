@@ -1,5 +1,6 @@
+import type { Planet } from '@dyson/shared/dist/Planet'
+
 import React, { useContext, useState, useCallback } from "react"
-import { Planet } from "../Planet"
 
 export const PlanetsContext = React.createContext<any>([])
 

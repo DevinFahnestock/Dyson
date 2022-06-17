@@ -9,8 +9,6 @@
   },
   "author": "",
   "license": "ISC",
-  "source": "index.ts",
-  "main": "./index.ts",
   "files": ["dist/**/*"],
   "publishConfig": {
     "directory": "dist"

@@ -22,7 +22,7 @@
     "react-router-dom": "^6.3.0"
   },
   "scripts": {
-    "start": "npm run start -ws",
+    "start": "concurrently \"npm run -w=@dyson/shared start\" \"npm run -w=@dyson/frontend start\" \"npm run -w=@dyson/server start\"",
     "build": "npm run build -ws"
   }
 }

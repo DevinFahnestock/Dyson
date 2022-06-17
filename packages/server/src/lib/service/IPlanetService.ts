@@ -1,6 +1,6 @@
-import { Planet } from "@dyson/shared/src/Planet"
-import { PlanetType } from "@dyson/shared/src/shared"
-import { Warehouse } from "@dyson/shared/src/Warehouse"
+import { Planet } from "@dyson/shared/dist/Planet"
+import { PlanetType } from "@dyson/shared/dist/shared"
+import { Warehouse } from "@dyson/shared/dist/Warehouse"
 
 export interface IPlanetService {
 

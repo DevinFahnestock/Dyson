@@ -1,5 +1,5 @@
-import { ResourceType } from "@dyson/shared/src/shared";
-import { Warehouse } from "@dyson/shared/src/Warehouse";
+import { ResourceType } from "@dyson/shared/dist/shared";
+import { Warehouse } from "@dyson/shared/dist/Warehouse";
 
 export interface IWarehouseRepository {
 

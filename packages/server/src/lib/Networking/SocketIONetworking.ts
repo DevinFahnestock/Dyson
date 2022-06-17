@@ -1,10 +1,10 @@
-import type { User } from "@dyson/shared/src/User"
+import type { User } from "@dyson/shared/dist/User"
 
 import { INetworking } from "./INetworking";
 import { Server, Socket } from "socket.io";
 import { IPlanetService, IUserService, IWarehouseService } from "../service";
-import { PlanetType } from "@dyson/shared/src/shared";
-import { Warehouse } from "@dyson/shared/src/Warehouse";
+import { PlanetType } from "@dyson/shared/dist/shared";
+import { Warehouse } from "@dyson/shared/dist/Warehouse";
 
 export class SocketIONetworking implements INetworking {
   protected readonly port: number;

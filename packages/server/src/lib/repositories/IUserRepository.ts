@@ -1,5 +1,5 @@
 
-import { User } from "@dyson/shared/src/User"
+import { User } from "@dyson/shared/dist/User"
 
 export interface IUserRepository {
 
