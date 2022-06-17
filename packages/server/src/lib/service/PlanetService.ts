@@ -116,6 +116,7 @@ export class PlanetService implements IPlanetService {
       name: PlanetNames[Math.floor(Math.random() * PlanetNames.length)],
       created: Time.utc().toISOString(),
       id: null,
+      resourceGenerator
     }
 
     return this.planetRepository.createPlanet(planet)
