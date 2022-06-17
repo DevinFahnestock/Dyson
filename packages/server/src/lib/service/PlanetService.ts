@@ -4,9 +4,9 @@ import { PlanetType } from "@dyson/shared/dist/Shared"
 import { IPlanetService } from "./IPlanetService"
 
 import Time from  "@dyson/shared/dist/Time/Time" 
-import PlanetNames from "../../resources/planet-names.json"
-import upgradeTimes from "../../resources/upgrade-times.json"
-import upgradeCosts from '../../resources/upgrade-costs.json'
+import PlanetNames from "@dyson/shared/src/resources/planet-names.json"
+import upgradeTimes from "@dyson/shared/src/resources/upgrade-times.json"
+import upgradeCosts from '@dyson/shared/src/resources/upgrade-costs.json'
 import { Warehouse } from "@dyson/shared/dist/Warehouse"
 
 

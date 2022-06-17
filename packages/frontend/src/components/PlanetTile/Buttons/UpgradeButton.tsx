@@ -6,7 +6,7 @@ import duration from "dayjs/plugin/duration"
 import relativeTime from "dayjs/plugin/relativeTime"
 import dayjs from "dayjs"
 
-import UpgradeCosts from "../../../lib/gameData/upgrade-costs.json"
+import UpgradeCosts from "@dyson/shared/src/resources/upgrade-costs.json"
 import useWarehouse from "src/lib/gameData/useWarehouse"
 
 import { resourcesMet, isUpgrading } from "./helpers/UpgradeValidations"

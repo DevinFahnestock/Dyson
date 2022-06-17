@@ -1,5 +1,5 @@
-import { Planet } from "src/lib/Planet"
-import { Warehouse } from "src/lib/Warehouse"
+import { Planet } from "@dyson/shared/dist/Planet"
+import { Warehouse } from "@dyson/shared/dist/Warehouse"
 
 export const resourcesMet = (nextLevelReq: any, warehouse: Warehouse) => {
   if (nextLevelReq.food >= warehouse.food) {

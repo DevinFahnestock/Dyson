@@ -1,9 +1,9 @@
 import { IWarehouseRepository } from "../repositories/IWarehouseRepository";
 import { Warehouse } from "@dyson/shared/dist/Warehouse";
 import { IWarehouseService } from "./IWarehouseService";
-import upgradeCosts from '../../resources/upgrade-costs.json'
+import upgradeCosts from '@dyson/shared/src/resources/upgrade-costs.json'
 
-import config from '../../resources/config.json'
+import config from '@dyson/shared/src/resources/config.json'
 
 export class WarehouseService implements IWarehouseService {
 

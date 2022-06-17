@@ -1,8 +1,8 @@
 import React from 'react'
-import { Planet } from 'src/lib/Planet'
+import { Planet } from '@dyson/shared/dist/Planet'
 
-import upgradeCosts from "../../lib/gameData/upgrade-costs.json"
-import upgradeTimes from "../../lib/gameData/upgrade-times.json"
+import upgradeTimes from "@dyson/shared/src/resources/upgrade-times.json"
+import upgradeCosts from "@dyson/shared/src/resources/upgrade-costs.json"
 
 
 interface props {

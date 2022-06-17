@@ -1,5 +1,5 @@
 import React, { useContext, useState, useCallback } from "react"
-import { Warehouse } from "../Warehouse"
+import { Warehouse } from "@dyson/shared/dist/Warehouse"
 
 export const WarehouseContext = React.createContext({})
 

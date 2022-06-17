@@ -4,7 +4,7 @@ import { CelestialBody } from "src/lib/pixelPlanets/core";
 import AtmospherelessPlanet from "src/lib/pixelPlanets/bodies/planets/prototypes/AtmospherelessPlanet";
 import LavaPlanet from "src/lib/pixelPlanets/bodies/planets/prototypes/LavaPlanet";
 import WetPlanet from "src/lib/pixelPlanets/bodies/planets/prototypes/WetPlanet";
-import { PlanetType } from "../../../lib/shared";
+import { PlanetType } from "@dyson/shared/dist/shared";
 
 import CelestialBodyRenderer from "./CelestialBodyRenderer";
 
