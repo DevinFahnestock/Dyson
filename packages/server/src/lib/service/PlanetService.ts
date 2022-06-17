@@ -1,13 +1,14 @@
-import { Planet } from "../Planet"
+import { Planet } from "@dyson/shared/dist/Planet"
 import { IPlanetRepository } from "../repositories/IPlanetRepository"
-import { PlanetType } from "../shared"
+import { PlanetType } from "@dyson/shared/dist/Shared"
 import { IPlanetService } from "./IPlanetService"
 
-import Time from "../Time/Time"
+import Time from  "@dyson/shared/dist/Time/Time" 
 import PlanetNames from "../../resources/planet-names.json"
 import upgradeTimes from "../../resources/upgrade-times.json"
 import upgradeCosts from '../../resources/upgrade-costs.json'
-import { Warehouse } from "../Warehouse"
+import { Warehouse } from "@dyson/shared/dist/Warehouse"
+
 
 export class PlanetService implements IPlanetService {
   protected readonly planetRepository: IPlanetRepository

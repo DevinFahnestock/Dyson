@@ -1,7 +1,6 @@
 import { app } from "firebase-admin"
 import { IPlanetRepository } from './IPlanetRepository'
-import { Planet } from '../Planet'
-
+import { Planet } from "@dyson/shared/dist/Planet"
 
 export class FirebasePlanetRepository implements IPlanetRepository {
   protected readonly admin: app.App

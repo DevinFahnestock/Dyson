@@ -1,15 +1,16 @@
 {
-  "name": "shared",
+  "name": "@dyson/shared",
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "build": "ttsc --watch",
+    "build": "ttsc",
+    "start": "ttsc --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
-  "type": "module",
-  "source": "index.ts",
-  "main": "./index.ts",
-  "module": "./index.ts"
+  "files": ["dist/**/*"],
+  "publishConfig": {
+    "directory": "dist"
+  }
 }

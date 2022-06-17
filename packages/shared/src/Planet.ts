@@ -1,4 +1,4 @@
-import { PlanetType } from '../lib/shared'
+import { PlanetType } from './shared'
 
 export interface Planet {
   id: string

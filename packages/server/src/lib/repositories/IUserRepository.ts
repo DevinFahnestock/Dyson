@@ -1,4 +1,6 @@
 
+import { User } from "@dyson/shared/dist/User"
+
 export interface IUserRepository {
 
   createNewUser(user: User): Promise<User>
