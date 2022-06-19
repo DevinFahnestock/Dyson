@@ -16,7 +16,7 @@ export interface IPlanetService {
 
   startPlanetUpgrade(planetID: string,warehouse: Warehouse, userID: string, warehouseCalllback: (warehouse: Warehouse) => void): Promise<Planet>
 
-  getTopPlanets(): Planet[]
+  getTopTenPlanets(): Promise<Planet[]>
 
 }
 

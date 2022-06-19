@@ -2,12 +2,9 @@ import React from "react";
 import "./styles.css";
 
 import CelestialBodyRenderer from "./CelestialBodyRenderer";
-import UpgradeCost from "./UpgradeCost";
 
 interface PlanetTileProps {
   planet: any;
-  upgradeClick: () => void;
-  onUpgradeTimeComplete: () => void;
 }
 
 const PlanetTileSimpleView = ({
@@ -18,9 +15,9 @@ const PlanetTileSimpleView = ({
       <div className="Definition">
         <CelestialBodyRenderer type={planet.type} seed={planet.seed} />
         <h3>{planet.name}</h3>
-        {!planet.upgradeFinishedTime && <UpgradeCost planet={planet}/>}
-        <div>
-          Level {planet.level}
+        <div className="SimpleDescription">
+          Level {planet.level} <br />
+          Owner: {planet.owner}
         </div>
       </div>
     </div>

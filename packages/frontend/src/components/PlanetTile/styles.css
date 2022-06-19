@@ -22,3 +22,8 @@
   padding: 20px;
   text-align: center;
 }
+
+.SimpleDescription {
+  display: flex;
+  flex-direction: column;
+}

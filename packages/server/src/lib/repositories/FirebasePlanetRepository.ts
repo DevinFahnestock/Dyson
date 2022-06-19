@@ -40,9 +40,19 @@ export class FirebasePlanetRepository implements IPlanetRepository {
     return results
   }
 
-  fetchTopPlanets(): Promise<Planet[]> {
+  async fetchTopPlanets( limit: number ): Promise<Planet[]> {
     const planetsRef = this.admin.firestore().collection("admin").doc("gameData").collection("planetData")
-    const topPlanets = await planetsRef.where()
+    
+    const topPlanetsQuery = await planetsRef.orderBy("level", "desc").limit(limit).get()
+    
+    let planets = []
+
+    topPlanetsQuery.forEach(docRef => {
+      planets.push(docRef.data())
+    })
+
+    return planets
+
   }
 
 }

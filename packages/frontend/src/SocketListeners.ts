@@ -25,7 +25,6 @@ export const StartAllSocketListeners = (
   currentSocket.on("warehouseUpdate", (data) => {
     updateWarehouse(data)
   })
-
 }
 
 export const disableAllSocketListeners = (currentSocket: Socket | null) => {

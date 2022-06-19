@@ -33,12 +33,13 @@ export class SocketIONetworking implements INetworking {
       console.log(
         "Connection established with socket ID: ",
         socket.handshake.address
-      );
+      )
 
-      this.onUpgradePlanet(socket);
-      this.onUserStateChange(socket);
-      this.onStartPlanetUpgrade(socket);
-    });
+      this.onUpgradePlanet(socket)
+      this.onUserStateChange(socket)
+      this.onStartPlanetUpgrade(socket)
+      this.getTopTenPlanets(socket)
+    })
   }
 
   private onUpgradePlanet(socket: Socket) {
@@ -46,12 +47,12 @@ export class SocketIONetworking implements INetworking {
       const newPlanetData = await this.planetService.checkForUpgradeCompleted(
         userID,
         planetID
-      );
+      )
 
       if (newPlanetData) {
         socket.emit("planetUpdate", newPlanetData);
       }
-    });
+    })
   }
 
   private onUserStateChange(socket: Socket) {
@@ -98,9 +99,16 @@ export class SocketIONetworking implements INetworking {
           this.warehouseService.updateResources(warehouse, userID)
           socket.emit("warehouseUpdate", warehouse)
         }
-      );
+      )
 
-      socket.emit("planetUpdate", data);
-    });
+      socket.emit("planetUpdate", data)
+    })
+  }
+
+  private getTopTenPlanets(socket: Socket) {
+    socket.on("topTenPlanets", async () => {
+      const planets = await this.planetService.getTopTenPlanets()
+      socket.emit("topTenUpdate", planets)
+    })
   }
 }
