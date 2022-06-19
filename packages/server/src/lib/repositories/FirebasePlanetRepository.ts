@@ -40,4 +40,9 @@ export class FirebasePlanetRepository implements IPlanetRepository {
     return results
   }
 
+  fetchTopPlanets(): Promise<Planet[]> {
+    const planetsRef = this.admin.firestore().collection("admin").doc("gameData").collection("planetData")
+    const topPlanets = await planetsRef.where()
+  }
+
 }
