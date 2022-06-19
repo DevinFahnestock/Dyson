@@ -121,4 +121,9 @@ export class PlanetService implements IPlanetService {
 
     return this.planetRepository.createPlanet(planet)
   }
+
+  getTopPlanets(): Planet[] {
+    return this.planetRepository.fetchTopPlanets()
+  }
+
 }
