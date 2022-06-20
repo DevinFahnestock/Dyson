@@ -1,16 +1,15 @@
 import type { Planet } from '@dyson/shared/dist/Planet'
 
-import React, { useContext, useState, useCallback } from "react"
+import React, { useContext, useState, useCallback } from 'react'
 
 export const PlanetsContext = React.createContext<any>([])
 
 interface PlanetApi {
-  planets: Planet[],
-  clearPlanets: () => void,
-  updatePlanet: (planetData: Planet) => void,
-  updateAllPlanets: (data: Planet[]) => void,
+  planets: Planet[]
+  clearPlanets: () => void
+  updatePlanet: (planetData: Planet) => void
+  updateAllPlanets: (data: Planet[]) => void
 }
-
 
 export const PlanetsProvider = ({ children }: any) => {
   const [planets, setPlanets] = useState<Planet[]>([])
@@ -26,9 +25,7 @@ export const PlanetsProvider = ({ children }: any) => {
       }
 
       setPlanets((planets) => {
-        const planetIndex = planets.findIndex(
-          (planet: Planet) => planet.id === planetData.id
-        )
+        const planetIndex = planets.findIndex((planet: Planet) => planet.id === planetData.id)
 
         let copy = [...planets]
         copy[planetIndex] = planetData
@@ -53,11 +50,7 @@ export const PlanetsProvider = ({ children }: any) => {
     updateAllPlanets,
   }
 
-  return (
-    <PlanetsContext.Provider value={planetApi}>
-      {children}
-    </PlanetsContext.Provider>
-  )
+  return <PlanetsContext.Provider value={planetApi}>{children}</PlanetsContext.Provider>
 }
 
 export const usePlanets = () => {

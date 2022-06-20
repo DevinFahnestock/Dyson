@@ -4,5 +4,11 @@
     "organic": 50,
     "food": 50,
     "money": 30
+  },
+  "StarterResourceGeneratorLevel": {
+    "metal": 1,
+    "organic": 1,
+    "money": 1,
+    "food": 1
   }
 }

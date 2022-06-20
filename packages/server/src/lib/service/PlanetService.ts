@@ -116,8 +116,19 @@ export class PlanetService implements IPlanetService {
       name: PlanetNames[Math.floor(Math.random() * PlanetNames.length)],
       created: Time.utc().toISOString(),
       id: null,
+      ResourceGeneratorLevel: {
+        metal: 10,
+        organic: 10,
+        food: 10,
+        money: 10
+      }
     }
 
     return this.planetRepository.createPlanet(planet)
   }
+
+  getTopTenPlanets(): Promise<Planet[]> {
+    return this.planetRepository.fetchTopPlanets(10)
+  }
+
 }

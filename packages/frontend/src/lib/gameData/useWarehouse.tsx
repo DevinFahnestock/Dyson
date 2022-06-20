@@ -1,5 +1,5 @@
-import React, { useContext, useState, useCallback } from "react"
-import { Warehouse } from "@dyson/shared/dist/Warehouse"
+import React, { useContext, useState, useCallback } from 'react'
+import { Warehouse } from '@dyson/shared/dist/Warehouse'
 
 export const WarehouseContext = React.createContext({})
 
@@ -19,9 +19,7 @@ export const WarehouseProvider = ({ children }: any) => {
 
   const updateResource = useCallback(({ resource, amount }: any) => {
     setWarehouse((warehouse) => {
-      const resourceIndex = Object.keys(warehouse).findIndex(
-        (element) => resource === element
-      )
+      const resourceIndex = Object.keys(warehouse).findIndex((element) => resource === element)
 
       warehouse[resourceIndex] = amount
       return warehouse
@@ -35,11 +33,7 @@ export const WarehouseProvider = ({ children }: any) => {
     updateWarehouse,
   }
 
-  return (
-    <WarehouseContext.Provider value={warehouseApi}>
-      {children}
-    </WarehouseContext.Provider>
-  )
+  return <WarehouseContext.Provider value={warehouseApi}>{children}</WarehouseContext.Provider>
 }
 
 export const useWarehouse = () => {

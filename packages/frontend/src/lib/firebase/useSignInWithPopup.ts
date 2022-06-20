@@ -1,9 +1,8 @@
+import { useState } from 'react'
 
-import { useState } from "react"
+import { AuthProvider, signInWithPopup as firebaseSignInWithPopup, User } from 'firebase/auth'
 
-import { AuthProvider, signInWithPopup as firebaseSignInWithPopup, User } from "firebase/auth"
-
-import useAuthentication from "./useAuthentication"
+import useAuthentication from './useAuthentication'
 
 const useSignInWithPopup = (provider: AuthProvider) => {
   const auth = useAuthentication()
@@ -13,12 +12,10 @@ const useSignInWithPopup = (provider: AuthProvider) => {
   const [loading, setLoading] = useState(false)
 
   const signInWithPopup = async () => {
-
-
     try {
       if (auth) {
-      setLoading(true)
-      setUser((await firebaseSignInWithPopup(auth, provider)).user)
+        setLoading(true)
+        setUser((await firebaseSignInWithPopup(auth, provider)).user)
       }
     } catch (error) {
       setError(error)
