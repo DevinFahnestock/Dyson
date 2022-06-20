@@ -1,10 +1,9 @@
-import React from "react"
-import "./styles.css"
+import React from 'react'
+import './styles.css'
 
-import { useSignInWithGoogle, useUser, useSignOut } from "../../lib/firebase"
-import { Link } from "react-router-dom"
-import { User } from "firebase/auth"
-
+import { useSignInWithGoogle, useUser, useSignOut } from '../../lib/firebase'
+import { Link } from 'react-router-dom'
+import { User } from 'firebase/auth'
 
 const NavBar = () => {
   const user: User | null = useUser()
@@ -13,27 +12,31 @@ const NavBar = () => {
   const { signInWithPopup } = useSignInWithGoogle()
 
   return (
-    <div className="container">
+    <div className='container'>
       <nav>
-        <a href="/">
+        <a href='/'>
           <h1>Dyson</h1>
         </a>
-        <Link to="/leaderboard">leaderboard</Link>
-        <Link to="/">My Planets</Link>
+        <Link to='/leaderboard'>leaderboard</Link>
+        <Link to='/'>My Planets</Link>
         {!user && (
-          <a className="SignInButton" onClick={() => signInWithPopup()}>
+          <a className='SignInButton' onClick={() => signInWithPopup()}>
             Sign in
           </a>
         )}
         {user && (
-          <div className="profile">
-            <div className="profile name">
+          <div className='profile'>
+            <div className='profile name'>
               {user.displayName}
-              <a onClick={() => {
-                signOut()
-                }}>Sign out</a>
+              <a
+                onClick={() => {
+                  signOut()
+                }}
+              >
+                Sign out
+              </a>
             </div>
-            <img src={user.photoURL!} alt="Profile" />
+            <img src={user.photoURL!} alt='Profile' />
           </div>
         )}
       </nav>

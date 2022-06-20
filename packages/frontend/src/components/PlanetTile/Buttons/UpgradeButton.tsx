@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from "react"
-import "./styles.css"
+import React, { useEffect, useState } from 'react'
+import './styles.css'
 
-import utc from "dayjs/plugin/utc"
-import duration from "dayjs/plugin/duration"
-import relativeTime from "dayjs/plugin/relativeTime"
-import dayjs from "dayjs"
+import utc from 'dayjs/plugin/utc'
+import duration from 'dayjs/plugin/duration'
+import relativeTime from 'dayjs/plugin/relativeTime'
+import dayjs from 'dayjs'
 
-import UpgradeCosts from "@dyson/shared/src/resources/upgrade-costs.json"
-import useWarehouse from "src/lib/gameData/useWarehouse"
+import UpgradeCosts from '@dyson/shared/src/resources/upgrade-costs.json'
+import useWarehouse from 'src/lib/gameData/useWarehouse'
 
-import { resourcesMet, isUpgrading } from "./helpers/UpgradeValidations"
+import { resourcesMet, isUpgrading } from './helpers/UpgradeValidations'
 
 dayjs.extend(duration)
 dayjs.extend(utc)
@@ -26,22 +26,22 @@ const UpgradeButton = ({ onClick, planet, onUpgradeTimeComplete }: any) => {
   const setTimerinfo = (timer: null | NodeJS.Timer) => {
     const durationLeft = dayjs.duration(upgradeFinishedTime.diff(dayjs.utc()))
 
-    const hoursLeft = durationLeft.get("hours")
-    const minutesLeft = durationLeft.get("minutes")
+    const hoursLeft = durationLeft.get('hours')
+    const minutesLeft = durationLeft.get('minutes')
 
-    let timerText = ""
+    let timerText = ''
 
     if (durationLeft.asSeconds() > 0) {
       if (hoursLeft > 0) {
-        timerText = durationLeft.format("H:mm:ss")
+        timerText = durationLeft.format('H:mm:ss')
       } else if (minutesLeft > 0) {
-        timerText = durationLeft.format("m:ss")
+        timerText = durationLeft.format('m:ss')
       } else {
         timerText =
-          durationLeft.asSeconds() > 1 ? durationLeft.format("s") + " seconds" : durationLeft.format("s") + " second"
+          durationLeft.asSeconds() > 1 ? durationLeft.format('s') + ' seconds' : durationLeft.format('s') + ' second'
       }
     } else {
-      timerText = "Finished"
+      timerText = 'Finished'
       timer && clearInterval(timer)
       onUpgradeTimeComplete?.()
     }
@@ -73,7 +73,7 @@ const UpgradeButton = ({ onClick, planet, onUpgradeTimeComplete }: any) => {
       data-upgrading={isUpgrading(planet)}
       data-upgradeable={resourcesMet(nextLevelReq, warehouse)}
     >
-      {!planet.upgradeFinishedTime ? "Upgrade" : upgradeTimeLeft}
+      {!planet.upgradeFinishedTime ? 'Upgrade' : upgradeTimeLeft}
     </button>
   )
 }

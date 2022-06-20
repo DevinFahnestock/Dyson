@@ -1,4 +1,3 @@
-
 .UpgradeButton {
     align-items: center;
     background-image: linear-gradient(135deg, #494949 40%, #3f3f3f);
@@ -9,7 +8,7 @@
     cursor: pointer;
     display: flex;
     flex-direction: column;
-    font-family: "Codec cold",sans-serif;
+    font-family: "Codec cold", sans-serif;
     font-size: 10px;
     height: 4ch;
     justify-content: center;
@@ -21,7 +20,7 @@
     padding-top: 3px;
 }
 
-.UpgradeButton[data-upgradeable="true"] { 
+.UpgradeButton[data-upgradeable="true"] {
     background-image: linear-gradient(135deg, #6FD08C 40%, #5FAC76);
 }
 
