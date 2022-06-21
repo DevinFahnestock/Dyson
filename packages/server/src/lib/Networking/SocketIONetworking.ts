@@ -95,4 +95,10 @@ export class SocketIONetworking implements INetworking {
       socket.emit('topTenUpdate', planets)
     })
   }
+
+  private resolveUserNames(socket: Socket) {
+    socket.on('resolveUserNames', (ids) => {
+      socket.emit('usernamesResolved', this.userService.resolveUserNames(ids))
+    })
+  }
 }

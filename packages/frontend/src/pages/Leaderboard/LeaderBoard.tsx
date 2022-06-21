@@ -1,8 +1,9 @@
+import { Planet } from '@dyson/shared/dist/Planet'
 import React, { useEffect, useRef } from 'react'
 import SimplePlanetView from 'src/components/PlanetView/SimplePlanetView'
 
 const LeaderBoard = ({ socketRef }: any) => {
-  let planets = useRef()
+  let planets = useRef<Array<Planet>>()
 
   socketRef?.current?.emit('topTenPlanets')
 
@@ -15,7 +16,14 @@ const LeaderBoard = ({ socketRef }: any) => {
     }
   })
 
+  let userIds
+  const planetsList = planets.current
+  if (planetsList) {
+    userIds = planetsList
+  }
+
   socketRef?.current?.emit('topTenPlanets')
+  socketRef?.current?.emit('resolveUserNames', userIds)
 
   return (
     <div>
