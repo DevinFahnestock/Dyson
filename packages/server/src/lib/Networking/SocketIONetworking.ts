@@ -35,6 +35,7 @@ export class SocketIONetworking implements INetworking {
       this.onUserStateChange(socket)
       this.onStartPlanetUpgrade(socket)
       this.getTopTenPlanets(socket)
+      this.resolveUserNames(socket)
     })
   }
 

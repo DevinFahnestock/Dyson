@@ -5,9 +5,10 @@ import CelestialBodyRenderer from './CelestialBodyRenderer'
 
 interface PlanetTileProps {
   planet: any
+  username: String
 }
 
-const PlanetTileSimpleView = ({ planet }: PlanetTileProps) => {
+const PlanetTileSimpleView = ({ planet, username }: PlanetTileProps) => {
   return (
     <div className='PlanetTile'>
       <div className='Definition'>
@@ -15,7 +16,7 @@ const PlanetTileSimpleView = ({ planet }: PlanetTileProps) => {
         <h3>{planet.name}</h3>
         <div className='SimpleDescription'>
           Level {planet.level} <br />
-          Owner: {planet.owner}
+          Owner: {username}
         </div>
       </div>
     </div>

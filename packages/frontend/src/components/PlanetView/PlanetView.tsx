@@ -4,8 +4,6 @@ import PlanetTile from '../PlanetTile/PlanetTile'
 import './styles.css'
 
 const PlanetView = ({ onUpgradeTimeComplete, upgradeClick, planets, user, socket }: any) => {
-  console.log(user, socket)
-
   return (
     <div className='Planetview'>
       <h3>Planets:</h3>
