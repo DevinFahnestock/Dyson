@@ -23,12 +23,11 @@ export class UserService implements IUserService {
     return null
   }
 
-  async resolveUserNames(ids: string[]) {
+  async resolveUserNames(ids: string[]): Promise<Object> {
     let names = {}
-    ids.forEach(async (element) => {
-      names[element] = await this.repository.resolveUserID(element)
-      console.log(element, names[element])
-    })
+    for (const id of ids) {
+      names[id] = await this.repository.resolveUserID(id)
+    }
     return names
   }
 }

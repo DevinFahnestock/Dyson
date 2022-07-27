@@ -98,8 +98,10 @@ export class SocketIONetworking implements INetworking {
   }
 
   private resolveUserNames(socket: Socket) {
-    socket.on('resolveUserNames', (ids) => {
-      socket.emit('usernamesResolved', this.userService.resolveUserNames(ids))
+    socket.on('resolveUserNames', async (ids) => {
+      const names = await this.userService.resolveUserNames(ids)
+      console.log(names)
+      socket.emit('usernamesResolved', names)
     })
   }
 }
