@@ -28,15 +28,15 @@ if (rootElement) {
   const firebaseApp = initializeApp(firebaseConfig)
 
   root.render(
-    <React.StrictMode>
-      <AuthenticationProvider value={getAuth(firebaseApp)}>
-        <PlanetsProvider>
-          <WarehouseProvider>
-            <App />
-          </WarehouseProvider>
-        </PlanetsProvider>
-      </AuthenticationProvider>
-    </React.StrictMode>
+    // <React.StrictMode>
+    <AuthenticationProvider value={getAuth(firebaseApp)}>
+      <PlanetsProvider>
+        <WarehouseProvider>
+          <App />
+        </WarehouseProvider>
+      </PlanetsProvider>
+    </AuthenticationProvider>
+    // </React.StrictMode>
   )
 }
 

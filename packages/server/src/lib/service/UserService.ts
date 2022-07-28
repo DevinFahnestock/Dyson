@@ -1,10 +1,9 @@
-import type { User } from "@dyson/shared/dist/User"
- 
-import { IUserRepository } from "../repositories/IUserRepository";
-import { IUserService } from "./IUserService";
+import type { User } from '@dyson/shared/dist/User'
+
+import { IUserRepository } from '../repositories/IUserRepository'
+import { IUserService } from './IUserService'
 
 export class UserService implements IUserService {
-
   protected readonly repository: IUserRepository
 
   constructor(repository: IUserRepository) {
@@ -17,14 +16,18 @@ export class UserService implements IUserService {
 
   async fetchUser(user: User): Promise<User> {
     const userData = await this.repository.fetchUserData(user.uid)
-    if (userData) { 
+    if (userData) {
       return userData
     }
     this.createNewUser(user)
     return null
-    
   }
 
-  
-
+  async resolveUserNames(ids: string[]): Promise<Object> {
+    let names = {}
+    for (const id of ids) {
+      names[id] = await this.repository.resolveUserID(id)
+    }
+    return names
+  }
 }

@@ -35,6 +35,7 @@ export class SocketIONetworking implements INetworking {
       this.onUserStateChange(socket)
       this.onStartPlanetUpgrade(socket)
       this.getTopTenPlanets(socket)
+      this.resolveUserNames(socket)
     })
   }
 
@@ -93,6 +94,14 @@ export class SocketIONetworking implements INetworking {
     socket.on('topTenPlanets', async () => {
       const planets = await this.planetService.getTopTenPlanets()
       socket.emit('topTenUpdate', planets)
+    })
+  }
+
+  private resolveUserNames(socket: Socket) {
+    socket.on('resolveUserNames', async (ids) => {
+      const names = await this.userService.resolveUserNames(ids)
+      console.log(names)
+      socket.emit('usernamesResolved', names)
     })
   }
 }

@@ -1,6 +1,6 @@
-import type { User } from "@dyson/shared/dist/User"
+import type { User } from '@dyson/shared/dist/User'
 
-import { app } from "firebase-admin"
+import { app } from 'firebase-admin'
 import { IUserRepository } from './IUserRepository'
 
 export class FirebaseUserRepository implements IUserRepository {
@@ -11,12 +11,23 @@ export class FirebaseUserRepository implements IUserRepository {
   }
 
   async createNewUser(user: User): Promise<User> {
-    await this.admin.firestore().collection("admin").doc("gameData").collection("userData").doc(user.uid).set(user)
+    await this.admin.firestore().collection('admin').doc('gameData').collection('userData').doc(user.uid).set(user)
     return user
   }
 
   async fetchUserData(userID: string): Promise<User> {
-    const result = await this.admin.firestore().collection("admin").doc("gameData").collection("userData").doc(userID).get()
+    const result = await this.admin
+      .firestore()
+      .collection('admin')
+      .doc('gameData')
+      .collection('userData')
+      .doc(userID)
+      .get()
     return result.data() as User
+  }
+
+  async resolveUserID(id: string): Promise<string> {
+    const user = await this.admin.firestore().collection('admin').doc('gameData').collection('userData').doc(id).get()
+    return user.data().displayName
   }
 }
