@@ -1,14 +1,13 @@
-import { Planet } from "@dyson/shared/dist/Planet"
-import { IPlanetRepository } from "../repositories/IPlanetRepository"
-import { PlanetType } from "@dyson/shared/dist/Shared"
-import { IPlanetService } from "./IPlanetService"
+import { Planet } from '@dyson/shared/dist/Planet'
+import { IPlanetRepository } from '../repositories/IPlanetRepository'
+import { PlanetType } from '@dyson/shared/dist/Shared'
+import { IPlanetService } from './IPlanetService'
 
-import Time from  "@dyson/shared/dist/Time/Time" 
-import PlanetNames from "@dyson/shared/src/resources/planet-names.json"
-import upgradeTimes from "@dyson/shared/src/resources/upgrade-times.json"
+import Time from '@dyson/shared/dist/Time/Time'
+import PlanetNames from '@dyson/shared/src/resources/planet-names.json'
+import upgradeTimes from '@dyson/shared/src/resources/upgrade-times.json'
 import upgradeCosts from '@dyson/shared/src/resources/upgrade-costs.json'
-import { Warehouse } from "@dyson/shared/dist/Warehouse"
-
+import { Warehouse } from '@dyson/shared/dist/Warehouse'
 
 export class PlanetService implements IPlanetService {
   protected readonly planetRepository: IPlanetRepository
@@ -17,9 +16,14 @@ export class PlanetService implements IPlanetService {
     this.planetRepository = planetRepository
   }
 
-  async startPlanetUpgrade(planetID: string, warehouse: Warehouse, userID: string, warehouseCalllback: (warehouse: Warehouse) => void): Promise<Planet> {
+  async startPlanetUpgrade(
+    planetID: string,
+    warehouse: Warehouse,
+    userID: string,
+    warehouseCallback: (warehouse: Warehouse) => void
+  ): Promise<Planet> {
     const planetToUpgrade = await this.getPlanet(planetID)
-    
+
     if (!planetToUpgrade) {
       return null
     }
@@ -29,30 +33,41 @@ export class PlanetService implements IPlanetService {
     }
 
     const nextLevel = planetToUpgrade.level + 1
-    
+
     const upgradeCost = upgradeCosts[nextLevel]
 
     //think of a better way to do this that isnt a 3AM solution
-    if (upgradeCost.metal > warehouse.metal) {return null}
-    if (upgradeCost.organic > warehouse.organic) {return null}
-    if (upgradeCost.money > warehouse.money) {return null}
-    if (upgradeCost.food > warehouse.food) {return null}
+    // if (upgradeCost.metal > warehouse.metal) {return null}
+    // if (upgradeCost.organic > warehouse.organic) {return null}
+    // if (upgradeCost.money > warehouse.money) {return null}
+    // if (upgradeCost.food > warehouse.food) {return null}
 
-    warehouse.metal -= upgradeCost.metal
-    warehouse.organic -= upgradeCost.organic
-    warehouse.money -= upgradeCost.money
-    warehouse.food -= upgradeCost.food
+    // warehouse.metal -= upgradeCost.metal
+    // warehouse.organic -= upgradeCost.organic
+    // warehouse.money -= upgradeCost.money
+    // warehouse.food -= upgradeCost.food
 
-    warehouseCalllback(warehouse)
+    //better way
+    for (const [resource, amount] of Object.entries(upgradeCost)) {
+      if (amount > warehouse[resource]) {
+        return null
+      }
+    }
 
-    const time = upgradeTimes[planetToUpgrade.level].split(":")
+    for (const [resource, amount] of Object.entries(upgradeCost)) {
+      warehouse[resource] -= amount
+    }
+
+    const time = upgradeTimes[planetToUpgrade.level].split(':')
     planetToUpgrade.upgradeFinishedTime = Time.utc()
-      .add(parseInt(time[0]), "hour")
-      .add(parseInt(time[1]), "minute")
-      .add(parseInt(time[2]), "second")
+      .add(parseInt(time[0]), 'hour')
+      .add(parseInt(time[1]), 'minute')
+      .add(parseInt(time[2]), 'second')
       .toISOString()
 
     this.updatePlanet(planetToUpgrade, userID)
+
+    warehouseCallback(warehouse)
 
     return planetToUpgrade
   }
@@ -83,7 +98,6 @@ export class PlanetService implements IPlanetService {
       planetToCheck.upgradeFinishedTime = null
       planetToCheck.level++
       return this.updatePlanet(planetToCheck, userID)
-      
     }
   }
 
@@ -97,7 +111,7 @@ export class PlanetService implements IPlanetService {
 
   async updatePlanet(planet: Planet, userID: string): Promise<Planet> {
     const planetToUpdate = await this.planetRepository.fetchPlanet(planet.id)
-    
+
     if (planetToUpdate.owner !== userID) {
       return null
     }
@@ -120,8 +134,8 @@ export class PlanetService implements IPlanetService {
         metal: 10,
         organic: 10,
         food: 10,
-        money: 10
-      }
+        money: 10,
+      },
     }
 
     return this.planetRepository.createPlanet(planet)
@@ -130,5 +144,4 @@ export class PlanetService implements IPlanetService {
   getTopTenPlanets(): Promise<Planet[]> {
     return this.planetRepository.fetchTopPlanets(10)
   }
-
 }
