@@ -14,7 +14,7 @@ import { useUser } from 'src/lib/firebase'
 import usePlanets from 'src/lib/gameData/usePlanets'
 import useWarehouse from 'src/lib/gameData/useWarehouse'
 
-import { StartAllSocketListeners, disableAllSocketListeners, setupNewSocketRef } from './SocketListeners'
+import { StartAllSocketListeners, disableAllSocketListeners, setupNewSocketRef } from './lib/Networking/SocketListeners'
 
 function App() {
   const user: any = useUser()
