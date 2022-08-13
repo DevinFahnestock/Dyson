@@ -8,36 +8,36 @@ import { SolarSystemView } from './pages/SolarSystemView/SolarSystemView'
 
 import { useEffect, useRef } from 'react'
 
-import { Socket } from 'socket.io-client'
-
 import { useUser } from 'src/lib/firebase'
 import usePlanets from 'src/lib/gameData/usePlanets'
 import useWarehouse from 'src/lib/gameData/useWarehouse'
 
 import { StartAllSocketListeners, disableAllSocketListeners, setupNewSocketRef } from './lib/Networking/SocketListeners'
+import { SocketEmitter } from './lib/Networking/SocketEmitter'
 
 function App() {
   const user: any = useUser()
   const { planets, updatePlanet, updateAllPlanets, clearPlanets }: any = usePlanets()
   const { warehouse, updateWarehouse }: any = useWarehouse()
 
-  const socketRef = useRef<Socket | null>()
+  const socketEmitter = useRef<SocketEmitter>()
 
   useEffect(() => {
     !user && clearPlanets()
-    user && socketRef?.current?.emit('userStateChanged', user)
+    user && socketEmitter.current?.UserStateChange(user)
   }, [user, user?.uid, clearPlanets])
 
   useEffect(() => {
-    setupNewSocketRef(socketRef)
+    socketEmitter.current = new SocketEmitter(setupNewSocketRef())
 
-    if (socketRef?.current) {
-      StartAllSocketListeners(socketRef?.current, updateAllPlanets, updateWarehouse, updatePlanet)
+    console.log(socketEmitter)
+    if (socketEmitter.current.socket) {
+      StartAllSocketListeners(socketEmitter.current.socket, updateAllPlanets, updateWarehouse, updatePlanet)
     }
 
     return () => {
-      if (socketRef?.current) {
-        disableAllSocketListeners(socketRef?.current)
+      if (socketEmitter?.current?.socket) {
+        disableAllSocketListeners(socketEmitter.current.socket)
       }
     }
   }, [updateAllPlanets, updatePlanet, updateWarehouse])
@@ -49,9 +49,21 @@ function App() {
         <Routes>
           <Route
             path='/'
-            element={<SolarSystemView socketRef={socketRef} user={user} planets={planets} warehouse={warehouse} />}
+            element={
+              socketEmitter.current && (
+                <SolarSystemView
+                  socketEmitter={socketEmitter?.current}
+                  user={user}
+                  planets={planets}
+                  warehouse={warehouse}
+                />
+              )
+            }
           />
-          <Route path='/leaderboard' element={<LeaderBoard socketRef={socketRef} />} />
+          <Route
+            path='/leaderboard'
+            element={socketEmitter.current && <LeaderBoard socketEmitter={socketEmitter.current} />}
+          />
         </Routes>
       </div>
     </Router>

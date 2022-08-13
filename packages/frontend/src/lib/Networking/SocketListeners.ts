@@ -33,10 +33,8 @@ export const disableAllSocketListeners = (currentSocket: Socket | null) => {
   currentSocket?.off('warehouseUpdate')
 }
 
-export const setupNewSocketRef = (socketRef: any) => {
-  if (!socketRef?.current) {
-    socketRef.current = io(`${address}`, {
-      transports: ['websocket', 'polling'],
-    })
-  }
+export const setupNewSocketRef = () => {
+  return io(`${address}`, {
+    transports: ['websocket', 'polling'],
+  })
 }

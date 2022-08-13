@@ -1,8 +1,8 @@
-import { Socket } from 'socket.io'
+import { Socket } from 'socket.io-client'
 import { User } from '@dyson/shared/src/User'
 
 export class SocketEmitter {
-  protected readonly socket: Socket
+  public readonly socket: Socket
 
   constructor(socket: Socket) {
     this.socket = socket

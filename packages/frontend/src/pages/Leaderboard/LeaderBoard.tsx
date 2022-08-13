@@ -1,8 +1,13 @@
 import { Planet } from '@dyson/shared/dist/Planet'
 import React, { useEffect, useRef, useState } from 'react'
 import SimplePlanetView from 'src/components/PlanetView/SimplePlanetView'
+import { SocketEmitter } from 'src/lib/Networking/SocketEmitter'
 
-const LeaderBoard = ({ socketRef }: any) => {
+type props = {
+  socketEmitter: SocketEmitter
+}
+
+const LeaderBoard = ({ socketEmitter }: props) => {
   let planets = useRef<Planet[]>()
   let [usernames, setUsernames] = useState<String[]>()
 
@@ -10,9 +15,9 @@ const LeaderBoard = ({ socketRef }: any) => {
 
   useEffect(() => {
     if (!planets.current) {
-      socketRef?.current?.emit('topTenPlanets')
+      socketEmitter.TopTenPlanets()
 
-      socketRef?.current?.on('topTenUpdate', (data: any) => {
+      socketEmitter.socket.on('topTenUpdate', (data: any) => {
         planets.current = data
         let userIDs: String[] = []
         if (planets.current) {
@@ -20,15 +25,15 @@ const LeaderBoard = ({ socketRef }: any) => {
             userIDs.push(planet.owner)
           })
         }
-        socketRef?.current?.emit('resolveUserNames', userIDs)
-        socketRef?.current?.on('usernamesResolved', (data: any) => {
+        socketEmitter.ResolveUserNames(userIDs)
+        socketEmitter.socket.on('usernamesResolved', (data: any) => {
           setUsernames(data)
         })
       })
     }
     return () => {
-      socketRef?.current?.off('topTenUpdate')
-      socketRef?.current?.off('usernamesResolved')
+      socketEmitter.socket.off('topTenUpdate')
+      socketEmitter.socket.off('usernamesResolved')
     }
   }, [])
 

@@ -7,8 +7,19 @@ import PlanetView from '../../components/PlanetView/PlanetView'
 import ResourceDisplay from '../../components/ResourceDisplay/ResourceDisplay'
 
 import './styles.css'
+import { User } from '@dyson/shared/src/User'
+import { Warehouse } from '@dyson/shared/dist/Warehouse'
+import { Planet } from '@dyson/shared/dist/Planet'
+import { SocketEmitter } from 'src/lib/Networking/SocketEmitter'
 
-export const SolarSystemView = ({ user, warehouse, planets, socketRef }: any) => {
+type props = {
+  user: User
+  warehouse: Warehouse
+  planets: Planet[]
+  socketEmitter: SocketEmitter
+}
+
+export const SolarSystemView = ({ user, warehouse, planets, socketEmitter }: props) => {
   return (
     <div>
       {user ? (
@@ -18,7 +29,7 @@ export const SolarSystemView = ({ user, warehouse, planets, socketRef }: any) =>
             planets={planets}
             upgradeClick={upgradeClick}
             onUpgradeTimeComplete={onUpgradeTimeComplete}
-            socket={socketRef.current}
+            socket={socketEmitter.socket}
             user={user}
           />
         </div>
