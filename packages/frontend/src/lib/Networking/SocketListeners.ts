@@ -1,6 +1,6 @@
 import io, { Socket } from 'socket.io-client'
 
-const address = process.env.SERVER_ADDRESS || 'localhost:25145'
+const address = process.env.SERVER_ADDRESS || '192.168.50.250:25145' || 'localhost:25145'
 
 export const StartAllSocketListeners = (
   currentSocket: Socket,
