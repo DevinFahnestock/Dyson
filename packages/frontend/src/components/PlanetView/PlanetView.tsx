@@ -3,7 +3,7 @@ import PlanetTile from '../PlanetTile/PlanetTile'
 
 import './styles.css'
 
-const PlanetView = ({ onUpgradeTimeComplete, upgradeClick, planets, user, socket }: any) => {
+const PlanetView = ({ socketEmitter, planets, user }: any) => {
   return (
     <div className='Planetview'>
       <h3>Planets:</h3>
@@ -13,8 +13,12 @@ const PlanetView = ({ onUpgradeTimeComplete, upgradeClick, planets, user, socket
             <PlanetTile
               key={planet.id}
               planet={planet}
-              upgradeClick={() => upgradeClick(planet.id, socket, user)}
-              onUpgradeTimeComplete={() => onUpgradeTimeComplete(planet.id, socket, user)}
+              collectClick={() => {
+                console.log('collecting')
+                socketEmitter.UpdateResourceGeneration(planet.id, user.uid)
+              }}
+              upgradeClick={() => socketEmitter.UpgradePlanet(planet.id, user.uid)}
+              onUpgradeTimeComplete={() => socketEmitter.CheckForCompleteUpgrade(planet.id, user.uid)}
             />
           ))}
         {!planets && <>You have no Planets!</>}

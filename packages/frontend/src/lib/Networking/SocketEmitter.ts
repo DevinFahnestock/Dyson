@@ -2,7 +2,7 @@ import { Socket } from 'socket.io-client'
 import { User } from '@dyson/shared/src/User'
 
 export class SocketEmitter {
-  public readonly socket: Socket
+  public socket: Socket
 
   constructor(socket: Socket) {
     this.socket = socket
@@ -36,6 +36,13 @@ export class SocketEmitter {
 
   public UpgradePlanet(planetID: String, userID: String) {
     this.socket.emit('upgradePlanet', {
+      planetID: planetID,
+      userID: userID,
+    })
+  }
+
+  public UpdateResourceGeneration(planetID: String, userID: String) {
+    this.socket.emit('UpdateResourceGeneration', {
       planetID: planetID,
       userID: userID,
     })

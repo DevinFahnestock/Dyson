@@ -35,8 +35,6 @@ export class PlanetService implements IPlanetService {
 
     const upgradeCost = PlanetResourceUpgradeCost(nextLevel)
 
-    console.log('cost', upgradeCost)
-
     for (const [resource, amount] of Object.entries(upgradeCost)) {
       if (amount > warehouse[resource]) {
         return null
@@ -120,11 +118,12 @@ export class PlanetService implements IPlanetService {
       created: Time.utc().toISOString(),
       id: null,
       ResourceGeneratorLevel: {
-        metal: 10,
-        organic: 10,
-        food: 10,
-        money: 10,
+        metal: 1,
+        organic: 1,
+        food: 1,
+        money: 1,
       },
+      LastGeneratedTime: Time.utc().toISOString(),
     }
 
     return this.planetRepository.createPlanet(planet)
