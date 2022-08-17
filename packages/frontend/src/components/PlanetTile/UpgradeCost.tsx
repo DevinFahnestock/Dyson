@@ -20,7 +20,6 @@ const UpgradeCost = ({ planet }: props) => {
   const dayjstime = dayjs.duration(upgradeTime)
 
   const timeStr = dayjstime.format('HH:mm:ss')
-  console.table(upgradeTime)
 
   return (
     <div className='UpgradeCost'>

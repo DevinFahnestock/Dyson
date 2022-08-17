@@ -11,8 +11,6 @@ const LeaderBoard = ({ socketEmitter }: props) => {
   let planets = useRef<Planet[]>()
   let [usernames, setUsernames] = useState<String[]>()
 
-  console.log('top planets: ', planets.current)
-
   useEffect(() => {
     if (!planets.current) {
       socketEmitter.TopTenPlanets()

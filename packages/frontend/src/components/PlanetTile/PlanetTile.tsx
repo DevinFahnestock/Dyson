@@ -19,7 +19,7 @@ const PlanetTile = ({ planet, upgradeClick, onUpgradeTimeComplete, collectClick 
       <div className='Definition'>
         <CelestialBodyRenderer type={planet.type} seed={planet.seed} />
         <h3>{planet.name}</h3>
-        <CollectButton onClick={collectClick} />
+        <CollectButton onClick={collectClick} planet={planet} />
         {!planet.upgradeFinishedTime && <UpgradeCost planet={planet} />}
         <div>
           Level {planet.level}

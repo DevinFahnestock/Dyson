@@ -2,7 +2,7 @@ import { Socket } from 'socket.io-client'
 import { User } from '@dyson/shared/src/User'
 
 export class SocketEmitter {
-  public readonly socket: Socket
+  public socket: Socket
 
   constructor(socket: Socket) {
     this.socket = socket

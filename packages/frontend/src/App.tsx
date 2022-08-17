@@ -20,7 +20,7 @@ function App() {
   const { planets, updatePlanet, updateAllPlanets, clearPlanets }: any = usePlanets()
   const { warehouse, updateWarehouse }: any = useWarehouse()
 
-  const socketEmitter = useRef<SocketEmitter>()
+  const socketEmitter = useRef<SocketEmitter | null>()
 
   useEffect(() => {
     !user && clearPlanets()
@@ -28,15 +28,20 @@ function App() {
   }, [user, user?.uid, clearPlanets])
 
   useEffect(() => {
-    socketEmitter.current = new SocketEmitter(setupNewSocketRef())
+    if (!socketEmitter.current?.socket) {
+      socketEmitter.current = new SocketEmitter(setupNewSocketRef())
+    } else {
+      socketEmitter.current.socket = setupNewSocketRef()
+    }
 
-    console.log(socketEmitter)
     if (socketEmitter.current.socket) {
+      console.log('starting sockets', socketEmitter.current.socket)
       StartAllSocketListeners(socketEmitter.current.socket, updateAllPlanets, updateWarehouse, updatePlanet)
     }
 
     return () => {
       if (socketEmitter?.current?.socket) {
+        console.log('closing socket', socketEmitter?.current?.socket)
         disableAllSocketListeners(socketEmitter.current.socket)
       }
     }

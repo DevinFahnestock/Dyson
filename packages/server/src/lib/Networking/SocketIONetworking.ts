@@ -6,6 +6,9 @@ import { IPlanetService, IUserService, IWarehouseService } from '../service'
 import { PlanetType } from '@dyson/shared/dist/shared'
 import { Warehouse } from '@dyson/shared/dist/Warehouse'
 
+import { getResourcesGenerated } from '@dyson/shared/dist/GenerationCalculator'
+import dayjs from '@dyson/shared/dist/Time/Time'
+
 export class SocketIONetworking implements INetworking {
   protected readonly port: number
   protected readonly server: Server
@@ -36,6 +39,7 @@ export class SocketIONetworking implements INetworking {
       this.onStartPlanetUpgrade(socket)
       this.getTopTenPlanets(socket)
       this.resolveUserNames(socket)
+      this.updateResourceGeneration(socket)
     })
   }
 
@@ -100,8 +104,37 @@ export class SocketIONetworking implements INetworking {
   private resolveUserNames(socket: Socket) {
     socket.on('resolveUserNames', async (ids) => {
       const names = await this.userService.resolveUserNames(ids)
-      console.log(names)
       socket.emit('usernamesResolved', names)
+    })
+  }
+
+  private updateResourceGeneration(socket: Socket) {
+    socket.on('UpdateResourceGeneration', async ({ planetID, userID }) => {
+      console.log('checking for resources')
+      const planet = await this.planetService.getPlanet(planetID)
+      if (planet.owner !== userID) {
+        console.log('not the owner of the planet. cant generate resources.')
+        console.log(planet.owner, userID)
+        return null
+      }
+      if (!planet.LastGeneratedTime) {
+        planet.LastGeneratedTime = dayjs.utc().toISOString()
+        console.log('migrating planet. [adding LastGeneratedTime]')
+      }
+
+      const warehouse = await this.warehouseService.getWarehouse(userID)
+
+      const generated = getResourcesGenerated(planet)
+
+      for (const [resource, amount] of Object.entries(generated)) {
+        warehouse[resource] += amount
+      }
+
+      this.warehouseService.updateResources(warehouse, userID)
+      socket.emit('warehouseUpdate', warehouse)
+      planet.LastGeneratedTime = dayjs.utc().toISOString()
+      this.planetService.updatePlanet(planet, userID)
+      socket.emit('planetUpdate', planet)
     })
   }
 }

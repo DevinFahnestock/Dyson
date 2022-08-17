@@ -23,14 +23,7 @@ export const SolarSystemView = ({ user, warehouse, planets, socketEmitter }: pro
       {user ? (
         <div className='UIdisplay'>
           <ResourceDisplay warehouse={warehouse} />
-          <PlanetView
-            planets={planets}
-            upgradeClick={socketEmitter.UpgradePlanet}
-            collectClick={socketEmitter.UpdateResourceGeneration}
-            onUpgradeTimeComplete={socketEmitter.CheckForCompleteUpgrade}
-            socket={socketEmitter.socket}
-            user={user}
-          />
+          <PlanetView planets={planets} socketEmitter={socketEmitter} user={user} />
         </div>
       ) : (
         <SignInScreen />
