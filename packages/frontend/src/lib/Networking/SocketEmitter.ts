@@ -40,4 +40,11 @@ export class SocketEmitter {
       userID: userID,
     })
   }
+
+  public UpdateResourceGeneration(planetID: String, userID: String) {
+    this.socket.emit('UpdateResourceGeneration', {
+      planetID: planetID,
+      userID: userID,
+    })
+  }
 }

@@ -3,7 +3,7 @@ import PlanetTile from '../PlanetTile/PlanetTile'
 
 import './styles.css'
 
-const PlanetView = ({ onUpgradeTimeComplete, upgradeClick, planets, user, socket }: any) => {
+const PlanetView = ({ onUpgradeTimeComplete, upgradeClick, collectClick, planets, user, socket }: any) => {
   return (
     <div className='Planetview'>
       <h3>Planets:</h3>
@@ -13,8 +13,9 @@ const PlanetView = ({ onUpgradeTimeComplete, upgradeClick, planets, user, socket
             <PlanetTile
               key={planet.id}
               planet={planet}
-              upgradeClick={() => upgradeClick(planet.id, socket, user)}
-              onUpgradeTimeComplete={() => onUpgradeTimeComplete(planet.id, socket, user)}
+              collectClick={() => collectClick(planet.id, user.id)}
+              upgradeClick={() => upgradeClick(planet.id, user.id)}
+              onUpgradeTimeComplete={() => onUpgradeTimeComplete(planet.id, user.id)}
             />
           ))}
         {!planets && <>You have no Planets!</>}

@@ -8,11 +8,12 @@ export interface Planet {
   created: string
   upgradeFinishedTime: string
   type: PlanetType
-  seed: number,
+  seed: number
   ResourceGeneratorLevel: {
-    metal: number,
-    organic: number,
-    money: number,
-    food: number,
+    metal: number
+    organic: number
+    money: number
+    food: number
   }
+  LastGeneratedTime: string
 }

@@ -1,7 +1,5 @@
 import React from 'react'
 
-import { upgradeClick, onUpgradeTimeComplete } from './helpers/ButtonActions'
-
 import SignInScreen from '../../components/SignInScreen/SignInScreen'
 import PlanetView from '../../components/PlanetView/PlanetView'
 import ResourceDisplay from '../../components/ResourceDisplay/ResourceDisplay'
@@ -27,8 +25,9 @@ export const SolarSystemView = ({ user, warehouse, planets, socketEmitter }: pro
           <ResourceDisplay warehouse={warehouse} />
           <PlanetView
             planets={planets}
-            upgradeClick={upgradeClick}
-            onUpgradeTimeComplete={onUpgradeTimeComplete}
+            upgradeClick={socketEmitter.UpgradePlanet}
+            collectClick={socketEmitter.UpdateResourceGeneration}
+            onUpgradeTimeComplete={socketEmitter.CheckForCompleteUpgrade}
             socket={socketEmitter.socket}
             user={user}
           />
