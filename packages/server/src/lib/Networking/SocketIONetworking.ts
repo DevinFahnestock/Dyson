@@ -95,8 +95,8 @@ export class SocketIONetworking implements INetworking {
   }
 
   private getTopTenPlanets(socket: Socket) {
-    socket.on('topTenPlanets', async () => {
-      const planets = await this.planetService.getTopTenPlanets()
+    socket.on('topTenPlanets', async (offset) => {
+      const planets = await this.planetService.getTopTenPlanets(offset)
       socket.emit('topTenUpdate', planets)
     })
   }
@@ -114,7 +114,6 @@ export class SocketIONetworking implements INetworking {
       const planet = await this.planetService.getPlanet(planetID)
       if (planet.owner !== userID) {
         console.log('not the owner of the planet. cant generate resources.')
-        console.log(planet.owner, userID)
         return null
       }
       if (!planet.LastGeneratedTime) {

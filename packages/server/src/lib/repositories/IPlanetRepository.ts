@@ -1,8 +1,7 @@
-import { Planet } from "@dyson/shared/dist/Planet"
+import { Planet } from '@dyson/shared/dist/Planet'
 
 export interface IPlanetRepository {
-
-  createPlanet(planet: Planet): Promise<Planet> 
+  createPlanet(planet: Planet): Promise<Planet>
 
   updatePlanet(planet: Planet): Promise<void>
 
@@ -10,5 +9,5 @@ export interface IPlanetRepository {
 
   fetchUserPlanets(userID: string): Promise<Array<Planet>>
 
-  fetchTopPlanets(limit: number): Promise<Planet[]>
+  fetchTopPlanets(limit: number, offset: number): Promise<Planet[]>
 }

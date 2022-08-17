@@ -8,8 +8,8 @@ export class SocketEmitter {
     this.socket = socket
   }
 
-  public TopTenPlanets() {
-    this.socket.emit('topTenPlanets')
+  public TopTenPlanets(offset: number) {
+    this.socket.emit('topTenPlanets', offset)
   }
 
   public ResolveUserNames(userIDs: String[]) {

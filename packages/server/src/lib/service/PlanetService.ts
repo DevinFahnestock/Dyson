@@ -129,7 +129,7 @@ export class PlanetService implements IPlanetService {
     return this.planetRepository.createPlanet(planet)
   }
 
-  getTopTenPlanets(): Promise<Planet[]> {
-    return this.planetRepository.fetchTopPlanets(10)
+  getTopTenPlanets(offset: number): Promise<Planet[]> {
+    return this.planetRepository.fetchTopPlanets(10, offset)
   }
 }
