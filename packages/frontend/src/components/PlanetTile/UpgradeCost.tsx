@@ -1,8 +1,10 @@
 import React from 'react'
 import { Planet } from '@dyson/shared/dist/Planet'
 
-import upgradeTimes from '@dyson/shared/src/resources/upgrade-times.json'
-import upgradeCosts from '@dyson/shared/src/resources/upgrade-costs.json'
+import { PlanetResourceUpgradeCost, PlanetTimeUpgradeCost } from '@dyson/shared/dist/ResourceCost'
+
+import dayjs from '@dyson/shared/dist/Time/Time'
+import { duration } from 'dayjs'
 
 interface props {
   planet: Planet
@@ -10,7 +12,15 @@ interface props {
 
 const UpgradeCost = ({ planet }: props) => {
   const planetLevel = planet.level
-  const upgradeCost = upgradeCosts[planetLevel + 1]
+  let upgradeCost = PlanetResourceUpgradeCost(planetLevel + 1)
+  const upgradeTime = PlanetTimeUpgradeCost(planetLevel + 1)
+
+  dayjs.extend(duration)
+
+  const dayjstime = dayjs.duration(upgradeTime)
+
+  const timeStr = dayjstime.format('HH:mm:ss')
+  console.table(upgradeTime)
 
   return (
     <div className='UpgradeCost'>
@@ -23,7 +33,7 @@ const UpgradeCost = ({ planet }: props) => {
       <br />
       Food: {upgradeCost.food}
       <br />
-      Time: {upgradeTimes[planetLevel + 1]}
+      Time: {timeStr}
     </div>
   )
 }

@@ -22,6 +22,7 @@ export class SocketEmitter {
       userID: userID,
     })
   }
+
   public UserStateChange(user: User) {
     this.socket.emit('userStateChanged', user)
   }

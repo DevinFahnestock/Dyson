@@ -23,6 +23,8 @@
   },
   "scripts": {
     "start": "concurrently \"npm run -w=@dyson/shared start\" \"npm run -w=@dyson/frontend start\" \"npm run -w=@dyson/server start\"",
+    "start-front-back": "concurrently \"npm run -w=@dyson/frontend start\" \"npm run -w=@dyson/server start\"",
+    "start-shared": "npm run -w=@dyson/shared start",
     "build": "npm run build -ws"
   }
 }

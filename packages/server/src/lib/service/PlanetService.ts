@@ -5,8 +5,7 @@ import { IPlanetService } from './IPlanetService'
 
 import Time from '@dyson/shared/dist/Time/Time'
 import PlanetNames from '@dyson/shared/src/resources/planet-names.json'
-import upgradeTimes from '@dyson/shared/src/resources/upgrade-times.json'
-import upgradeCosts from '@dyson/shared/src/resources/upgrade-costs.json'
+import { PlanetResourceUpgradeCost, PlanetTimeUpgradeCost } from '@dyson/shared/dist/ResourceCost'
 import { Warehouse } from '@dyson/shared/dist/Warehouse'
 
 export class PlanetService implements IPlanetService {
@@ -34,20 +33,10 @@ export class PlanetService implements IPlanetService {
 
     const nextLevel = planetToUpgrade.level + 1
 
-    const upgradeCost = upgradeCosts[nextLevel]
+    const upgradeCost = PlanetResourceUpgradeCost(nextLevel)
 
-    //think of a better way to do this that isnt a 3AM solution
-    // if (upgradeCost.metal > warehouse.metal) {return null}
-    // if (upgradeCost.organic > warehouse.organic) {return null}
-    // if (upgradeCost.money > warehouse.money) {return null}
-    // if (upgradeCost.food > warehouse.food) {return null}
+    console.log('cost', upgradeCost)
 
-    // warehouse.metal -= upgradeCost.metal
-    // warehouse.organic -= upgradeCost.organic
-    // warehouse.money -= upgradeCost.money
-    // warehouse.food -= upgradeCost.food
-
-    //better way
     for (const [resource, amount] of Object.entries(upgradeCost)) {
       if (amount > warehouse[resource]) {
         return null
@@ -55,14 +44,14 @@ export class PlanetService implements IPlanetService {
     }
 
     for (const [resource, amount] of Object.entries(upgradeCost)) {
-      warehouse[resource] -= amount
+      warehouse[resource] -= amount as number
     }
 
-    const time = upgradeTimes[planetToUpgrade.level].split(':')
+    const time = PlanetTimeUpgradeCost(planetToUpgrade.level)
     planetToUpgrade.upgradeFinishedTime = Time.utc()
-      .add(parseInt(time[0]), 'hour')
-      .add(parseInt(time[1]), 'minute')
-      .add(parseInt(time[2]), 'second')
+      .add(time.hours, 'hour')
+      .add(time.minutes, 'minute')
+      .add(time.seconds, 'second')
       .toISOString()
 
     this.updatePlanet(planetToUpgrade, userID)
