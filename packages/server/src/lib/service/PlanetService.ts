@@ -132,4 +132,8 @@ export class PlanetService implements IPlanetService {
   getTopTenPlanets(offset: number): Promise<Planet[]> {
     return this.planetRepository.fetchTopPlanets(10, offset)
   }
+
+  getCounters(): Promise<any> {
+    return this.planetRepository.getCounters()
+  }
 }

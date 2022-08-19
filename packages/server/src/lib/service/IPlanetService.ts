@@ -21,4 +21,6 @@ export interface IPlanetService {
   ): Promise<Planet>
 
   getTopTenPlanets(offset: number): Promise<Planet[]>
+
+  getCounters(): Promise<any>
 }

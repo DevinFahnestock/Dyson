@@ -1,4 +1,5 @@
 import { app } from 'firebase-admin'
+import FieldValue from 'firebase/firestore'
 import { IPlanetRepository } from './IPlanetRepository'
 import { Planet } from '@dyson/shared/dist/Planet'
 
@@ -15,6 +16,13 @@ export class FirebasePlanetRepository implements IPlanetRepository {
     planet.id = docRef.id
 
     await docRef.set(planet)
+    this.admin
+      .firestore()
+      .collection('admin')
+      .doc('gameData')
+      .collection('counters')
+      .doc('Jl2JWvpXIVqDRFMlf6LF')
+      .set({ planets: FieldValue.increment(1) }, { merge: true })
 
     return planet
   }
@@ -64,5 +72,16 @@ export class FirebasePlanetRepository implements IPlanetRepository {
 
     console.log('fetching data')
     return planets
+  }
+
+  async getCounters() {
+    const query = await this.admin
+      .firestore()
+      .collection('admin')
+      .doc('gameData')
+      .collection('counters')
+      .doc('Jl2JWvpXIVqDRFMlf6LF')
+      .get()
+    return query.data()
   }
 }

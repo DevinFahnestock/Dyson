@@ -40,6 +40,7 @@ export class SocketIONetworking implements INetworking {
       this.getTopTenPlanets(socket)
       this.resolveUserNames(socket)
       this.updateResourceGeneration(socket)
+      this.getCounters(socket)
     })
   }
 
@@ -134,6 +135,13 @@ export class SocketIONetworking implements INetworking {
       planet.LastGeneratedTime = dayjs.utc().toISOString()
       this.planetService.updatePlanet(planet, userID)
       socket.emit('planetUpdate', planet)
+    })
+  }
+
+  private getCounters(socket: Socket) {
+    socket.on('getCounters', async () => {
+      const counters = await this.planetService.getCounters()
+      socket.emit('counters', counters)
     })
   }
 }

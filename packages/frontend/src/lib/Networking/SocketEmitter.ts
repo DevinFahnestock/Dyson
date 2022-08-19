@@ -47,4 +47,8 @@ export class SocketEmitter {
       userID: userID,
     })
   }
+
+  public GetCounters() {
+    this.socket.emit('getCounters')
+  }
 }

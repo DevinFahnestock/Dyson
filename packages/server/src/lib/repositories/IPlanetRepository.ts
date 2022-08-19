@@ -10,4 +10,6 @@ export interface IPlanetRepository {
   fetchUserPlanets(userID: string): Promise<Array<Planet>>
 
   fetchTopPlanets(limit: number, offset: number): Promise<Planet[]>
+
+  getCounters(): Promise<any>
 }
