@@ -14,7 +14,6 @@ const PlanetView = ({ socketEmitter, planets, user }: any) => {
               key={planet.id}
               planet={planet}
               collectClick={() => {
-                console.log('collecting')
                 socketEmitter.UpdateResourceGeneration(planet.id, user.uid)
               }}
               upgradeClick={() => socketEmitter.UpgradePlanet(planet.id, user.uid)}

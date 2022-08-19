@@ -1,5 +1,6 @@
 import type { User } from '@dyson/shared/dist/User'
 
+import FieldValue from 'firebase/firestore'
 import { app } from 'firebase-admin'
 import { IUserRepository } from './IUserRepository'
 
@@ -12,6 +13,13 @@ export class FirebaseUserRepository implements IUserRepository {
 
   async createNewUser(user: User): Promise<User> {
     await this.admin.firestore().collection('admin').doc('gameData').collection('userData').doc(user.uid).set(user)
+    this.admin
+      .firestore()
+      .collection('admin')
+      .doc('gameData')
+      .collection('counters')
+      .doc('Jl2JWvpXIVqDRFMlf6LF')
+      .set({ users: FieldValue.increment(1) }, { merge: true })
     return user
   }
 

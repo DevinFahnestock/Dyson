@@ -1,9 +1,8 @@
-import { Planet } from "@dyson/shared/dist/Planet"
-import { PlanetType } from "@dyson/shared/dist/shared"
-import { Warehouse } from "@dyson/shared/dist/Warehouse"
+import { Planet } from '@dyson/shared/dist/Planet'
+import { PlanetType } from '@dyson/shared/dist/shared'
+import { Warehouse } from '@dyson/shared/dist/Warehouse'
 
 export interface IPlanetService {
-
   getUserPlanets(userID: string): Promise<Array<Planet>>
 
   getPlanet(PlanetID: string): Promise<Planet>
@@ -14,9 +13,14 @@ export interface IPlanetService {
 
   checkForUpgradeCompleted(userID: string, PlanetID: string): Promise<Planet>
 
-  startPlanetUpgrade(planetID: string,warehouse: Warehouse, userID: string, warehouseCalllback: (warehouse: Warehouse) => void): Promise<Planet>
+  startPlanetUpgrade(
+    planetID: string,
+    warehouse: Warehouse,
+    userID: string,
+    warehouseCalllback: (warehouse: Warehouse) => void
+  ): Promise<Planet>
 
-  getTopTenPlanets(): Promise<Planet[]>
+  getTopTenPlanets(offset: number): Promise<Planet[]>
 
+  getCounters(): Promise<any>
 }
-
