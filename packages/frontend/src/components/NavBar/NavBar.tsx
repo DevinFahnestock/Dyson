@@ -16,8 +16,12 @@ const NavBar = () => {
         <a href='/'>
           <h1>Dyson</h1>
         </a>
-        <Link to='/'>My Planets</Link>
-        <Link to='/leaderboard'>leaderboard</Link>
+        <Link to='/' className='hide'>
+          My Planets
+        </Link>
+        <Link to='/leaderboard' className='hide'>
+          leaderboard
+        </Link>
         {!user && (
           <a className='SignInButton' onClick={() => signInWithPopup()}>
             Sign in

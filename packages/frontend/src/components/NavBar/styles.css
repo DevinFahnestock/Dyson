@@ -3,6 +3,8 @@
   background-image: linear-gradient(#26408B, #22387B);
   margin-bottom: 20px;
   height: 50px;
+  max-height: 50px;
+  position: fixed;
 }
 
 .profile {
@@ -25,13 +27,16 @@
 }
 
 nav {
+  align-items: center;
   display: flex;
   flex-direction: row;
+  white-space: nowrap;
+  max-height: 50px;
   justify-content: space-between;
 }
 
 h1 {
-  font-size: x-large;
+  font-size: 2rem;
   margin: 0 1ch;
 }
 
@@ -39,4 +44,8 @@ a {
   color: aliceblue;
   cursor: pointer;
   margin: 0 1ch;
+}
+
+.hide {
+  overflow: hidden;
 }
