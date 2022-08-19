@@ -3,7 +3,7 @@ import ResourceTile from './ResourceTile'
 import './styles.css'
 const ResourceDisplay = ({ warehouse }: any) => {
   return (
-    <div>
+    <div className='ResourceDisplay'>
       <h3>Resources</h3>
       <div className='ResourceGrid'>
         {warehouse && <ResourceTile type='money' amount={warehouse.money} />}
