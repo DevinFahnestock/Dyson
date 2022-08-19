@@ -19,7 +19,8 @@
   ],
   "dependencies": {
     "concurrently": "^7.2.0",
-    "react-router-dom": "^6.3.0"
+    "react-router-dom": "^6.3.0",
+    "react-tooltip": "^4.2.21"
   },
   "scripts": {
     "start": "concurrently \"npm run -w=@dyson/shared start\" \"npm run -w=@dyson/frontend start\" \"npm run -w=@dyson/server start\"",

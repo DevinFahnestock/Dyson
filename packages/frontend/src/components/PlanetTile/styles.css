@@ -11,6 +11,7 @@
   align-items: center;
   gap: 1.5em;
   justify-content: space-around;
+  flex-wrap: wrap;
 }
 
 .UpgradeCost {
@@ -26,4 +27,24 @@
 .SimpleDescription {
   display: flex;
   flex-direction: column;
+}
+
+.CelestialBodyRenderer {
+  min-width: 100px;
+  min-height: 100px;
+}
+
+.LevelSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.PlanetName {
+  flex-basis: 150px;
+  flex-grow: 0;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

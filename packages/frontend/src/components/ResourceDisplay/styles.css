@@ -5,3 +5,8 @@
     border-top: solid salmon;
     padding: 5px;
 }
+
+.ResourceTile {
+    min-width: fit-content;
+    white-space: nowrap;
+}
