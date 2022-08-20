@@ -6,7 +6,6 @@ import './styles.css'
 const SimplePlanetView = ({ planets, usernames }: any) => {
   return (
     <div className='PlanetView'>
-      <h3>Planets:</h3>
       <div className='Planetgrid'>
         {planets &&
           planets.map((planet: any) => (

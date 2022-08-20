@@ -14,9 +14,15 @@ body {
   color: white;
 }
 
+@media only screen and (max-width: 600px) {
+  .UIdisplay {
+    flex-direction: row;
+  }
+}
+
 .UIdisplay {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: flex-start;
   gap: 5vh;
   flex-wrap: wrap;

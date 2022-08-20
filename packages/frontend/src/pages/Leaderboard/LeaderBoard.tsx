@@ -3,6 +3,8 @@ import React, { useEffect, useRef, useState } from 'react'
 import SimplePlanetView from 'src/components/PlanetView/SimplePlanetView'
 import { SocketEmitter } from 'src/lib/Networking/SocketEmitter'
 
+import './styles.css'
+
 type props = {
   socketEmitter: SocketEmitter
 }
@@ -51,13 +53,14 @@ const LeaderBoard = ({ socketEmitter }: props) => {
     pageNums.push(<a onClick={() => setOffset(i * 10)}>{i + 1}</a>)
   }
 
+  console.log(pageNums)
   return (
-    <div>
-      Rankings
-      {pageNums}
-      <div className='UIdisplay'>
-        {planets.current && usernames && <SimplePlanetView planets={planets.current} usernames={usernames} />}
+    <div className='UIdisplay'>
+      <div className='Navigation'>
+        Rankings
+        <div className='PageNumbers'>{pageNums}</div>
       </div>
+      {planets.current && usernames && <SimplePlanetView planets={planets.current} usernames={usernames} />}
     </div>
   )
 }

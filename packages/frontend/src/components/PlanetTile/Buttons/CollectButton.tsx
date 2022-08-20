@@ -1,37 +1,28 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import './styles.css'
 
-import { getResourcesGenerated } from '@dyson/shared/dist/GenerationCalculator'
-import { Planet } from '@dyson/shared/dist/Planet'
+import ReactTooltip from 'react-tooltip'
+import Generatable from './GeneratableInfoPanel'
 
 const CollectButton = ({ onClick, planet }: any) => {
-  function getGeneratedResourceTotal(planet: Planet) {
-    const newGen = getResourcesGenerated(planet)
-    let total: number = 0
-    for (const amount of Object.values(newGen)) {
-      total += amount as number
-    }
-    return total
-  }
-
-  const [total, setTotal] = useState<number>(getGeneratedResourceTotal(planet))
-
-  useEffect(() => {
-    let timer: null | NodeJS.Timer = null
-
-    timer = setInterval(() => {
-      setTotal(getGeneratedResourceTotal(planet))
-    }, 2000)
-
-    return () => {
-      timer && clearInterval(timer)
-    }
-  }, [planet])
-
+  const tooltipID = `tooltip-collectable-${planet.id}`
+  ReactTooltip.rebuild()
   return (
-    <button type='button' className='CollectButton' onClick={onClick}>
-      Collect +{total}
-    </button>
+    <div>
+      <ReactTooltip id={tooltipID}>
+        <Generatable planet={planet} />
+      </ReactTooltip>
+      <button
+        data-tip
+        data-for={tooltipID}
+        data-background-color='clear'
+        type='button'
+        className='CollectButton'
+        onClick={onClick}
+      >
+        Collect
+      </button>
+    </div>
   )
 }
 

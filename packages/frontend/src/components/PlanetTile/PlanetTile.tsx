@@ -3,10 +3,8 @@ import './styles.css'
 
 import UpgradeButton from './Buttons/UpgradeButton'
 import CelestialBodyRenderer from './CelestialBodyRenderer'
-import UpgradeCost from './UpgradeCost'
-import CollectButton from './Buttons/CollectButton'
 
-import ReactTooltip from 'react-tooltip'
+import CollectButton from './Buttons/CollectButton'
 
 interface PlanetTileProps {
   planet: any
@@ -20,14 +18,10 @@ const PlanetTile = ({ planet, upgradeClick, onUpgradeTimeComplete, collectClick 
     <div className='PlanetTile'>
       <div className='Definition'>
         <CelestialBodyRenderer type={planet.type} seed={planet.seed} />
-        <h3 className='PlanetName'>{planet.name}</h3>
-        <CollectButton onClick={collectClick} planet={planet} />
+        <h3 className='PlanetName'>{planet.name}</h3>Level {planet.level}
         <div className='LevelSection'>
-          Level {planet.level}
-          <ReactTooltip id='upgradeCost'>{!planet.upgradeFinishedTime && <UpgradeCost planet={planet} />}</ReactTooltip>
-          <a data-tip data-for='upgradeCost' data-background-color='clear'>
-            <UpgradeButton onClick={upgradeClick} onUpgradeTimeComplete={onUpgradeTimeComplete} planet={planet} />
-          </a>
+          <CollectButton onClick={collectClick} planet={planet} />
+          <UpgradeButton onClick={upgradeClick} onUpgradeTimeComplete={onUpgradeTimeComplete} planet={planet} />
         </div>
       </div>
     </div>

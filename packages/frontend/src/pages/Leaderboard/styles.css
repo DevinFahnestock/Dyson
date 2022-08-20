@@ -1,0 +1,25 @@
+.UIdisplay {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: inherit;
+    justify-content: center;
+    padding-top: 50px;
+    flex-wrap: wrap;
+}
+
+.Navigation {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.PageNumbers a {
+    font-size: 18pt;
+    color: beige;
+}
+
+.PageNumbers a:hover {
+    font-size: 18pt;
+    color: orange;
+}

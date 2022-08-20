@@ -46,6 +46,12 @@ a {
   margin: 0 1ch;
 }
 
+a:hover {
+  color: orange;
+  cursor: pointer;
+  margin: 0 1ch;
+}
+
 .hide {
   overflow: hidden;
 }

@@ -11,6 +11,9 @@ import useWarehouse from 'src/lib/gameData/useWarehouse'
 
 import { resourcesMet, isUpgrading } from './helpers/UpgradeValidations'
 
+import UpgradeCostInfoPanel from './UpgradeCostInfoPanel'
+import ReactTooltip from 'react-tooltip'
+
 dayjs.extend(duration)
 dayjs.extend(utc)
 dayjs.extend(relativeTime)
@@ -65,16 +68,28 @@ const UpgradeButton = ({ onClick, planet, onUpgradeTimeComplete }: any) => {
     }
   }, [planet?.upgradeFinishedTime])
 
+  const tooltipID = `tooltip-upgradeCost-${planet.id}`
+
+  ReactTooltip.rebuild()
+
   return (
-    <button
-      type='button'
-      className='UpgradeButton'
-      onClick={onClick}
-      data-upgrading={isUpgrading(planet)}
-      data-upgradeable={resourcesMet(nextLevelReq, warehouse)}
-    >
-      {!planet.upgradeFinishedTime ? 'Upgrade' : upgradeTimeLeft}
-    </button>
+    <div>
+      <ReactTooltip id={tooltipID}>
+        <UpgradeCostInfoPanel planet={planet} />
+      </ReactTooltip>
+      <button
+        data-tip
+        data-for={tooltipID}
+        data-background-color='clear'
+        type='button'
+        className='UpgradeButton'
+        onClick={onClick}
+        data-upgrading={isUpgrading(planet)}
+        data-upgradeable={resourcesMet(nextLevelReq, warehouse)}
+      >
+        {!planet.upgradeFinishedTime ? 'Upgrade' : upgradeTimeLeft}
+      </button>
+    </div>
   )
 }
 
