@@ -11,7 +11,8 @@
   align-items: center;
   gap: 1.5em;
   justify-content: space-around;
-  flex-wrap: wrap;
+  white-space: nowrap;
+  flex-wrap: nowrap;
 }
 
 .SimpleDescription {
@@ -41,4 +42,20 @@
 
 .LevelSection {
   gap: 10px
+}
+
+
+@media only screen and (max-width: 600px) {
+  .Definition {
+    flex-wrap: wrap;
+    flex-direction: column;
+  }
+
+  .PlanetName {
+    flex-basis: 20px;
+  }
+
+  .LevelSection {
+    flex-direction: row;
+  }
 }

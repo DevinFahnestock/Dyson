@@ -52,6 +52,11 @@ a:hover {
   margin: 0 1ch;
 }
 
-.hide {
-  overflow: hidden;
+
+
+
+@media only screen and (max-width: 600px) {
+  .hide {
+    display: none;
+  }
 }

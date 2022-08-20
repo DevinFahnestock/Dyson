@@ -14,11 +14,6 @@ body {
   color: white;
 }
 
-@media only screen and (max-width: 600px) {
-  .UIdisplay {
-    flex-direction: row;
-  }
-}
 
 .UIdisplay {
   display: flex;
@@ -28,4 +23,10 @@ body {
   flex-wrap: wrap;
   justify-content: center;
   padding-top: 50px;
+}
+
+@media only screen and (max-width: 600px) {
+  .UIdisplay {
+    flex-direction: row;
+  }
 }
