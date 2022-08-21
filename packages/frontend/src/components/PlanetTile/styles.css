@@ -4,6 +4,19 @@
   margin: 0.5em;
 }
 
+.PlanetTileSimpleView {
+  border: thick double blanchedalmond;
+  border-radius: 0.6em;
+  margin: 0.5em;
+}
+
+.PlanetTileSimpleView h3 {
+  display: flex;
+  flex-basis: 15em;
+  align-items: center;
+  justify-content: center;
+}
+
 .Definition {
   margin: 1em;
   color: blanchedalmond;
