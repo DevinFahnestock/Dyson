@@ -4,6 +4,19 @@
   margin: 0.5em;
 }
 
+.PlanetTileSimpleView {
+  border: thick double blanchedalmond;
+  border-radius: 0.6em;
+  margin: 0.5em;
+}
+
+.PlanetTileSimpleView h3 {
+  display: flex;
+  flex-basis: 15em;
+  align-items: center;
+  justify-content: center;
+}
+
 .Definition {
   margin: 1em;
   color: blanchedalmond;
@@ -11,7 +24,8 @@
   align-items: center;
   gap: 1.5em;
   justify-content: space-around;
-  flex-wrap: wrap;
+  white-space: nowrap;
+  flex-wrap: nowrap;
 }
 
 .SimpleDescription {
@@ -41,4 +55,20 @@
 
 .LevelSection {
   gap: 10px
+}
+
+
+@media only screen and (max-width: 600px) {
+  .Definition {
+    flex-wrap: wrap;
+    flex-direction: column;
+  }
+
+  .PlanetName {
+    flex-basis: 20px;
+  }
+
+  .LevelSection {
+    flex-direction: row;
+  }
 }

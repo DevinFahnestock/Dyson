@@ -10,7 +10,7 @@ interface PlanetTileProps {
 
 const PlanetTileSimpleView = ({ planet, username }: PlanetTileProps) => {
   return (
-    <div className='PlanetTile'>
+    <div className='PlanetTileSimpleView'>
       <div className='Definition'>
         <CelestialBodyRenderer type={planet.type} seed={planet.seed} />
         <h3>{planet.name}</h3>

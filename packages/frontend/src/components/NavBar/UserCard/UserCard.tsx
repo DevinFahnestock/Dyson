@@ -18,7 +18,7 @@ const UserCard = ({ user }: any) => {
           Sign out
         </a>
       </div>
-      <img src={user.photoURL} alt='Profile' />
+      <img src={user.photoURL} style={{borderRadius: '50%'}} alt='Profile' />
     </div>
   )
 }
