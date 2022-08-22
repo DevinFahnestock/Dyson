@@ -14,6 +14,7 @@ import useWarehouse from 'src/lib/gameData/useWarehouse'
 
 import { StartAllSocketListeners, disableAllSocketListeners, setupNewSocketRef } from './lib/Networking/SocketListeners'
 import { SocketEmitter } from './lib/Networking/SocketEmitter'
+import Player from './pages/Player/Player'
 
 function App() {
   const user: any = useUser()
@@ -49,8 +50,8 @@ function App() {
 
   return (
     <Router>
+      <NavBar />
       <div className='App'>
-        <NavBar />
         <Routes>
           <Route
             path='/'
@@ -68,6 +69,10 @@ function App() {
           <Route
             path='/leaderboard'
             element={socketEmitter.current && <LeaderBoard socketEmitter={socketEmitter.current} />}
+          />
+          <Route
+            path='/player/:id'
+            element={socketEmitter.current && <Player socketEmitter={socketEmitter.current} />}
           />
         </Routes>
       </div>

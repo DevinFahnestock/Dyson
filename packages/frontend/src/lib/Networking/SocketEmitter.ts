@@ -51,4 +51,8 @@ export class SocketEmitter {
   public GetCounters() {
     this.socket.emit('getCounters')
   }
+
+  public GetUserPage(userID: String) {
+    this.socket.emit('getUser', userID)
+  }
 }

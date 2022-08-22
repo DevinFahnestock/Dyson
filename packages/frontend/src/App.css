@@ -2,16 +2,17 @@
 
 body {
   background-color: #282c34;
+  font-family: "Koulen", cursive;
+  font-size: calc(10px + 2vmin);
+  color: white;
 }
 
 .App {
-  font-family: "Koulen", cursive;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  padding-top: 50px;
 }
 
 
@@ -22,7 +23,6 @@ body {
   gap: 5vh;
   flex-wrap: wrap;
   justify-content: center;
-  padding-top: 50px;
 }
 
 @media only screen and (max-width: 600px) {
