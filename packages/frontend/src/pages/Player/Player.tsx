@@ -27,10 +27,7 @@ const Player = ({ socketEmitter }: props) => {
   useEffect(() => {
     if (id) {
       getUserPageData(id)
-      // setUser(userPageData.current?.user)
-      // setPlanets(userPageData.current?.planets)
       if (userPageData?.current?.user) {
-        console.log('resolving userid')
         let userIDs: string[] = []
         userIDs.push(userPageData.current.user.uid)
         socketEmitter.ResolveUserNames(userIDs)
