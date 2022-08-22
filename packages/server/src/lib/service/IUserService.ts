@@ -6,4 +6,6 @@ export interface IUserService {
   fetchUser(user: User): Promise<User>
 
   resolveUserNames(ids: string[]): any
+
+  fetchUserByID(userID: string): Promise<User>
 }

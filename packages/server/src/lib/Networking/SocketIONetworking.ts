@@ -41,6 +41,7 @@ export class SocketIONetworking implements INetworking {
       this.resolveUserNames(socket)
       this.updateResourceGeneration(socket)
       this.getCounters(socket)
+      this.getUser(socket)
     })
   }
 
@@ -142,6 +143,17 @@ export class SocketIONetworking implements INetworking {
     socket.on('getCounters', async () => {
       const counters = await this.planetService.getCounters()
       socket.emit('counters', counters)
+    })
+  }
+
+  private getUser(socket: Socket) {
+    socket.on('getUser', async (userID) => {
+      console.log(userID)
+      const userdata = {
+        user: await this.userService.fetchUserByID(userID),
+        planets: await this.planetService.getUserPlanets(userID),
+      }
+      socket.emit('userPageData', userdata)
     })
   }
 }

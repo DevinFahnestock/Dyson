@@ -23,6 +23,15 @@ export class UserService implements IUserService {
     return null
   }
 
+  async fetchUserByID(userID: string): Promise<User> {
+    console.log('getting user data for user ', userID)
+    const userData = await this.repository.fetchUserData(userID)
+    if (userData) {
+      return userData
+    }
+    return null
+  }
+
   async resolveUserNames(ids: string[]): Promise<Object> {
     let names = {}
     for (const id of ids) {

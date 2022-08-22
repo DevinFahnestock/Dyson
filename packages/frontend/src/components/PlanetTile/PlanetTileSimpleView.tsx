@@ -16,7 +16,9 @@ const PlanetTileSimpleView = ({ planet, username }: PlanetTileProps) => {
         <h3>{planet.name}</h3>
         <div className='SimpleDescription'>
           Level {planet.level} <br />
-          Owner: {username}
+          <div className='ownertag'>
+            Owner: <a href={`/player/${planet.owner}`}>{username}</a>
+          </div>
         </div>
       </div>
     </div>
