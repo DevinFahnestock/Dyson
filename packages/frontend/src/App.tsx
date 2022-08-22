@@ -15,6 +15,7 @@ import useWarehouse from 'src/lib/gameData/useWarehouse'
 import { StartAllSocketListeners, disableAllSocketListeners, setupNewSocketRef } from './lib/Networking/SocketListeners'
 import { SocketEmitter } from './lib/Networking/SocketEmitter'
 import Player from './pages/Player/Player'
+import SignUp from './pages/SignUp/SignUp'
 
 function App() {
   const user: any = useUser()
@@ -74,6 +75,7 @@ function App() {
             path='/player/:id'
             element={socketEmitter.current && <Player socketEmitter={socketEmitter.current} />}
           />
+          <Route path='/signup' element={socketEmitter.current && <SignUp socketEmitter={socketEmitter.current} />} />
         </Routes>
       </div>
     </Router>

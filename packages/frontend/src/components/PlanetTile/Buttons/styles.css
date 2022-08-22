@@ -18,6 +18,8 @@
     padding-left: 20px;
     padding-right: 20px;
     padding-top: 3px;
+    justify-content: center;
+    align-items: center;
 }
 
 .UpgradeButton[data-upgradeable="true"] {

@@ -59,6 +59,7 @@ export class SocketIONetworking implements INetworking {
     socket.on('userStateChanged', async (user: User) => {
       const userData = await this.userService.fetchUser(user)
 
+      console.log(user)
       if (userData) {
         socket.emit('updateAll', {
           planets: await this.planetService.getUserPlanets(user.uid),

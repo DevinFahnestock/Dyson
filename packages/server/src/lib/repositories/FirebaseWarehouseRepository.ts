@@ -1,8 +1,8 @@
-import { app } from 'firebase-admin'
+import type { app } from 'firebase-admin'
 import { ResourceType } from '@dyson/shared/dist/shared'
 import { Warehouse } from '@dyson/shared/dist/Warehouse'
 import { IWarehouseRepository as IWarehouseRepository } from './IWarehouseRepository'
-import FieldValue from 'firebase/firestore'
+import { firestore } from 'firebase-admin'
 
 export class FirebaseWarehouseRepository implements IWarehouseRepository {
   protected readonly admin: app.App
@@ -73,7 +73,7 @@ export class FirebaseWarehouseRepository implements IWarehouseRepository {
       .doc('gameData')
       .collection('counters')
       .doc('Jl2JWvpXIVqDRFMlf6LF')
-      .set({ warehouses: FieldValue.increment(1) }, { merge: true })
+      .set({ warehouses: firestore.FieldValue.increment(1) }, { merge: true })
     return warehouse.id
   }
 

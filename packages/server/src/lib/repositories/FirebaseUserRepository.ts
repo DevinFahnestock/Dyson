@@ -1,7 +1,7 @@
 import type { User } from '@dyson/shared/dist/User'
+import { firestore } from 'firebase-admin'
 
-import FieldValue from 'firebase/firestore'
-import { app } from 'firebase-admin'
+import type { app } from 'firebase-admin'
 import { IUserRepository } from './IUserRepository'
 
 export class FirebaseUserRepository implements IUserRepository {
@@ -19,7 +19,7 @@ export class FirebaseUserRepository implements IUserRepository {
       .doc('gameData')
       .collection('counters')
       .doc('Jl2JWvpXIVqDRFMlf6LF')
-      .set({ users: FieldValue.increment(1) }, { merge: true })
+      .set({ users: firestore.FieldValue.increment(1) }, { merge: true })
     return user
   }
 

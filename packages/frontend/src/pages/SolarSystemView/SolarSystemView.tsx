@@ -18,6 +18,8 @@ type props = {
 }
 
 export const SolarSystemView = ({ user, warehouse, planets, socketEmitter }: props) => {
+  console.log(user)
+  console.log(warehouse)
   return (
     <div>
       {user ? (

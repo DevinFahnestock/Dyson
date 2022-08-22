@@ -1,10 +1,11 @@
 import React from 'react'
+import { SocketEmitter } from 'src/lib/Networking/SocketEmitter'
+import Signupform from './components/Signupform'
 
-const SignUp = () => {
+const SignUp = ({ socketEmitter }: { socketEmitter: SocketEmitter }) => {
   return (
     <div>
-      Create a new Account Username: <input className='usernameInput' />
-      Password: <input className='passwordInput' type='password' />
+      <Signupform socketEmitter={socketEmitter} />
     </div>
   )
 }

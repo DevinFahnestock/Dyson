@@ -1,5 +1,5 @@
-import { app } from 'firebase-admin'
-import FieldValue from 'firebase/firestore'
+import type { app } from 'firebase-admin'
+import { firestore } from 'firebase-admin'
 import { IPlanetRepository } from './IPlanetRepository'
 import { Planet } from '@dyson/shared/dist/Planet'
 
@@ -22,7 +22,7 @@ export class FirebasePlanetRepository implements IPlanetRepository {
       .doc('gameData')
       .collection('counters')
       .doc('Jl2JWvpXIVqDRFMlf6LF')
-      .set({ planets: FieldValue.increment(1) }, { merge: true })
+      .set({ planets: firestore.FieldValue.increment(1) }, { merge: true })
 
     return planet
   }
