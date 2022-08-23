@@ -51,17 +51,15 @@ const Signupform = ({ socketEmitter }: { socketEmitter: SocketEmitter }) => {
           await updateProfile(auth.currentUser, {
             displayName: acc.displayName,
           })
+          // change user (firebase.auth().currentUser)
         }
 
         console.log('account created successfully', userCredential)
       })
       .catch((error) => {
-        console.error(error)
         setError(error)
       })
       .finally(() => navigate('/'))
-
-    console.log(error)
   }
 
   return (
