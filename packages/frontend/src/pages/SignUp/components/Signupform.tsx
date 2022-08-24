@@ -42,7 +42,6 @@ const Signupform = ({ socketEmitter }: { socketEmitter: SocketEmitter }) => {
       setError('Username must be at least 5 characters long')
       return
     }
-
     createUserWithEmailAndPassword(auth, acc.email, acc.password)
       .then(async (userCredential) => {
         console.log(auth.currentUser)
