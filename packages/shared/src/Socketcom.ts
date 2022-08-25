@@ -1,0 +1,17 @@
+export enum Socketcom {
+  planetUpdate = 'planetUpdate',
+  userStateChanged = 'userStateChanged',
+  updatePlanetsAndWarehouse = 'updateAll',
+  checkCompleteUpgrade = 'checkCompleteUpgrade',
+  upgradePlanet = 'upgradePlanet',
+  warehouseUpdate = 'warehouseUpdate',
+  topTenPlanets = 'topTenPlanets',
+  topTenUpdate = 'topTenUpdate',
+  resolveUserNames = 'resolveUserNames',
+  usernamesResolved = 'usernamesResolved',
+  UpdateResourceGeneration = 'UpdateResourceGeneration',
+  getCounters = 'getCounters',
+  counters = 'counters',
+  getUser = 'getUser',
+  userPageData = 'userPageData',
+}

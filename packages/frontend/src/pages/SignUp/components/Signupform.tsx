@@ -6,6 +6,7 @@ import { createUserWithEmailAndPassword } from 'firebase/auth'
 import { SocketEmitter } from 'src/lib/Networking/SocketEmitter'
 import { useNavigate } from 'react-router-dom'
 import { updateProfile } from 'firebase/auth'
+import useToken from 'src/lib/gameData/useToken'
 
 const Signupform = ({ socketEmitter }: { socketEmitter: SocketEmitter }) => {
   let newAccount = useRef<{
@@ -20,6 +21,7 @@ const Signupform = ({ socketEmitter }: { socketEmitter: SocketEmitter }) => {
 
   let navigate = useNavigate()
   const auth = useAuthentication()
+  const { updateToken }: any = useToken()
 
   const verifyCreation = () => {
     let acc = newAccount.current
@@ -44,13 +46,13 @@ const Signupform = ({ socketEmitter }: { socketEmitter: SocketEmitter }) => {
     }
     createUserWithEmailAndPassword(auth, acc.email, acc.password)
       .then(async (userCredential) => {
-        console.log(auth.currentUser)
         if (auth.currentUser) {
           console.log('updating username')
           await updateProfile(auth.currentUser, {
             displayName: acc.displayName,
           })
-          // change user (firebase.auth().currentUser)
+
+          await updateToken(await auth.currentUser.getIdToken())
         }
 
         console.log('account created successfully', userCredential)

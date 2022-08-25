@@ -7,7 +7,7 @@ export class Auth {
     this.admin = admin
   }
 
-  public validateToken(token: string): string {
+  public validateToken(token: string) {
     this.admin
       .auth()
       .verifyIdToken(token)

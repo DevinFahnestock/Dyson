@@ -70,7 +70,7 @@ export class FirebasePlanetRepository implements IPlanetRepository {
       planets.push(docRef.data())
     })
 
-    console.log('fetching data')
+    console.log('fetching leaderboard data')
     return planets
   }
 

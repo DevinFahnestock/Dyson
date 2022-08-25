@@ -1,4 +1,4 @@
-import type { User } from '@dyson/shared/dist/User'
+import { User } from '@firebase/auth'
 import { firestore } from 'firebase-admin'
 
 import type { app } from 'firebase-admin'
@@ -23,16 +23,11 @@ export class FirebaseUserRepository implements IUserRepository {
     return user
   }
 
-  async fetchUserData(userID: string): Promise<User> {
-    const result = await this.admin
-      .firestore()
-      .collection('admin')
-      .doc('gameData')
-      .collection('userData')
-      .doc(userID)
-      .get()
-    return result.data() as User
-  }
+  // async fetchUserData(userID: string): Promise<User> {
+  //   const result = await this.admin.auth().getUser(userID)
+
+  //   return result
+  // }
 
   async resolveUserID(id: string): Promise<string> {
     const user = await this.admin.firestore().collection('admin').doc('gameData').collection('userData').doc(id).get()

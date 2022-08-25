@@ -1,5 +1,5 @@
 import { Planet } from '@dyson/shared/dist/Planet'
-import { User } from '@dyson/shared/src/User'
+import { User } from '@firebase/auth'
 import React, { useEffect, useRef, useState } from 'react'
 import { SocketEmitter } from 'src/lib/Networking/SocketEmitter'
 

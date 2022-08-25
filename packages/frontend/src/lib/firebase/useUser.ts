@@ -13,7 +13,6 @@ const useUser = () => {
       return
     }
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      console.log('auth changed', user)
       setUser(user)
     })
 
