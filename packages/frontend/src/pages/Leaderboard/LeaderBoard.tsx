@@ -50,10 +50,13 @@ const LeaderBoard = ({ socketEmitter }: props) => {
 
   let pageNums = []
   for (let i = 0; i < counters.planets / 10; i++) {
-    pageNums.push(<a onClick={() => setOffset(i * 10)}>{i + 1}</a>)
+    pageNums.push(
+      <a key={i} onClick={() => setOffset(i * 10)}>
+        {i + 1}
+      </a>
+    )
   }
 
-  console.log(pageNums)
   return (
     <div className='UIdisplay'>
       <div className='Navigation'>

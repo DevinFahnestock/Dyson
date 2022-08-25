@@ -1,5 +1,4 @@
 import { Socket } from 'socket.io-client'
-import { User } from '@dyson/shared/src/User'
 
 export class SocketEmitter {
   public socket: Socket
@@ -16,35 +15,28 @@ export class SocketEmitter {
     this.socket.emit('resolveUserNames', userIDs)
   }
 
-  public CheckCompleteUpgrade(planetID: String, userID: String) {
+  public CheckCompleteUpgrade(planetID: String, token: String) {
     this.socket.emit('checkCompleteUpgrade', {
       planetID: planetID,
-      userID: userID,
+      token: token,
     })
   }
 
-  public UserStateChange(user: User) {
-    this.socket.emit('userStateChanged', user)
+  public UserStateChange(token: string) {
+    this.socket.emit('userStateChanged', token)
   }
 
-  public CheckForCompleteUpgrade(planetID: String, userID: String) {
-    this.socket.emit('checkCompleteUpgrade', {
-      planetID: planetID,
-      userID: userID,
-    })
-  }
-
-  public UpgradePlanet(planetID: String, userID: String) {
+  public UpgradePlanet(planetID: String, token: String) {
     this.socket.emit('upgradePlanet', {
       planetID: planetID,
-      userID: userID,
+      token: token,
     })
   }
 
-  public UpdateResourceGeneration(planetID: String, userID: String) {
+  public UpdateResourceGeneration(planetID: String, token: String) {
     this.socket.emit('UpdateResourceGeneration', {
       planetID: planetID,
-      userID: userID,
+      token: token,
     })
   }
 

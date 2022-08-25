@@ -15,6 +15,9 @@ import useWarehouse from 'src/lib/gameData/useWarehouse'
 import { StartAllSocketListeners, disableAllSocketListeners, setupNewSocketRef } from './lib/Networking/SocketListeners'
 import { SocketEmitter } from './lib/Networking/SocketEmitter'
 import Player from './pages/Player/Player'
+import SignUp from './pages/SignUp/SignUp'
+import SignIn from './pages/SignIn/SignIn'
+import { useToken } from './lib/gameData/useToken'
 
 function App() {
   const user: any = useUser()
@@ -23,10 +26,25 @@ function App() {
 
   const socketEmitter = useRef<SocketEmitter | null>()
 
+  const { token, updateToken }: any = useToken()
+
   useEffect(() => {
-    !user && clearPlanets()
-    user && socketEmitter.current?.UserStateChange(user)
-  }, [user, user?.uid, clearPlanets])
+    //clear planets if the user logs out
+    if (!token) {
+      console.log('token not found. User not logged in, clearing planets')
+      clearPlanets()
+      if (user) {
+        const setNewToken = async () => {
+          updateToken(await user.getIdToken())
+        }
+        setNewToken()
+      }
+      return
+    }
+
+    // user state has changed
+    token && socketEmitter.current?.UserStateChange(token)
+  }, [user, updateToken, token, clearPlanets])
 
   useEffect(() => {
     if (!socketEmitter.current?.socket) {
@@ -70,10 +88,13 @@ function App() {
             path='/leaderboard'
             element={socketEmitter.current && <LeaderBoard socketEmitter={socketEmitter.current} />}
           />
+
           <Route
             path='/player/:id'
             element={socketEmitter.current && <Player socketEmitter={socketEmitter.current} />}
           />
+          <Route path='/signup' element={socketEmitter.current && <SignUp socketEmitter={socketEmitter.current} />} />
+          <Route path='/signin' element={socketEmitter.current && <SignIn />} />
         </Routes>
       </div>
     </Router>

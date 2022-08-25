@@ -18,6 +18,7 @@
     "packages/server"
   ],
   "dependencies": {
+    "@firebase/firestore": "^3.4.14",
     "concurrently": "^7.2.0",
     "react-router-dom": "^6.3.0",
     "react-tooltip": "^4.2.21"

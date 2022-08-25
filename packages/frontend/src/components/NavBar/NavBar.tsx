@@ -1,14 +1,15 @@
 import React from 'react'
 import './styles.css'
 
-import { useSignInWithGoogle, useUser } from '../../lib/firebase'
-import { Link } from 'react-router-dom'
+import { useUser } from '../../lib/firebase'
+import { Link, useNavigate } from 'react-router-dom'
 import { User } from 'firebase/auth'
 import UserCard from './UserCard/UserCard'
 
 const NavBar = () => {
   const user: User | null = useUser()
-  const { signInWithPopup } = useSignInWithGoogle()
+
+  const navigate = useNavigate()
 
   return (
     <div className='container'>
@@ -23,9 +24,24 @@ const NavBar = () => {
           leaderboard
         </Link>
         {!user && (
-          <a className='SignInButton' onClick={() => signInWithPopup()}>
-            Sign in
-          </a>
+          <div>
+            <a
+              className='SignInButton'
+              onClick={() => {
+                navigate('/Signin')
+              }}
+            >
+              Sign in
+            </a>
+            <a
+              className='SignUpButton'
+              onClick={() => {
+                navigate('/Signup')
+              }}
+            >
+              Sign up
+            </a>
+          </div>
         )}
         {user && <UserCard user={user} />}
       </nav>
@@ -34,3 +50,6 @@ const NavBar = () => {
 }
 
 export default NavBar
+
+// const { signInWithPopup } = useSignInWithGoogle()
+//   () => signInWithPopup()

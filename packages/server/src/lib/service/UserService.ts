@@ -1,4 +1,4 @@
-import type { User } from '@dyson/shared/dist/User'
+import { User } from '@firebase/auth'
 
 import { IUserRepository } from '../repositories/IUserRepository'
 import { IUserService } from './IUserService'
@@ -14,23 +14,23 @@ export class UserService implements IUserService {
     return await this.repository.createNewUser(user)
   }
 
-  async fetchUser(user: User): Promise<User> {
-    const userData = await this.repository.fetchUserData(user.uid)
-    if (userData) {
-      return userData
-    }
-    this.createNewUser(user)
-    return null
-  }
+  // async fetchUser(user: User): Promise<User> {
+  //   const userData = await this.repository.fetchUserData(user.uid)
+  //   if (userData) {
+  //     return userData
+  //   }
+  //   this.createNewUser(user)
+  //   return null
+  // }
 
-  async fetchUserByID(userID: string): Promise<User> {
-    console.log('getting user data for user ', userID)
-    const userData = await this.repository.fetchUserData(userID)
-    if (userData) {
-      return userData
-    }
-    return null
-  }
+  // async fetchUserByID(userID: string): Promise<User> {
+  //   console.log('getting user data for user ', userID)
+  //   const userData = await this.repository.fetchUserData(userID)
+  //   if (userData) {
+  //     return userData
+  //   }
+  //   return null
+  // }
 
   async resolveUserNames(ids: string[]): Promise<Object> {
     let names = {}
