@@ -1,9 +1,11 @@
 import React from 'react'
+import useToken from 'src/lib/gameData/useToken'
 import PlanetTile from '../PlanetTile/PlanetTile'
 
 import './styles.css'
 
-const PlanetView = ({ socketEmitter, planets, user }: any) => {
+const PlanetView = ({ socketEmitter, planets }: any) => {
+  const { token }: any = useToken()
   return (
     <div className='Planetview'>
       <h3>Planets:</h3>
@@ -14,10 +16,10 @@ const PlanetView = ({ socketEmitter, planets, user }: any) => {
               key={planet.id}
               planet={planet}
               collectClick={() => {
-                socketEmitter.UpdateResourceGeneration(planet.id, user.uid)
+                socketEmitter.UpdateResourceGeneration(planet.id, token)
               }}
-              upgradeClick={() => socketEmitter.UpgradePlanet(planet.id, user.uid)}
-              onUpgradeTimeComplete={() => socketEmitter.CheckForCompleteUpgrade(planet.id, user.uid)}
+              upgradeClick={() => socketEmitter.UpgradePlanet(planet.id, token)}
+              onUpgradeTimeComplete={() => socketEmitter.CheckCompleteUpgrade(planet.id, token)}
             />
           ))}
         {!planets && <>You have no Planets!</>}

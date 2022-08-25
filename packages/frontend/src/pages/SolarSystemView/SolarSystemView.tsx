@@ -5,7 +5,7 @@ import PlanetView from '../../components/PlanetView/PlanetView'
 import ResourceDisplay from '../../components/ResourceDisplay/ResourceDisplay'
 
 import './styles.css'
-import { User } from '@dyson/shared/src/User'
+import { User } from '@firebase/auth'
 import { Warehouse } from '@dyson/shared/dist/Warehouse'
 import { Planet } from '@dyson/shared/dist/Planet'
 import { SocketEmitter } from 'src/lib/Networking/SocketEmitter'
@@ -18,8 +18,6 @@ type props = {
 }
 
 export const SolarSystemView = ({ user, warehouse, planets, socketEmitter }: props) => {
-  console.log(user)
-  console.log(warehouse)
   return (
     <div>
       {user ? (

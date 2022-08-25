@@ -10,6 +10,7 @@ import { getAuth } from 'firebase/auth'
 import AuthenticationProvider from './lib/firebase/authenticationProvider'
 import { PlanetsProvider } from './lib/gameData/usePlanets'
 import { WarehouseProvider } from './lib/gameData/useWarehouse'
+import { TokenProvider } from './lib/gameData/useToken'
 
 const firebaseConfig = {
   apiKey: 'AIzaSyCVlFMqt9BuAiu-tX7TFa4x8sUwxqxmc7g',
@@ -30,11 +31,13 @@ if (rootElement) {
   root.render(
     // <React.StrictMode>
     <AuthenticationProvider value={getAuth(firebaseApp)}>
-      <PlanetsProvider>
-        <WarehouseProvider>
-          <App />
-        </WarehouseProvider>
-      </PlanetsProvider>
+      <TokenProvider>
+        <PlanetsProvider>
+          <WarehouseProvider>
+            <App />
+          </WarehouseProvider>
+        </PlanetsProvider>
+      </TokenProvider>
     </AuthenticationProvider>
     // </React.StrictMode>
   )
