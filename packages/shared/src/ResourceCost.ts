@@ -1,9 +1,9 @@
 export const PlanetResourceUpgradeCost = (level: number) => {
   return {
-    metal: Math.floor(20 * Math.pow(1.39, level)),
-    organic: Math.floor(15 * Math.pow(1.35, level)),
-    food: Math.floor(10 * Math.pow(1.46, level)),
-    money: Math.floor(25 * Math.pow(1.26, level)),
+    metal: Math.floor(20 * Math.pow(1.79, level)),
+    organic: Math.floor(15 * Math.pow(1.65, level)),
+    food: Math.floor(10 * Math.pow(1.76, level)),
+    money: Math.floor(25 * Math.pow(1.56, level)),
   }
 }
 

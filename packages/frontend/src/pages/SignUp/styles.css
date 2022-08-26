@@ -151,7 +151,7 @@ input:focus~.highlight {
     }
 }
 
-.SignupForm button {
+.Signuptype button {
     background-color: #FFFFFF;
     border: 0;
     border-radius: .5rem;
@@ -172,17 +172,24 @@ input:focus~.highlight {
     touch-action: manipulation;
 }
 
-.SignupForm button:hover {
+.Signuptype button:hover {
     background-color: orange;
 }
 
-.SignupForm button:focus {
+.Signuptype button:focus {
     outline: 2px solid transparent;
     outline-offset: 2px;
 }
 
-.SignupForm button:focus-visible {
+.Signuptype button:focus-visible {
     box-shadow: none;
+}
+
+.Signuptype {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 .SignupForm {
@@ -191,4 +198,5 @@ input:focus~.highlight {
     align-items: center;
     justify-content: center;
     padding-top: 50px;
+    gap: 2em;
 }

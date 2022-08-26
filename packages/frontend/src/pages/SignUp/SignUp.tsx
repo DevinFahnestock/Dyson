@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react'
 import './styles.css'
 
-import { useAuthentication } from 'src/lib/firebase'
+import { useAuthentication, useSignInWithGoogle } from 'src/lib/firebase'
 import { createUserWithEmailAndPassword } from 'firebase/auth'
 import { SocketEmitter } from 'src/lib/Networking/SocketEmitter'
 import { useNavigate } from 'react-router-dom'
@@ -11,6 +11,8 @@ import useToken from 'src/lib/gameData/useToken'
 import validator from 'validator'
 
 const SignUp = ({ socketEmitter }: { socketEmitter: SocketEmitter }) => {
+  const { signInWithPopup } = useSignInWithGoogle()
+
   let newAccount = useRef<{
     displayName: string
     email: string
@@ -67,7 +69,7 @@ const SignUp = ({ socketEmitter }: { socketEmitter: SocketEmitter }) => {
         navigate('/')
       })
       .catch((error) => {
-        console.log(error)
+        console.table(error)
         //setError(error)
       })
   }
@@ -75,70 +77,76 @@ const SignUp = ({ socketEmitter }: { socketEmitter: SocketEmitter }) => {
   return (
     <div className='SignupForm'>
       Create a new Account
-      <br />
-      <div className='group'>
-        <input
-          type='text'
-          id='username'
-          onChange={(e) => {
-            newAccount.current['displayName'] = e.target.value
-          }}
-        />
-        <span className='highlight' />
-        <span className='bar' />
-        <label>Username</label>
+      <div className='Signuptype'>
+        <div className='group'>
+          <input
+            type='text'
+            id='username'
+            onChange={(e) => {
+              newAccount.current['displayName'] = e.target.value
+            }}
+          />
+          <span className='highlight' />
+          <span className='bar' />
+          <label>Username</label>
+        </div>
+        <div className='group'>
+          <input
+            type='password'
+            id='password'
+            onChange={(e) => {
+              newAccount.current['password'] = e.target.value
+            }}
+          />
+          <span className='highlight' />
+          <span className='bar' />
+          <label>Password</label>
+        </div>
+        <div className='group'>
+          <input
+            type='password'
+            id='passwordVerify'
+            onChange={(e) => {
+              newAccount.current['passwordVerify'] = e.target.value
+            }}
+          />
+          <span className='highlight' />
+          <span className='bar' />
+          <label>Verify Password</label>
+        </div>
+        <div className='group'>
+          <input
+            type='text'
+            id='email'
+            onChange={(e) => {
+              newAccount.current['email'] = e.target.value
+            }}
+          />
+          <span className='highlight' />
+          <span className='bar' />
+          <label>Email</label>
+        </div>
+        <div className='group'>
+          <input
+            type='text'
+            id='phone'
+            onChange={(e) => {
+              newAccount.current['phone'] = e.target.value
+            }}
+          />
+          <span className='highlight' />
+          <span className='bar' />
+          <label>Phone Number</label>
+        </div>
+        <button type='submit' onClick={() => verifyCreation()}>
+          Create my Account
+        </button>
       </div>
-      <div className='group'>
-        <input
-          type='password'
-          id='password'
-          onChange={(e) => {
-            newAccount.current['password'] = e.target.value
-          }}
-        />
-        <span className='highlight' />
-        <span className='bar' />
-        <label>Password</label>
+      <div className='Signuptype'>
+        <button type='button' onClick={() => signInWithPopup()}>
+          Sign in With Google
+        </button>
       </div>
-      <div className='group'>
-        <input
-          type='password'
-          id='passwordVerify'
-          onChange={(e) => {
-            newAccount.current['passwordVerify'] = e.target.value
-          }}
-        />
-        <span className='highlight' />
-        <span className='bar' />
-        <label>Verify Password</label>
-      </div>
-      <div className='group'>
-        <input
-          type='text'
-          id='email'
-          onChange={(e) => {
-            newAccount.current['email'] = e.target.value
-          }}
-        />
-        <span className='highlight' />
-        <span className='bar' />
-        <label>Email</label>
-      </div>
-      <div className='group'>
-        <input
-          type='text'
-          id='phone'
-          onChange={(e) => {
-            newAccount.current['phone'] = e.target.value
-          }}
-        />
-        <span className='highlight' />
-        <span className='bar' />
-        <label>Phone Number</label>
-      </div>
-      <button type='submit' onClick={() => verifyCreation()}>
-        Create my Account
-      </button>
       {error}
     </div>
   )
