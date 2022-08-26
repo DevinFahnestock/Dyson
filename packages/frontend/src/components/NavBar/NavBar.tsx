@@ -50,6 +50,3 @@ const NavBar = () => {
 }
 
 export default NavBar
-
-// const { signInWithPopup } = useSignInWithGoogle()
-//   () => signInWithPopup()

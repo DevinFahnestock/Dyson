@@ -172,17 +172,24 @@ input:focus~.highlight {
     touch-action: manipulation;
 }
 
-.SigninForm button:hover {
+.signintype button:hover {
     background-color: orange;
 }
 
-.SigninForm button:focus {
+.signintype button:focus {
     outline: 2px solid transparent;
     outline-offset: 2px;
 }
 
-.SigninForm button:focus-visible {
+.signintype button:focus-visible {
     box-shadow: none;
+}
+
+.signintype {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 .SigninForm {
@@ -191,4 +198,5 @@ input:focus~.highlight {
     align-items: center;
     justify-content: center;
     padding-top: 50px;
+    gap: 2em;
 }
