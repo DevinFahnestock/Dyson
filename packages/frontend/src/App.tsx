@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import './App.css'
 import NavBar from './components/NavBar/NavBar'
 import LeaderBoard from './pages/Leaderboard/LeaderBoard'
-import { SolarSystemView } from './pages/SolarSystemView/SolarSystemView'
+import { SolarSystem } from './pages/SolarSystem/SolarSystem'
 
 import { useEffect, useRef } from 'react'
 
@@ -75,7 +75,7 @@ function App() {
             path='/'
             element={
               socketEmitter.current && (
-                <SolarSystemView
+                <SolarSystem
                   socketEmitter={socketEmitter?.current}
                   user={user}
                   planets={planets}

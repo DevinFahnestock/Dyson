@@ -4,7 +4,7 @@ import './styles.css'
 import { useUser } from '../../lib/firebase'
 import { Link, useNavigate } from 'react-router-dom'
 import { User } from 'firebase/auth'
-import UserCard from './UserCard/UserCard'
+import UserCard from '../UserCard/UserCard'
 
 const NavBar = () => {
   const user: User | null = useUser()

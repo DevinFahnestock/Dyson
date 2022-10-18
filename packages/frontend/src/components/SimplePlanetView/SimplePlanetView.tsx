@@ -1,5 +1,5 @@
 import React from 'react'
-import PlanetTileSimpleView from '../PlanetTile/PlanetTileSimpleView'
+import SimplePlanetTile from '../SimplePlanetTile/SimplePlanetTile'
 
 import './styles.css'
 
@@ -9,7 +9,7 @@ const SimplePlanetView = ({ planets, usernames }: any) => {
       <div className='Planetgrid'>
         {planets &&
           planets.map((planet: any) => (
-            <PlanetTileSimpleView key={planet.id} planet={planet} username={usernames[planet.owner]} />
+            <SimplePlanetTile key={planet.id} planet={planet} username={usernames[planet.owner]} />
           ))}
         {!planets && <>No Planets Found!</>}
       </div>

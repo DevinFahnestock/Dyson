@@ -1,10 +1,10 @@
 import React from 'react'
 import useToken from 'src/lib/hooks/useToken'
-import PlanetTile from '../PlanetTile/PlanetTile'
+import ModifiablePlanetTile from '../PlanetTile/ModifiablePlanetTile'
 
 import './styles.css'
 
-const PlanetView = ({ socketEmitter, planets }: any) => {
+const ModifiablePlanetView = ({ socketEmitter, planets }: any) => {
   const { token }: any = useToken()
   return (
     <div className='Planetview'>
@@ -12,7 +12,7 @@ const PlanetView = ({ socketEmitter, planets }: any) => {
       <div className='Planetgrid'>
         {planets &&
           planets.map((planet: any) => (
-            <PlanetTile
+            <ModifiablePlanetTile
               key={planet.id}
               planet={planet}
               collectClick={() => {
@@ -28,4 +28,4 @@ const PlanetView = ({ socketEmitter, planets }: any) => {
   )
 }
 
-export default PlanetView
+export default ModifiablePlanetView

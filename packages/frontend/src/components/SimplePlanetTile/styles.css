@@ -1,4 +1,4 @@
-.ModifiablePlanetTile {
+.PlanetTile {
   border: thick double blanchedalmond;
   border-radius: 0.6em;
   margin: 0.5em;
@@ -15,42 +15,31 @@
   flex-wrap: nowrap;
 }
 
+
+.PlanetTile h3 {
+  display: flex;
+  flex-basis: 15em;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.Description {
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  white-space: nowrap;
+}
+
 .CelestialBodyRenderer {
   min-width: 100px;
   min-height: 100px;
 }
 
-.LevelSection {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.PlanetName {
-  flex-basis: 150px;
-  flex-grow: 0;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.LevelSection {
-  gap: 10px
-}
-
 
 @media only screen and (max-width: 600px) {
-  .Definition {
+  .PlanetTile {
     flex-wrap: wrap;
     flex-direction: column;
-  }
-
-  .PlanetName {
-    flex-basis: 20px;
-  }
-
-  .LevelSection {
-    flex-direction: row;
   }
 }

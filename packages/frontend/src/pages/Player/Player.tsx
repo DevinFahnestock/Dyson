@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { SocketEmitter } from 'src/lib/Networking/SocketEmitter'
 
 import { useParams } from 'react-router-dom'
-import SimplePlanetView from 'src/components/PlanetView/SimplePlanetView'
+import SimplePlanetView from 'src/components/SimplePlanetView/SimplePlanetView'
 
 type props = {
   socketEmitter: SocketEmitter

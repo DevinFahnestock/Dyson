@@ -1,6 +1,6 @@
 import { Planet } from '@dyson/shared/dist/Planet'
 import React, { useEffect, useRef, useState } from 'react'
-import SimplePlanetView from 'src/components/PlanetView/SimplePlanetView'
+import SimplePlanetView from 'src/components/SimplePlanetView/SimplePlanetView'
 import { SocketEmitter } from 'src/lib/Networking/SocketEmitter'
 
 import './styles.css'

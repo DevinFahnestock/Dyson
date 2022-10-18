@@ -11,7 +11,7 @@ export const resourcesMet = (nextLevelReq: any, warehouse: Warehouse) => {
 }
 
 export const isUpgrading = (planet: Planet) => {
-  if (planet?.upgradeFinishedTime) {
+  if (planet.upgradeFinishedTime) {
     return true
   }
   return false

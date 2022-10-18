@@ -1,5 +1,5 @@
 import React from 'react'
-import PlanetView from '../../components/PlanetView/PlanetView'
+import ModifiablePlanetView from '../../components/ModifiablePlanetView/ModifiablePlanetView'
 import ResourceDisplay from '../../components/ResourceDisplay/ResourceDisplay'
 
 import './styles.css'
@@ -16,7 +16,7 @@ type props = {
   socketEmitter: SocketEmitter
 }
 
-export const SolarSystemView = ({ user, warehouse, planets, socketEmitter }: props) => {
+export const SolarSystem = ({ user, warehouse, planets, socketEmitter }: props) => {
   const navigate = useNavigate()
   if (!user) {
     navigate('/Signin')
@@ -27,7 +27,7 @@ export const SolarSystemView = ({ user, warehouse, planets, socketEmitter }: pro
       {user && (
         <div className='UIdisplay'>
           <ResourceDisplay warehouse={warehouse} />
-          <PlanetView planets={planets} socketEmitter={socketEmitter} user={user} />
+          <ModifiablePlanetView planets={planets} socketEmitter={socketEmitter} user={user} />
         </div>
       )}
     </div>

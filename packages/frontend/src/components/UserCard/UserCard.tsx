@@ -1,7 +1,7 @@
 import React from 'react'
 //import './styles.css'
 
-import { useSignOut } from '../../../lib/firebase'
+import { useSignOut } from '../../lib/firebase'
 
 const UserCard = ({ user }: any) => {
   const signOut = useSignOut()

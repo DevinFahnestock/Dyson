@@ -2,7 +2,7 @@ import React from 'react'
 import './styles.css'
 
 import UpgradeButton from './Buttons/UpgradeButton'
-import CelestialBodyRenderer from './CelestialBodyRenderer'
+import CelestialBodyRenderer from '../CelestialBodyRenderer'
 
 import CollectButton from './Buttons/CollectButton'
 
@@ -13,9 +13,9 @@ interface PlanetTileProps {
   collectClick: () => void
 }
 
-const PlanetTile = ({ planet, upgradeClick, onUpgradeTimeComplete, collectClick }: PlanetTileProps) => {
+const ModifiablePlanetTile = ({ planet, upgradeClick, onUpgradeTimeComplete, collectClick }: PlanetTileProps) => {
   return (
-    <div className='PlanetTile'>
+    <div className='ModifiablePlanetTile'>
       <div className='Definition'>
         <CelestialBodyRenderer type={planet.type} seed={planet.seed} />
         <h3 className='PlanetName'>{planet.name}</h3>Level {planet.level}
@@ -28,4 +28,4 @@ const PlanetTile = ({ planet, upgradeClick, onUpgradeTimeComplete, collectClick 
   )
 }
 
-export default PlanetTile
+export default ModifiablePlanetTile
