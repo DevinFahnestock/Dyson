@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { AuthProvider, signInWithPopup as firebaseSignInWithPopup, User } from 'firebase/auth'
 
 import useAuthentication from './useAuthentication'
-import useToken from '../gameData/useToken'
+import useToken from '../hooks/useToken'
 
 const useSignInWithPopup = (provider: AuthProvider) => {
   const auth = useAuthentication()

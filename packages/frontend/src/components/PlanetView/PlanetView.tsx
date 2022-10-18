@@ -1,5 +1,5 @@
 import React from 'react'
-import useToken from 'src/lib/gameData/useToken'
+import useToken from 'src/lib/hooks/useToken'
 import PlanetTile from '../PlanetTile/PlanetTile'
 
 import './styles.css'

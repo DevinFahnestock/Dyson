@@ -2,16 +2,9 @@ import { Planet } from '@dyson/shared/dist/Planet'
 import { Warehouse } from '@dyson/shared/dist/Warehouse'
 
 export const resourcesMet = (nextLevelReq: any, warehouse: Warehouse) => {
-  if (nextLevelReq.food >= warehouse.food) {
-    return false
-  }
-  if (nextLevelReq.metal >= warehouse.metal) {
-    return false
-  }
-  if (nextLevelReq.money >= warehouse.money) {
-    return false
-  }
-  if (nextLevelReq.organic >= warehouse.organic) {
+  console.table(Object.keys(nextLevelReq))
+  console.table(warehouse)
+  if (Object.keys(nextLevelReq).find((key) => nextLevelReq[key] >= warehouse[key])) {
     return false
   }
   return true

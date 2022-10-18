@@ -9,15 +9,15 @@ import { SolarSystemView } from './pages/SolarSystemView/SolarSystemView'
 import { useEffect, useRef } from 'react'
 
 import { useUser } from 'src/lib/firebase'
-import usePlanets from 'src/lib/gameData/usePlanets'
-import useWarehouse from 'src/lib/gameData/useWarehouse'
+import usePlanets from 'src/lib/hooks/usePlanets'
+import useWarehouse from 'src/lib/hooks/useWarehouse'
 
 import { StartAllSocketListeners, disableAllSocketListeners, setupNewSocketRef } from './lib/Networking/SocketListeners'
 import { SocketEmitter } from './lib/Networking/SocketEmitter'
 import Player from './pages/Player/Player'
 import SignUp from './pages/SignUp/SignUp'
 import SignIn from './pages/SignIn/SignIn'
-import { useToken } from './lib/gameData/useToken'
+import { useToken } from './lib/hooks/useToken'
 
 function App() {
   const user: any = useUser()

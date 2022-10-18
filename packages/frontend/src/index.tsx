@@ -8,9 +8,9 @@ import { initializeApp } from 'firebase/app'
 import { getAuth } from 'firebase/auth'
 
 import AuthenticationProvider from './lib/firebase/authenticationProvider'
-import { PlanetsProvider } from './lib/gameData/usePlanets'
-import { WarehouseProvider } from './lib/gameData/useWarehouse'
-import { TokenProvider } from './lib/gameData/useToken'
+import { PlanetsProvider } from './lib/hooks/usePlanets'
+import { WarehouseProvider } from './lib/hooks/useWarehouse'
+import { TokenProvider } from './lib/hooks/useToken'
 
 const firebaseConfig = {
   apiKey: 'AIzaSyCVlFMqt9BuAiu-tX7TFa4x8sUwxqxmc7g',

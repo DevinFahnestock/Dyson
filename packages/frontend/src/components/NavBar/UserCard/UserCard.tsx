@@ -18,7 +18,12 @@ const UserCard = ({ user }: any) => {
           Sign out
         </a>
       </div>
-      <img src={user.photoURL} style={{borderRadius: '50%'}} alt='Profile' />
+      <img
+        src={user && user.photoURL}
+        style={{ borderRadius: '50%', padding: '3px' }}
+        alt='Profile'
+        referrerPolicy='no-referrer'
+      />
     </div>
   )
 }
