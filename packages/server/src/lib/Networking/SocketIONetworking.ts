@@ -119,6 +119,7 @@ export class SocketIONetworking implements INetworking {
 
   private resolveUserNames(socket: Socket) {
     socket.on(Socketcom.resolveUserNames, async (ids) => {
+      console.log('resolving usernames')
       const names = await this.userService.resolveUserNames(ids)
       socket.emit(Socketcom.usernamesResolved, names)
     })
@@ -164,7 +165,7 @@ export class SocketIONetworking implements INetworking {
     socket.on(Socketcom.getUser, async (userID) => {
       console.log('getting user for id ', userID)
       const userdata = {
-        // user: await this.userService.fetchUserByID(userID),
+        user: await this.userService.fetchUserByID(userID),
         planets: await this.planetService.getUserPlanets(userID),
       }
       socket.emit(Socketcom.userPageData, userdata)

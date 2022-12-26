@@ -23,11 +23,11 @@ export class FirebaseUserRepository implements IUserRepository {
     return user
   }
 
-  // async fetchUserData(userID: string): Promise<User> {
-  //   const result = await this.admin.auth().getUser(userID)
+  async fetchUserData(userID: string): Promise<any> {
+    const result = await this.admin.auth().getUser(userID)
 
-  //   return result
-  // }
+    return result
+  }
 
   async resolveUserID(id: string): Promise<string> {
     const user = await this.admin.firestore().collection('admin').doc('gameData').collection('userData').doc(id).get()

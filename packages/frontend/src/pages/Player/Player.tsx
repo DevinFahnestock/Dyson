@@ -5,6 +5,7 @@ import { SocketEmitter } from 'src/lib/Networking/SocketEmitter'
 
 import { useParams } from 'react-router-dom'
 import SimplePlanetView from 'src/components/SimplePlanetView/SimplePlanetView'
+import { Socketcom } from '@dyson/shared/dist/Socketcom'
 
 type props = {
   socketEmitter: SocketEmitter
@@ -13,10 +14,10 @@ type props = {
 const Player = ({ socketEmitter }: props) => {
   const { id } = useParams()
 
-  function getUserPageData(id: string) {
-    console.log('fetching user data')
+  const getUserPageData = (id: string) => {
     socketEmitter.GetUserPage(id)
-    socketEmitter.socket.on('userPageData', (data) => {
+    socketEmitter.socket.on(Socketcom.userPageData, (data) => {
+      console.log(data)
       userPageData.current = data
     })
   }
@@ -26,20 +27,25 @@ const Player = ({ socketEmitter }: props) => {
 
   useEffect(() => {
     if (id) {
+      console.log('getting users planets', userPageData)
       getUserPageData(id)
-      if (userPageData?.current?.user) {
-        let userIDs: string[] = []
-        userIDs.push(userPageData.current.user.uid)
-        socketEmitter.ResolveUserNames(userIDs)
-        socketEmitter.socket.on('usernamesResolved', (data: any) => {
-          setUsernames(data)
-        })
-      }
     }
     return () => {
       socketEmitter.socket.off('userPageData')
     }
-  }, [setUsernames, userPageData.current])
+  }, [setUsernames])
+
+  useEffect(() => {
+    if (userPageData.current) {
+      let userIDs: string[] = []
+      userIDs.push(userPageData.current.user.uid)
+      socketEmitter.ResolveUserNames(userIDs)
+      socketEmitter.socket.on(Socketcom.usernamesResolved, (data: any) => {
+        setUsernames(data)
+        console.log(data)
+      })
+    }
+  }, [])
 
   return (
     <div>

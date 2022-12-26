@@ -7,5 +7,5 @@ export interface IUserService {
 
   resolveUserNames(ids: string[]): any
 
-  //fetchUserByID(userID: string): Promise<User>
+  fetchUserByID(userID: string): Promise<User>
 }
