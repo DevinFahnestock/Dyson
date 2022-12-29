@@ -1,3 +1,4 @@
+import { Socketcom } from '@dyson/shared/dist/Socketcom'
 import { Socket } from 'socket.io-client'
 
 export class SocketEmitter {
@@ -7,8 +8,8 @@ export class SocketEmitter {
     this.socket = socket
   }
 
-  public TopTenPlanets(offset: number) {
-    this.socket.emit('topTenPlanets', offset)
+  public FetchLeaderboard(offset: number) {
+    this.socket.emit(Socketcom.fetchLeaderboard, offset)
   }
 
   public ResolveUserNames(userIDs: String[]) {

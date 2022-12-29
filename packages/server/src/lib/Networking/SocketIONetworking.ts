@@ -43,7 +43,7 @@ export class SocketIONetworking implements INetworking {
       this.onUpgradePlanet(socket)
       this.onUserStateChange(socket)
       this.onStartPlanetUpgrade(socket)
-      this.getTopTenPlanets(socket)
+      this.fetchLeaderboard(socket)
       this.resolveUserNames(socket)
       this.updateResourceGeneration(socket)
       this.getCounters(socket)
@@ -110,15 +110,16 @@ export class SocketIONetworking implements INetworking {
     })
   }
 
-  private getTopTenPlanets(socket: Socket) {
-    socket.on(Socketcom.topTenPlanets, async (offset) => {
-      const planets = await this.planetService.getTopTenPlanets(offset)
-      socket.emit(Socketcom.topTenUpdate, planets)
+  private fetchLeaderboard(socket: Socket) {
+    socket.on(Socketcom.fetchLeaderboard, async (offset) => {
+      const planets = await this.planetService.fetchLeaderboard(offset)
+      socket.emit(Socketcom.leaderboardUpdate, planets)
     })
   }
 
   private resolveUserNames(socket: Socket) {
     socket.on(Socketcom.resolveUserNames, async (ids) => {
+      console.log('resolving usernames')
       const names = await this.userService.resolveUserNames(ids)
       socket.emit(Socketcom.usernamesResolved, names)
     })
@@ -164,7 +165,7 @@ export class SocketIONetworking implements INetworking {
     socket.on(Socketcom.getUser, async (userID) => {
       console.log('getting user for id ', userID)
       const userdata = {
-        // user: await this.userService.fetchUserByID(userID),
+        user: await this.userService.fetchUserByID(userID),
         planets: await this.planetService.getUserPlanets(userID),
       }
       socket.emit(Socketcom.userPageData, userdata)

@@ -14,7 +14,8 @@
         "declaration": true,
         "resolveJsonModule": true,
         "paths": {
-            "@dyson/*": ["./packages/*/"]
+            "@dyson/*": ["./packages/*/"],
+            "@dyson/assets/*": [".packages/frontend/assets/*"]
         },
     }
 }

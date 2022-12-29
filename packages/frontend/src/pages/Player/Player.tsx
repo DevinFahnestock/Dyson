@@ -1,10 +1,10 @@
-import { Planet } from '@dyson/shared/dist/Planet'
-import { User } from '@firebase/auth'
-import React, { useEffect, useRef, useState } from 'react'
+import React from 'react'
 import { SocketEmitter } from 'src/lib/Networking/SocketEmitter'
 
 import { useParams } from 'react-router-dom'
 import SimplePlanetView from 'src/components/SimplePlanetView/SimplePlanetView'
+import useResolveUsernames from 'src/lib/hooks/useResolveUsernames'
+import useFetchUserPageData from 'src/lib/hooks/useFetchUserPageData'
 
 type props = {
   socketEmitter: SocketEmitter
@@ -13,40 +13,22 @@ type props = {
 const Player = ({ socketEmitter }: props) => {
   const { id } = useParams()
 
-  function getUserPageData(id: string) {
-    console.log('fetching user data')
-    socketEmitter.GetUserPage(id)
-    socketEmitter.socket.on('userPageData', (data) => {
-      userPageData.current = data
-    })
+  let userID: Array<String> = []
+  if (id) {
+    userID.push(id)
   }
 
-  let userPageData = useRef<{ user: User; planets: Planet[] }>()
-  let [usernames, setUsernames] = useState<String[]>()
+  let [usernames, loadingUsernames] = useResolveUsernames(socketEmitter, userID)
 
-  useEffect(() => {
-    if (id) {
-      getUserPageData(id)
-      if (userPageData?.current?.user) {
-        let userIDs: string[] = []
-        userIDs.push(userPageData.current.user.uid)
-        socketEmitter.ResolveUserNames(userIDs)
-        socketEmitter.socket.on('usernamesResolved', (data: any) => {
-          setUsernames(data)
-        })
-      }
-    }
-    return () => {
-      socketEmitter.socket.off('userPageData')
-    }
-  }, [setUsernames, userPageData.current])
+  let [userPageData, loading] = useFetchUserPageData(socketEmitter, id)
 
+  if (loading || loadingUsernames) {
+    return <>Loading...</>
+  }
   return (
     <div>
-      {userPageData?.current?.user && userPageData.current.user.displayName}
-      {userPageData?.current?.planets && usernames && (
-        <SimplePlanetView planets={userPageData.current.planets} usernames={usernames} />
-      )}
+      {userPageData.user && userPageData.user.displayName}
+      {userPageData.planets && usernames && <SimplePlanetView planets={userPageData.planets} usernames={usernames} />}
     </div>
   )
 }
