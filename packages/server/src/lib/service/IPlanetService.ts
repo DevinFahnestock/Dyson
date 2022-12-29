@@ -20,7 +20,7 @@ export interface IPlanetService {
     warehouseCalllback: (warehouse: Warehouse) => void
   ): Promise<Planet>
 
-  getTopTenPlanets(offset: number): Promise<Planet[]>
+  fetchLeaderboard(offset: number): Promise<Planet[]>
 
   getCounters(): Promise<any>
 }

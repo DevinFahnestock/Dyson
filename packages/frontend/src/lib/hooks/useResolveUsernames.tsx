@@ -2,28 +2,35 @@ import { Socketcom } from '@dyson/shared/dist/Socketcom'
 import { useEffect, useState } from 'react'
 import { SocketEmitter } from '../Networking/SocketEmitter'
 
-const useResolveUsernames = (socketEmitter: SocketEmitter, userIDs: Array<String>) => {
-  const [usernames, setUsernames] = useState<Object>({})
-  const [error, setError] = useState(null)
+const useResolveUsernames = (socketEmitter: SocketEmitter, userIDs?: Array<String>) => {
+  const [usernames, setUsernames] = useState<Object>()
   const [loading, setLoading] = useState(false)
 
-  useEffect(() => {
-    try {
-      setLoading(true)
-      socketEmitter.ResolveUserNames(userIDs)
-      socketEmitter.socket.on(Socketcom.usernamesResolved, (data: Array<Object>) => {
-        setUsernames(data)
-        console.log('recieved usernames from the server', data)
-        socketEmitter.socket.off(Socketcom.usernamesResolved)
-      })
-    } catch (error) {
-      setError(error)
-    } finally {
+  const setUserIDs = (ids: Array<String>) => {
+    getNames(ids)
+  }
+
+  const getNames = (ids: Array<String>) => {
+    setLoading(true)
+    socketEmitter.ResolveUserNames(ids)
+    socketEmitter.socket.on(Socketcom.usernamesResolved, (data: Array<Object>) => {
+      setUsernames(data)
+      socketEmitter.socket.off(Socketcom.usernamesResolved)
       setLoading(false)
+    })
+  }
+
+  useEffect(() => {
+    if (userIDs) {
+      getNames(userIDs)
     }
   }, [])
 
-  return { usernames, error, loading }
+  const clearUsernames = () => {
+    setUsernames({})
+  }
+
+  return [usernames, loading, setUserIDs, clearUsernames] as [Object, boolean, (ids: String[]) => void, () => void]
 }
 
 export default useResolveUsernames

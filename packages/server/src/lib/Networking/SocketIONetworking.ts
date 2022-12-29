@@ -43,7 +43,7 @@ export class SocketIONetworking implements INetworking {
       this.onUpgradePlanet(socket)
       this.onUserStateChange(socket)
       this.onStartPlanetUpgrade(socket)
-      this.getTopTenPlanets(socket)
+      this.fetchLeaderboard(socket)
       this.resolveUserNames(socket)
       this.updateResourceGeneration(socket)
       this.getCounters(socket)
@@ -110,10 +110,10 @@ export class SocketIONetworking implements INetworking {
     })
   }
 
-  private getTopTenPlanets(socket: Socket) {
-    socket.on(Socketcom.topTenPlanets, async (offset) => {
-      const planets = await this.planetService.getTopTenPlanets(offset)
-      socket.emit(Socketcom.topTenUpdate, planets)
+  private fetchLeaderboard(socket: Socket) {
+    socket.on(Socketcom.fetchLeaderboard, async (offset) => {
+      const planets = await this.planetService.fetchLeaderboard(offset)
+      socket.emit(Socketcom.leaderboardUpdate, planets)
     })
   }
 

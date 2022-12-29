@@ -1,11 +1,10 @@
-import { Planet } from '@dyson/shared/dist/Planet'
-import { User } from '@firebase/auth'
-import React, { useRef } from 'react'
+import React from 'react'
 import { SocketEmitter } from 'src/lib/Networking/SocketEmitter'
 
 import { useParams } from 'react-router-dom'
 import SimplePlanetView from 'src/components/SimplePlanetView/SimplePlanetView'
 import useResolveUsernames from 'src/lib/hooks/useResolveUsernames'
+import useFetchUserPageData from 'src/lib/hooks/useFetchUserPageData'
 
 type props = {
   socketEmitter: SocketEmitter
@@ -19,38 +18,17 @@ const Player = ({ socketEmitter }: props) => {
     userID.push(id)
   }
 
-  let { usernames, error } = useResolveUsernames(socketEmitter, userID)
+  let [usernames, loadingUsernames] = useResolveUsernames(socketEmitter, userID)
 
-  let userPageData = useRef<{ user: User; planets: Planet[] }>()
+  let [userPageData, loading] = useFetchUserPageData(socketEmitter, id)
 
-  // useEffect(() => {
-  //   if (id) {
-  //     console.log('getting users planets', userPageData)
-  //   socketEmitter.GetUserPage(id)
-  //   socketEmitter.socket.on(Socketcom.userPageData, (data) => {
-  //     console.log(data)
-  //     userPageData.current = data
-  //   })
-  //   }
-  //   return () => {
-  //     socketEmitter.socket.off('userPageData')
-  //   }
-  // }, [])
-
+  if (loading || loadingUsernames) {
+    return <>Loading...</>
+  }
   return (
     <div>
-      {userPageData?.current?.user && userPageData.current.user.displayName}
-      {userPageData?.current?.planets && usernames && (
-        <SimplePlanetView planets={userPageData.current.planets} usernames={usernames} />
-      )}
-      {usernames && (
-        <ul>
-          {Object.entries(usernames).map(([key, value]) => (
-            <li key={key}>{value}</li>
-          ))}
-        </ul>
-      )}
-      {error && error}
+      {userPageData.user && userPageData.user.displayName}
+      {userPageData.planets && usernames && <SimplePlanetView planets={userPageData.planets} usernames={usernames} />}
     </div>
   )
 }

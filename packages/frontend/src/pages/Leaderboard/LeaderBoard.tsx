@@ -1,52 +1,39 @@
-import { Planet } from '@dyson/shared/dist/Planet'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect } from 'react'
 import SimplePlanetView from 'src/components/SimplePlanetView/SimplePlanetView'
+import useResolveUsernames from 'src/lib/hooks/useResolveUsernames'
 import { SocketEmitter } from 'src/lib/Networking/SocketEmitter'
 
 import './styles.css'
+import useLeaderboard from 'src/lib/hooks/useLeaderboard'
+import useCounters from 'src/lib/hooks/useCounters'
+import useOffset from 'src/lib/hooks/useOffset'
 
 type props = {
   socketEmitter: SocketEmitter
 }
 
 const LeaderBoard = ({ socketEmitter }: props) => {
-  let planets = useRef<Planet[]>()
-  let [usernames, setUsernames] = useState<String[]>()
-  let [offset, setOffset] = useState<number>(0)
-  let [counters, setCounters] = useState<{ planets: number; users: number; warehouses: number }>({
-    planets: 0,
-    users: 0,
-    warehouses: 0,
-  })
+  const [offset, setOffset] = useOffset(0)
+  const [leaderboard, loading, updateLeaderboardOffset] = useLeaderboard(socketEmitter, offset)
+  const [usernames, usernamesLoading, setUserIDs, clearUsernames] = useResolveUsernames(socketEmitter)
+  const [counters] = useCounters(socketEmitter)
 
   useEffect(() => {
-    socketEmitter.TopTenPlanets(offset)
-    socketEmitter.GetCounters()
-
-    socketEmitter.socket.on('counters', (counters) => {
-      setCounters(counters)
-    })
-
-    socketEmitter.socket.on('topTenUpdate', (data: any) => {
-      planets.current = data
-      let userIDs: String[] = []
-      if (planets.current) {
-        planets.current.forEach((planet) => {
-          userIDs.push(planet.owner)
-        })
-      }
-      socketEmitter.ResolveUserNames(userIDs)
-      socketEmitter.socket.on('usernamesResolved', (data: any) => {
-        setUsernames(data)
-      })
-    })
-    return () => {
-      socketEmitter.socket.off('topTenUpdate')
-      socketEmitter.socket.off('usernamesResolved')
-      socketEmitter.socket.off('counters')
-    }
+    updateLeaderboardOffset(offset)
+    clearUsernames()
   }, [offset])
-  console.log('updating content')
+
+  useEffect(() => {
+    if (leaderboard && !loading) {
+      let userIDs: String[] = []
+      leaderboard.forEach((planet) => {
+        userIDs.push(planet.owner)
+      })
+      if (userIDs.length > 0) {
+        setUserIDs(userIDs)
+      }
+    }
+  }, [leaderboard])
 
   let pageNums = []
   for (let i = 0; i < counters.planets / 10; i++) {
@@ -57,13 +44,17 @@ const LeaderBoard = ({ socketEmitter }: props) => {
     )
   }
 
+  if (loading || usernamesLoading || !usernames || Object.keys(usernames)?.length < 1) {
+    return <>Loading...</>
+  }
+
   return (
     <div className='UIdisplay'>
       <div className='Navigation'>
         Rankings
         <div className='PageNumbers'>{pageNums}</div>
       </div>
-      {planets.current && usernames && <SimplePlanetView planets={planets.current} usernames={usernames} />}
+      {leaderboard && usernames && <SimplePlanetView planets={leaderboard} usernames={usernames} />}
     </div>
   )
 }
