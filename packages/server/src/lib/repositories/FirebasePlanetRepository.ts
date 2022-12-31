@@ -27,6 +27,28 @@ export class FirebasePlanetRepository implements IPlanetRepository {
     return planet
   }
 
+  async deletePlanet(planet: Planet): Promise<void> {
+    await this.admin.firestore().collection('admin').doc('gameData').collection('planetData').doc(planet.id).delete()
+    this.admin
+      .firestore()
+      .collection('admin')
+      .doc('gameData')
+      .collection('counters')
+      .doc('Jl2JWvpXIVqDRFMlf6LF')
+      .set({ planets: firestore.FieldValue.increment(-1) }, { merge: true })
+  }
+
+  async deletePlanetByID(planetID: string): Promise<void> {
+    await this.admin.firestore().collection('admin').doc('gameData').collection('planetData').doc(planetID).delete()
+    this.admin
+      .firestore()
+      .collection('admin')
+      .doc('gameData')
+      .collection('counters')
+      .doc('Jl2JWvpXIVqDRFMlf6LF')
+      .set({ planets: firestore.FieldValue.increment(-1) }, { merge: true })
+  }
+
   async updatePlanet(planet: Planet): Promise<void> {
     await this.admin
       .firestore()
