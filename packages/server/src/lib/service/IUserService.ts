@@ -1,7 +1,7 @@
 import { User } from '@firebase/auth'
 
 export interface IUserService {
-  createNewUser(user: User): Promise<User>
+  createNewUser(userID: string): Promise<void>
 
   fetchUser(user: User): Promise<User>
 

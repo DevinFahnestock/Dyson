@@ -66,15 +66,15 @@ export class SocketIONetworking implements INetworking {
       const decodedToken = await this.decodeToken(token)
       let userData: any
       try {
-      userData= await this.userService.fetchUserByID(decodedToken.uid)
+        userData = await this.userService.fetchUserByID(decodedToken.uid)
+      } catch (error) {
+        //user doesnt exist in database, create a new Starting account
+        await this.userService.createNewUser(decodedToken.uid)
+        userData = await this.userService.fetchUserByID(decodedToken.uid)
+        await this.newUserCreation(socket, decodedToken.uid)
       }
-      if (userData) {
 
-      }
-      
-
-      //return warehouse and planets if user exists, if not, return null
-
+      //return warehouse and planets if user exists, if not, throw exception
       socket.emit(Socketcom.updatePlanetsAndWarehouse, {
         planets: await this.planetService.getUserPlanets(decodedToken.uid),
         resources: await this.warehouseService.getWarehouse(decodedToken.uid),
@@ -94,19 +94,19 @@ export class SocketIONetworking implements INetworking {
     })
   }
 
-  private async newUserCreation(socket: Socket, uid: string) {
+  private async newUserCreation(socket: Socket, userID: string) {
     //create starter planets
-    await this.planetService.createPlanet(uid, PlanetType.Lava)
-    await this.planetService.createPlanet(uid, PlanetType.Wet)
-    await this.planetService.createPlanet(uid, PlanetType.NoAtmosphere)
-    await this.planetService.createPlanet(uid, PlanetType.Lava)
+    await this.planetService.createPlanet(userID, PlanetType.Lava)
+    await this.planetService.createPlanet(userID, PlanetType.Wet)
+    await this.planetService.createPlanet(userID, PlanetType.NoAtmosphere)
+    await this.planetService.createPlanet(userID, PlanetType.Lava)
 
     //create warehouse
-    const warehouseID = await this.warehouseService.createWarehouse(uid)
+    const warehouseID = await this.warehouseService.createWarehouse(userID)
 
     socket.emit(Socketcom.updatePlanetsAndWarehouse, {
-      planets: await this.planetService.getUserPlanets(uid),
-      resources: await this.warehouseService.getWarehouse(warehouseID, uid),
+      planets: await this.planetService.getUserPlanets(userID),
+      resources: await this.warehouseService.getWarehouse(warehouseID, userID),
     })
   }
 
