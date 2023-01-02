@@ -18,7 +18,7 @@
 
 .PlanetTile h3 {
   display: flex;
-  flex-basis: 15em;
+  flex-basis: auto;
   align-items: center;
   justify-content: center;
 }

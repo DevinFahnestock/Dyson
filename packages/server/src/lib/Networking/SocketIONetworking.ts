@@ -11,6 +11,7 @@ import { getResourcesGenerated } from '@dyson/shared/dist/GenerationCalculator'
 import dayjs from '@dyson/shared/dist/Time/Time'
 import { app } from 'firebase-admin'
 import { DecodedIdToken } from 'firebase-admin/lib/auth/token-verifier'
+import { user } from 'firebase-functions/v1/auth'
 
 export class SocketIONetworking implements INetworking {
   protected readonly port: number
@@ -19,6 +20,8 @@ export class SocketIONetworking implements INetworking {
   protected readonly userService: IUserService
   protected readonly warehouseService: IWarehouseService
   protected readonly admin: app.App
+
+  protected readonly socket: Socket
 
   constructor(
     port: number,
@@ -58,8 +61,19 @@ export class SocketIONetworking implements INetworking {
 
   private onUserStateChange(socket: Socket) {
     socket.on(Socketcom.userStateChanged, async (token: string) => {
-      //return warehouse and planets if user exists, if not, return null
+      // TODO: check if the user is a new user and if so create initial planets and warehouse
+
       const decodedToken = await this.decodeToken(token)
+      let userData: any
+      try {
+      userData= await this.userService.fetchUserByID(decodedToken.uid)
+      }
+      if (userData) {
+
+      }
+      
+
+      //return warehouse and planets if user exists, if not, return null
 
       socket.emit(Socketcom.updatePlanetsAndWarehouse, {
         planets: await this.planetService.getUserPlanets(decodedToken.uid),

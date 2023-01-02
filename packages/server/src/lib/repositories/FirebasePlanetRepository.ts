@@ -16,37 +16,19 @@ export class FirebasePlanetRepository implements IPlanetRepository {
     planet.id = docRef.id
 
     await docRef.set(planet)
-    this.admin
-      .firestore()
-      .collection('admin')
-      .doc('gameData')
-      .collection('counters')
-      .doc('Jl2JWvpXIVqDRFMlf6LF')
-      .set({ planets: firestore.FieldValue.increment(1) }, { merge: true })
+    await this.incrementPlanetCounter(1)
 
     return planet
   }
 
   async deletePlanet(planet: Planet): Promise<void> {
     await this.admin.firestore().collection('admin').doc('gameData').collection('planetData').doc(planet.id).delete()
-    this.admin
-      .firestore()
-      .collection('admin')
-      .doc('gameData')
-      .collection('counters')
-      .doc('Jl2JWvpXIVqDRFMlf6LF')
-      .set({ planets: firestore.FieldValue.increment(-1) }, { merge: true })
+    await this.incrementPlanetCounter(-1)
   }
 
   async deletePlanetByID(planetID: string): Promise<void> {
     await this.admin.firestore().collection('admin').doc('gameData').collection('planetData').doc(planetID).delete()
-    this.admin
-      .firestore()
-      .collection('admin')
-      .doc('gameData')
-      .collection('counters')
-      .doc('Jl2JWvpXIVqDRFMlf6LF')
-      .set({ planets: firestore.FieldValue.increment(-1) }, { merge: true })
+    await this.incrementPlanetCounter(-1)
   }
 
   async updatePlanet(planet: Planet): Promise<void> {
@@ -97,13 +79,21 @@ export class FirebasePlanetRepository implements IPlanetRepository {
   }
 
   async getCounters() {
-    const query = await this.admin
+    const query = await (await this._getCounterDocumentReference()).get()
+    return query.data()
+  }
+
+  private async _getCounterDocumentReference() {
+    return await this.admin
       .firestore()
       .collection('admin')
       .doc('gameData')
       .collection('counters')
       .doc('Jl2JWvpXIVqDRFMlf6LF')
-      .get()
-    return query.data()
+  }
+
+  private async incrementPlanetCounter(valueToIncrementBy: number) {
+    const planetCounter = await this._getCounterDocumentReference()
+    await planetCounter.set({ planets: firestore.FieldValue.increment(valueToIncrementBy) }, { merge: true })
   }
 }

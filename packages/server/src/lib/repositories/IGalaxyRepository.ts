@@ -3,5 +3,7 @@ export interface IGalaxyRepository {
 
   fetchGalaxy(): any
 
-  fetchGalaxyPlanets(): any
+  fetchGalaxyPlanets(limit: number, offset: number): any
+
+  getCounters(): Promise<any>
 }

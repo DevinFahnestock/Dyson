@@ -5,6 +5,7 @@ import {
   IPlanetRepository,
   FirebasePlanetRepository,
   FirebaseUserRepository,
+  FirebaseGalaxyRepository,
 } from './lib/repositories'
 import {
   IPlanetService,
@@ -18,6 +19,9 @@ import { INetworking } from './lib/Networking/INetworking'
 import { SocketIONetworking } from './lib/Networking/SocketIONetworking'
 import { IWarehouseRepository } from './lib/repositories/IWarehouseRepository'
 import { FirebaseWarehouseRepository } from './lib/repositories/FirebaseWarehouseRepository'
+import { IGalaxyRepository } from './lib/repositories/IGalaxyRepository'
+import { IGalaxyService } from './lib/service/IGalaxyService'
+import { GalaxyService } from './lib/service/GalaxyService'
 
 require('dotenv').config()
 
@@ -39,8 +43,13 @@ const planetService: IPlanetService = new PlanetService(planetRepository)
 const warehouseRepository: IWarehouseRepository = new FirebaseWarehouseRepository(administrator)
 const warehouseService: IWarehouseService = new WarehouseService(warehouseRepository)
 
+const galaxyRepository: IGalaxyRepository = new FirebaseGalaxyRepository(administrator)
+const galaxyService: IGalaxyService = new GalaxyService(galaxyRepository)
+
 const port = 25145
 
 const network: INetworking = new SocketIONetworking(port, planetService, userService, warehouseService, administrator)
+
+galaxyService.initiateGalaxyCheck()
 
 network.listenForConnections()
