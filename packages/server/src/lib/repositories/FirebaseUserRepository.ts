@@ -48,12 +48,6 @@ export class FirebaseUserRepository implements IUserRepository {
     }
   }
 
-  // TODO: change the location of this function. It is fetching the auth user, not the database user
-  async fetchGoogleAuthUserData(userID: string): Promise<any> {
-    const result = await this.admin.auth().getUser(userID)
-    return result
-  }
-
   async resolveUserNameByID(userID: string): Promise<string> {
     const userDocumentReference = await this._getUserDocumentReference(userID)
 
