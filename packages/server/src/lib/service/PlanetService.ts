@@ -143,8 +143,4 @@ export class PlanetService implements IPlanetService {
   fetchLeaderboard(offset: number): Promise<Planet[]> {
     return this.planetRepository.queryPlanets(10, offset)
   }
-
-  getCounters(): Promise<any> {
-    return this.planetRepository.getCounters()
-  }
 }

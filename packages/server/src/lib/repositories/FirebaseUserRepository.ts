@@ -1,14 +1,14 @@
-import { User } from '@firebase/auth'
-import { firestore } from 'firebase-admin'
-
 import type { app } from 'firebase-admin'
 import { IUserRepository } from './IUserRepository'
+import { ICounterRepository } from './ICounterRepository'
 
 export class FirebaseUserRepository implements IUserRepository {
   protected readonly admin: app.App
+  protected readonly counterRepository: ICounterRepository
 
-  constructor(admin: app.App) {
+  constructor(admin: app.App, counterRepository: ICounterRepository) {
     this.admin = admin
+    this.counterRepository = counterRepository
   }
 
   async queryUsers(limit: number, offset: number): Promise<any[]> {
@@ -32,7 +32,7 @@ export class FirebaseUserRepository implements IUserRepository {
       throw new Error(`User with ID ${userID} already exists. Cannot create new user`)
     } else {
       await userDocumentReference.set({ newAccount: false })
-      await this.incrementUserCounter(1)
+      await this.counterRepository.incrementCounter('users', 1)
     }
   }
 
@@ -48,12 +48,6 @@ export class FirebaseUserRepository implements IUserRepository {
     }
   }
 
-  // TODO: change the location of this function. It is fetching the auth user, not the database user
-  async fetchGoogleAuthUserData(userID: string): Promise<any> {
-    const result = await this.admin.auth().getUser(userID)
-    return result
-  }
-
   async resolveUserNameByID(userID: string): Promise<string> {
     const userDocumentReference = await this._getUserDocumentReference(userID)
 
@@ -66,19 +60,9 @@ export class FirebaseUserRepository implements IUserRepository {
     return await this.admin.firestore().collection('admin').doc('gameData').collection('userData').doc(userID)
   }
 
-  private async incrementUserCounter(valueToIncrementBy: number) {
-    await this.admin
-      .firestore()
-      .collection('admin')
-      .doc('gameData')
-      .collection('counters')
-      .doc('Jl2JWvpXIVqDRFMlf6LF')
-      .set({ users: firestore.FieldValue.increment(valueToIncrementBy) }, { merge: true })
-  }
-
   async deleteUserDatabaseEntries(userID: string): Promise<void> {
     const userDocumentReference = await this._getUserDocumentReference(userID)
     userDocumentReference.delete()
-    this.incrementUserCounter(-1)
+    await this.counterRepository.incrementCounter('users', -1)
   }
 }

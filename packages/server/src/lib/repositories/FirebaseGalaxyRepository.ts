@@ -4,18 +4,21 @@ import { app, firestore } from 'firebase-admin'
 import { IGalaxyRepository } from './IGalaxyRepository'
 import PlanetNames from '@dyson/shared/src/resources/planet-names.json'
 import Time from '@dyson/shared/dist/Time/Time'
+import { ICounterRepository } from './ICounterRepository'
 
 export class FirebaseGalaxyRepository implements IGalaxyRepository {
   protected readonly admin: app.App
+  protected readonly counterRepository: ICounterRepository
 
-  constructor(admin: app.App) {
+  constructor(admin: app.App, counterRepository: ICounterRepository) {
     this.admin = admin
+    this.counterRepository = counterRepository
   }
 
-  async createGalaxy() {
+  async AddPlanetsToGalaxy(numberOfPlanetsToAdd: number) {
     let planets: Array<Planet> = []
 
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < numberOfPlanetsToAdd - 1; i++) {
       planets[i] = {
         level: 0,
         owner: null,
@@ -36,7 +39,6 @@ export class FirebaseGalaxyRepository implements IGalaxyRepository {
     }
 
     planets.forEach(async (planet) => {
-      console.log(planet)
       const docRef = this.admin
         .firestore()
         .collection('admin')
@@ -49,17 +51,9 @@ export class FirebaseGalaxyRepository implements IGalaxyRepository {
       planet.id = docRef.id
 
       await docRef.set(planet)
-
-      console.log('got doc ref for planet', planet)
-
-      await this.admin
-        .firestore()
-        .collection('admin')
-        .doc('gameData')
-        .collection('counters')
-        .doc('Jl2JWvpXIVqDRFMlf6LF')
-        .set({ galaxyPlanets: firestore.FieldValue.increment(1) }, { merge: true })
     })
+
+    await this.counterRepository.incrementCounter('galaxyPlanets', planets.length)
   }
 
   async fetchGalaxy() {
@@ -84,19 +78,5 @@ export class FirebaseGalaxyRepository implements IGalaxyRepository {
 
     console.log('fetching galaxy data')
     return planets
-  }
-
-  async getCounters() {
-    const query = await this._getCounterDocumentReference().get()
-    return query.data()
-  }
-
-  private _getCounterDocumentReference() {
-    return this.admin.firestore().collection('admin').doc('gameData').collection('counters').doc('Jl2JWvpXIVqDRFMlf6LF')
-  }
-
-  private async incrementGalaxyPlanetCounter(valueToIncrementBy: number) {
-    const planetCounter = await this._getCounterDocumentReference()
-    await planetCounter.set({ galaxyPlanets: firestore.FieldValue.increment(valueToIncrementBy) }, { merge: true })
   }
 }

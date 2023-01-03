@@ -4,23 +4,21 @@ import { Socket } from 'socket.io'
 export interface INetworking {
   listenForConnections()
 
-  decodeToken(token: string): Promise<DecodedIdToken>
+  onUserStateChange(socket: Socket)
 
-  private onUserStateChange(socket: Socket)
+  onUpgradePlanet(socket: Socket)
 
-  private onUpgradePlanet(socket: Socket)
+  newUserCreation(socket: Socket, uid: string)
 
-  private newUserCreation(socket: Socket, uid: string)
+  onStartPlanetUpgrade(socket: Socket)
 
-  private onStartPlanetUpgrade(socket: Socket)
+  fetchLeaderboard(socket: Socket)
 
-  private fetchLeaderboard(socket: Socket)
+  resolveUserNames(socket: Socket)
 
-  private resolveUserNames(socket: Socket)
+  updateResourceGeneration(socket: Socket)
 
-  private updateResourceGeneration(socket: Socket)
+  getCounters(socket: Socket)
 
-  private getCounters(socket: Socket)
-
-  private getUser(socket: Socket)
+  getUser(socket: Socket)
 }

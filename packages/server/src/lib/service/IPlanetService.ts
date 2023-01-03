@@ -25,6 +25,4 @@ export interface IPlanetService {
   deletePlanetByID(planetID: string): Promise<void>
 
   deleteAllPlanetsByUserID(userID: string): Promise<void>
-
-  getCounters(): Promise<any>
 }

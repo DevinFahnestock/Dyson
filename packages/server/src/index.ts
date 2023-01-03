@@ -6,6 +6,8 @@ import {
   FirebasePlanetRepository,
   FirebaseUserRepository,
   FirebaseGalaxyRepository,
+  ICounterRepository,
+  FirebaseCounterRepository,
 } from './lib/repositories'
 import {
   IPlanetService,
@@ -35,21 +37,33 @@ let administrator = admin.initializeApp({
   databaseURL: process.env.DATABASE_URL,
 })
 
-const userRepository: IUserRepository = new FirebaseUserRepository(administrator)
-const userService: IUserService = new UserService(userRepository)
+const auth: Auth = new Auth(administrator)
 
-const planetRepository: IPlanetRepository = new FirebasePlanetRepository(administrator)
+const counterRepository: ICounterRepository = new FirebaseCounterRepository(administrator)
+
+const userRepository: IUserRepository = new FirebaseUserRepository(administrator, counterRepository)
+const userService: IUserService = new UserService(userRepository, auth)
+
+const planetRepository: IPlanetRepository = new FirebasePlanetRepository(administrator, counterRepository)
 const planetService: IPlanetService = new PlanetService(planetRepository)
 
 const warehouseRepository: IWarehouseRepository = new FirebaseWarehouseRepository(administrator)
 const warehouseService: IWarehouseService = new WarehouseService(warehouseRepository)
 
-const galaxyRepository: IGalaxyRepository = new FirebaseGalaxyRepository(administrator)
-const galaxyService: IGalaxyService = new GalaxyService(galaxyRepository)
+const galaxyRepository: IGalaxyRepository = new FirebaseGalaxyRepository(administrator, counterRepository)
+const galaxyService: IGalaxyService = new GalaxyService(galaxyRepository, counterRepository)
 
 const port = 25145
 
-const network: INetworking = new SocketIONetworking(port, planetService, userService, warehouseService, administrator)
+const network: INetworking = new SocketIONetworking(
+  port,
+  planetService,
+  userService,
+  warehouseService,
+  counterRepository,
+  administrator,
+  auth
+)
 
 galaxyService.initiateGalaxyCheck()
 
@@ -59,7 +73,6 @@ network.listenForConnections()
 
 function deleteAllInvalidUsers() {
   userService.queryUsers(100, 0).then((data) => {
-    console.log('users with 0 limit: ', data)
     data.forEach((user) => {
       if (!user.newAccount) {
         userService.deleteUserDatabaseEntries(user.uid)

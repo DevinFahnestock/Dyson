@@ -1,13 +1,16 @@
 import { User } from '@firebase/auth'
+import { Auth } from '../firebase/auth'
 
 import { IUserRepository } from '../repositories/IUserRepository'
 import { IUserService } from './IUserService'
 
 export class UserService implements IUserService {
   protected readonly repository: IUserRepository
+  protected readonly auth: Auth
 
-  constructor(repository: IUserRepository) {
+  constructor(repository: IUserRepository, auth: Auth) {
     this.repository = repository
+    this.auth = auth
   }
 
   async deleteUserDatabaseEntries(userID: string): Promise<void> {
@@ -27,8 +30,9 @@ export class UserService implements IUserService {
     }
   }
 
+  // TODO: Clean this up whatever it is...
   async fetchUser(user: User): Promise<User> {
-    const userData = await this.repository.fetchGoogleAuthUserData(user.uid)
+    const userData = await this.auth.fetchGoogleAuthUserData(user.uid)
     if (userData) {
       return userData
     }
