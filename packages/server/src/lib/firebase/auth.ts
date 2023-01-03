@@ -16,4 +16,17 @@ export class Auth {
         this.admin.auth().getUser(uid)
       })
   }
+
+  public getUsers() {
+    this.admin
+      .auth()
+      .listUsers(1000)
+      .then((listOfUsers) => {
+        listOfUsers.users.forEach((user) => {
+          if (user.email != 'devinmfahnestock@gmail.com') {
+            console.log(user.email)
+          }
+        })
+      })
+  }
 }
