@@ -6,6 +6,8 @@ import {
   FirebasePlanetRepository,
   FirebaseUserRepository,
   FirebaseGalaxyRepository,
+  ICounterRepository,
+  FirebaseCounterRepository,
 } from './lib/repositories'
 import {
   IPlanetService,
@@ -35,16 +37,18 @@ let administrator = admin.initializeApp({
   databaseURL: process.env.DATABASE_URL,
 })
 
-const userRepository: IUserRepository = new FirebaseUserRepository(administrator)
+const counterRepository: ICounterRepository = new FirebaseCounterRepository(administrator)
+
+const userRepository: IUserRepository = new FirebaseUserRepository(administrator, counterRepository)
 const userService: IUserService = new UserService(userRepository)
 
-const planetRepository: IPlanetRepository = new FirebasePlanetRepository(administrator)
+const planetRepository: IPlanetRepository = new FirebasePlanetRepository(administrator, counterRepository)
 const planetService: IPlanetService = new PlanetService(planetRepository)
 
-const warehouseRepository: IWarehouseRepository = new FirebaseWarehouseRepository(administrator)
+const warehouseRepository: IWarehouseRepository = new FirebaseWarehouseRepository(administrator, counterRepository)
 const warehouseService: IWarehouseService = new WarehouseService(warehouseRepository)
 
-const galaxyRepository: IGalaxyRepository = new FirebaseGalaxyRepository(administrator)
+const galaxyRepository: IGalaxyRepository = new FirebaseGalaxyRepository(administrator, counterRepository)
 const galaxyService: IGalaxyService = new GalaxyService(galaxyRepository)
 
 const port = 25145

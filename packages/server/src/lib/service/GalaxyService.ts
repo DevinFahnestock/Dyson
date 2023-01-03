@@ -1,3 +1,4 @@
+import { ICounterRepository } from '../repositories'
 import { IGalaxyRepository } from '../repositories/IGalaxyRepository'
 import { IGalaxyService } from './IGalaxyService'
 
@@ -13,7 +14,7 @@ export class GalaxyService implements IGalaxyService {
     const counters = await this.galaxyRepository.getCounters()
     if (counters.galaxyPlanets == 0) {
       console.log('No planets found in galaxy, Creating new Galaxy...')
-      await this.galaxyRepository.createGalaxy()
+      await this.galaxyRepository.AddPlanetsToGalaxy()
     } else {
       console.log('Galaxy exists, skipping galaxy creation')
     }
