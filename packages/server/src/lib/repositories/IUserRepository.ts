@@ -8,4 +8,8 @@ export interface IUserRepository {
   fetchDatabaseUserData(userID: string): Promise<any>
 
   resolveUserNameByID(id: string): Promise<string>
+
+  deleteUserDatabaseEntries(userID: string): Promise<void>
+
+  queryUsers(limit: number, offset: number): Promise<any>
 }

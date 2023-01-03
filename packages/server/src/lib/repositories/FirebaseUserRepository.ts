@@ -11,6 +11,18 @@ export class FirebaseUserRepository implements IUserRepository {
     this.admin = admin
   }
 
+  async queryUsers(limit: number, offset: number): Promise<any[]> {
+    const usersRef = this.admin.firestore().collection('admin').doc('gameData').collection('userData')
+
+    const usersQuery = await usersRef.limit(limit).offset(offset).get()
+    let users = []
+
+    usersQuery.forEach((userDocumentReference) => {
+      users.push(userDocumentReference.data())
+    })
+    return users
+  }
+
   async createNewDatabaseUser(userID: string): Promise<void> {
     const userDocumentReference = await this._getUserDocumentReference(userID)
 
@@ -19,7 +31,7 @@ export class FirebaseUserRepository implements IUserRepository {
     if (userDocSnapshot.exists) {
       throw new Error(`User with ID ${userID} already exists. Cannot create new user`)
     } else {
-      await userDocumentReference.set({ newAccount: true })
+      await userDocumentReference.set({ newAccount: false })
       await this.incrementUserCounter(1)
     }
   }
@@ -62,5 +74,11 @@ export class FirebaseUserRepository implements IUserRepository {
       .collection('counters')
       .doc('Jl2JWvpXIVqDRFMlf6LF')
       .set({ users: firestore.FieldValue.increment(valueToIncrementBy) }, { merge: true })
+  }
+
+  async deleteUserDatabaseEntries(userID: string): Promise<void> {
+    const userDocumentReference = await this._getUserDocumentReference(userID)
+    userDocumentReference.delete()
+    this.incrementUserCounter(-1)
   }
 }

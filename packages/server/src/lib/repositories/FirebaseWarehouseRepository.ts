@@ -11,6 +11,33 @@ export class FirebaseWarehouseRepository implements IWarehouseRepository {
     this.admin = admin
   }
 
+  async fetchUserWarehouses(userID: string): Promise<any[]> {
+    const warehouseCollectionReference = this.admin
+      .firestore()
+      .collection('admin')
+      .doc('gameData')
+      .collection('warehouseData')
+    const warehousesQuerySnapshot = await warehouseCollectionReference.where('owner', '==', userID).get()
+
+    const results = []
+    warehousesQuerySnapshot.docs.map((documentSnapshot) => {
+      results.push(documentSnapshot.data())
+    })
+
+    return results
+  }
+
+  async deleteWarehouseByID(warehouseID: string): Promise<void> {
+    await this.admin
+      .firestore()
+      .collection('admin')
+      .doc('gameData')
+      .collection('warehouseData')
+      .doc(warehouseID)
+      .delete()
+    this.incrementWarehouseCounter(-1)
+  }
+
   setResource(resourceType: ResourceType, warehouseID: string, userID: string): Promise<number> {
     throw new Error('Method not implemented.')
   }
@@ -67,14 +94,18 @@ export class FirebaseWarehouseRepository implements IWarehouseRepository {
     const docRef = this.admin.firestore().collection('admin').doc('gameData').collection('warehouseData').doc()
     warehouse.id = docRef.id
     await docRef.set(warehouse)
+    this.incrementWarehouseCounter(1)
+    return warehouse.id
+  }
+
+  private incrementWarehouseCounter(valueToIncrementBy: number) {
     this.admin
       .firestore()
       .collection('admin')
       .doc('gameData')
       .collection('counters')
       .doc('Jl2JWvpXIVqDRFMlf6LF')
-      .set({ warehouses: firestore.FieldValue.increment(1) }, { merge: true })
-    return warehouse.id
+      .set({ warehouses: firestore.FieldValue.increment(valueToIncrementBy) }, { merge: true })
   }
 
   updateWarehouse(warehouseID: string, userID: string): Promise<any[]> {
