@@ -67,13 +67,11 @@ export class SocketIONetworking implements INetworking {
       // TODO: check if the user is a new user and if so create initial planets and warehouse
 
       const decodedIDToken: DecodedIdToken = await this.auth.decodeToken(token)
-      let userData: any
+
       try {
-        userData = await this.userService.fetchUserByID(decodedIDToken.uid)
+        await this.userService.fetchUserByID(decodedIDToken.uid)
       } catch (error) {
         //user doesnt exist in database, create a new Starting account
-        await this.userService.createNewUser(decodedIDToken.uid)
-        userData = await this.userService.fetchUserByID(decodedIDToken.uid)
         await this.newUserCreation(socket, decodedIDToken.uid)
       }
 
@@ -98,7 +96,11 @@ export class SocketIONetworking implements INetworking {
   }
 
   async newUserCreation(socket: Socket, userID: string) {
+    // create user database entry
+    await this.userService.createNewUser(userID)
+
     //create starter planets
+
     await this.planetService.createPlanet(userID, PlanetType.Lava)
     await this.planetService.createPlanet(userID, PlanetType.Wet)
     await this.planetService.createPlanet(userID, PlanetType.NoAtmosphere)
