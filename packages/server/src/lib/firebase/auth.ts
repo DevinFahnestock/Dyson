@@ -1,5 +1,6 @@
 import { app } from 'firebase-admin'
 import { DecodedIdToken } from 'firebase-admin/lib/auth/token-verifier'
+import { UserRecord } from 'firebase-functions/v1/auth'
 
 export class Auth {
   protected readonly admin: app.App
@@ -18,16 +19,8 @@ export class Auth {
     return decodedToken
   }
 
-  public getUsers(limit: number) {
-    this.admin
-      .auth()
-      .listUsers(limit)
-      .then((listOfUsers) => {
-        listOfUsers.users.forEach((user) => {
-          if (user.email != 'devinmfahnestock@gmail.com') {
-            console.log(user.email)
-          }
-        })
-      })
+  async getUsers(limit: number): Promise<UserRecord[]> {
+    const userList = await this.admin.auth().listUsers(limit)
+    return userList.users
   }
 }
