@@ -1,20 +1,22 @@
-import { ResourceType } from "@dyson/shared/dist/shared";
-import { Warehouse } from "@dyson/shared/dist/Warehouse";
+import { ResourceType } from '@dyson/shared/dist/shared'
+import { Warehouse } from '@dyson/shared/dist/Warehouse'
 
 export interface IWarehouseRepository {
+  setResource(resourceType: ResourceType, warehouseID: string, userID: string): Promise<number>
 
-    setResource(resourceType: ResourceType, warehouseID: string, userID: string): Promise<number>
+  getResource(resourceType: ResourceType, warehouseID: string, userID: string): Promise<number>
 
-    getResource(resourceType: ResourceType, warehouseID: string, userID: string): Promise<number>
+  updateResources(warehouse: Warehouse, userID: string): Promise<boolean>
 
-    updateResources(warehouse: Warehouse, userID: string): Promise<boolean>
+  fetchWarehouseByID(userID: string, warehouseID?: string): Promise<Warehouse>
 
-    fetchWarehouseByID(userID: string, warehouseID?: string): Promise<Warehouse>
+  fetchWarehousesByUser(userID: string): Promise<Array<Warehouse>>
 
-    fetchWarehousesByUser(userID: string): Promise<Array<Warehouse>>
+  createWarehouse(warehouse: any, userID: string): Promise<string>
 
-    createWarehouse(warehouse: any, userID: string): Promise<string>
+  updateWarehouse(warehouseID: string, userID: string): Promise<Array<any>>
 
-    updateWarehouse(warehouseID: string, userID: string): Promise<Array<any>>
+  deleteWarehouseByID(planetID: string): Promise<void>
 
+  fetchUserWarehouses(userID: string): Promise<Array<any>>
 }

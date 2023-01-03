@@ -1,10 +1,7 @@
-import { User } from '@firebase/auth'
-
 import { INetworking } from './INetworking'
 import { Server, Socket } from 'socket.io'
 import { IPlanetService, IUserService, IWarehouseService } from '../service'
 import { PlanetType } from '@dyson/shared/dist/shared'
-import { Warehouse } from '@dyson/shared/dist/Warehouse'
 import { Socketcom } from '@dyson/shared/dist/Socketcom'
 
 import { getResourcesGenerated } from '@dyson/shared/dist/GenerationCalculator'
@@ -19,6 +16,8 @@ export class SocketIONetworking implements INetworking {
   protected readonly userService: IUserService
   protected readonly warehouseService: IWarehouseService
   protected readonly admin: app.App
+
+  protected readonly socket: Socket
 
   constructor(
     port: number,
@@ -58,9 +57,20 @@ export class SocketIONetworking implements INetworking {
 
   private onUserStateChange(socket: Socket) {
     socket.on(Socketcom.userStateChanged, async (token: string) => {
-      //return warehouse and planets if user exists, if not, return null
-      const decodedToken = await this.decodeToken(token)
+      // TODO: check if the user is a new user and if so create initial planets and warehouse
 
+      const decodedToken = await this.decodeToken(token)
+      let userData: any
+      try {
+        userData = await this.userService.fetchUserByID(decodedToken.uid)
+      } catch (error) {
+        //user doesnt exist in database, create a new Starting account
+        await this.userService.createNewUser(decodedToken.uid)
+        userData = await this.userService.fetchUserByID(decodedToken.uid)
+        await this.newUserCreation(socket, decodedToken.uid)
+      }
+
+      //return warehouse and planets if user exists, if not, throw exception
       socket.emit(Socketcom.updatePlanetsAndWarehouse, {
         planets: await this.planetService.getUserPlanets(decodedToken.uid),
         resources: await this.warehouseService.getWarehouse(decodedToken.uid),
@@ -80,19 +90,19 @@ export class SocketIONetworking implements INetworking {
     })
   }
 
-  private async newUserCreation(socket: Socket, uid: string) {
+  private async newUserCreation(socket: Socket, userID: string) {
     //create starter planets
-    await this.planetService.createPlanet(uid, PlanetType.Lava)
-    await this.planetService.createPlanet(uid, PlanetType.Wet)
-    await this.planetService.createPlanet(uid, PlanetType.NoAtmosphere)
-    await this.planetService.createPlanet(uid, PlanetType.Lava)
+    await this.planetService.createPlanet(userID, PlanetType.Lava)
+    await this.planetService.createPlanet(userID, PlanetType.Wet)
+    await this.planetService.createPlanet(userID, PlanetType.NoAtmosphere)
+    await this.planetService.createPlanet(userID, PlanetType.Lava)
 
     //create warehouse
-    const warehouseID = await this.warehouseService.createWarehouse(uid)
+    const warehouseID = await this.warehouseService.createWarehouse(userID)
 
     socket.emit(Socketcom.updatePlanetsAndWarehouse, {
-      planets: await this.planetService.getUserPlanets(uid),
-      resources: await this.warehouseService.getWarehouse(warehouseID, uid),
+      planets: await this.planetService.getUserPlanets(userID),
+      resources: await this.warehouseService.getWarehouse(warehouseID, userID),
     })
   }
 

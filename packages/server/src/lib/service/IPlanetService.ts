@@ -22,5 +22,9 @@ export interface IPlanetService {
 
   fetchLeaderboard(offset: number): Promise<Planet[]>
 
+  deletePlanetByID(planetID: string): Promise<void>
+
+  deleteAllPlanetsByUserID(userID: string): Promise<void>
+
   getCounters(): Promise<any>
 }

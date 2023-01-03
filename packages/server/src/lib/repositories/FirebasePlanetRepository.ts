@@ -16,15 +16,19 @@ export class FirebasePlanetRepository implements IPlanetRepository {
     planet.id = docRef.id
 
     await docRef.set(planet)
-    this.admin
-      .firestore()
-      .collection('admin')
-      .doc('gameData')
-      .collection('counters')
-      .doc('Jl2JWvpXIVqDRFMlf6LF')
-      .set({ planets: firestore.FieldValue.increment(1) }, { merge: true })
+    await this.incrementPlanetCounter(1)
 
     return planet
+  }
+
+  async deletePlanet(planet: Planet): Promise<void> {
+    await this.admin.firestore().collection('admin').doc('gameData').collection('planetData').doc(planet.id).delete()
+    await this.incrementPlanetCounter(-1)
+  }
+
+  async deletePlanetByID(planetID: string): Promise<void> {
+    await this.admin.firestore().collection('admin').doc('gameData').collection('planetData').doc(planetID).delete()
+    await this.incrementPlanetCounter(-1)
   }
 
   async updatePlanet(planet: Planet): Promise<void> {
@@ -60,28 +64,35 @@ export class FirebasePlanetRepository implements IPlanetRepository {
     return results
   }
 
-  async fetchTopPlanets(limit: number, offset: number): Promise<Planet[]> {
+  async queryPlanets(limit: number, offset: number): Promise<Planet[]> {
     const planetsRef = this.admin.firestore().collection('admin').doc('gameData').collection('planetData')
 
-    const topPlanetsQuery = await planetsRef.orderBy('level', 'desc').limit(limit).offset(offset).get()
+    const planetsQuery = await planetsRef.orderBy('level', 'desc').limit(limit).offset(offset).get()
     let planets = []
 
-    topPlanetsQuery.forEach((docRef) => {
-      planets.push(docRef.data())
+    planetsQuery.forEach((planetDocumentReference) => {
+      planets.push(planetDocumentReference.data())
     })
 
-    console.log('fetching leaderboard data')
     return planets
   }
 
   async getCounters() {
-    const query = await this.admin
+    const query = await (await this._getCounterDocumentReference()).get()
+    return query.data()
+  }
+
+  private async _getCounterDocumentReference() {
+    return await this.admin
       .firestore()
       .collection('admin')
       .doc('gameData')
       .collection('counters')
       .doc('Jl2JWvpXIVqDRFMlf6LF')
-      .get()
-    return query.data()
+  }
+
+  private async incrementPlanetCounter(valueToIncrementBy: number) {
+    const planetCounter = await this._getCounterDocumentReference()
+    await planetCounter.set({ planets: firestore.FieldValue.increment(valueToIncrementBy) }, { merge: true })
   }
 }

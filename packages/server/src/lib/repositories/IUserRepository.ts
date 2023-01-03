@@ -1,9 +1,15 @@
 import { User } from '@firebase/auth'
 
 export interface IUserRepository {
-  createNewUser(user: User): Promise<User>
+  createNewDatabaseUser(userID: string): Promise<void>
 
-  fetchUserData(userID: string): Promise<User>
+  fetchGoogleAuthUserData(userID: string): Promise<User>
 
-  resolveUserID(id: string): Promise<string>
+  fetchDatabaseUserData(userID: string): Promise<any>
+
+  resolveUserNameByID(id: string): Promise<string>
+
+  deleteUserDatabaseEntries(userID: string): Promise<void>
+
+  queryUsers(limit: number, offset: number): Promise<any>
 }
