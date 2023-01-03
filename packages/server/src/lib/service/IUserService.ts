@@ -8,4 +8,8 @@ export interface IUserService {
   resolveUserNames(ids: string[]): Promise<Object>
 
   fetchUserByID(userID: string): Promise<User>
+
+  queryUsers(limit: number, offset: number): Promise<any[]>
+
+  deleteUserDatabaseEntries(userID: string): Promise<void>
 }

@@ -10,6 +10,15 @@ export class UserService implements IUserService {
     this.repository = repository
   }
 
+  async deleteUserDatabaseEntries(userID: string): Promise<void> {
+    await this.repository.deleteUserDatabaseEntries(userID)
+  }
+
+  async queryUsers(limit: number, offset: number): Promise<any[]> {
+    const queriedUsers = await this.repository.queryUsers(limit, offset)
+    return queriedUsers
+  }
+
   async createNewUser(userID: string): Promise<void> {
     try {
       await this.repository.createNewDatabaseUser(userID)

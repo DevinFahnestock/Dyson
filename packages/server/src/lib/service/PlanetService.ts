@@ -15,6 +15,17 @@ export class PlanetService implements IPlanetService {
     this.planetRepository = planetRepository
   }
 
+  async deletePlanetByID(planetID: string): Promise<void> {
+    await this.planetRepository.deletePlanetByID(planetID)
+  }
+
+  async deleteAllPlanetsByUserID(userID: string): Promise<void> {
+    const planets = await this.planetRepository.fetchUserPlanets(userID)
+    planets.map(async (planet) => {
+      await this.planetRepository.deletePlanetByID(planet.id)
+    })
+  }
+
   async startPlanetUpgrade(
     planetID: string,
     warehouse: Warehouse,
@@ -130,7 +141,7 @@ export class PlanetService implements IPlanetService {
   }
 
   fetchLeaderboard(offset: number): Promise<Planet[]> {
-    return this.planetRepository.fetchTopPlanets(10, offset)
+    return this.planetRepository.queryPlanets(10, offset)
   }
 
   getCounters(): Promise<any> {
