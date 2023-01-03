@@ -1,17 +1,13 @@
-import { User } from '@firebase/auth'
-
 import { INetworking } from './INetworking'
 import { Server, Socket } from 'socket.io'
 import { IPlanetService, IUserService, IWarehouseService } from '../service'
 import { PlanetType } from '@dyson/shared/dist/shared'
-import { Warehouse } from '@dyson/shared/dist/Warehouse'
 import { Socketcom } from '@dyson/shared/dist/Socketcom'
 
 import { getResourcesGenerated } from '@dyson/shared/dist/GenerationCalculator'
 import dayjs from '@dyson/shared/dist/Time/Time'
 import { app } from 'firebase-admin'
 import { DecodedIdToken } from 'firebase-admin/lib/auth/token-verifier'
-import { user } from 'firebase-functions/v1/auth'
 
 export class SocketIONetworking implements INetworking {
   protected readonly port: number

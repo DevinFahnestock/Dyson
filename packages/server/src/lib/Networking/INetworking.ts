@@ -4,7 +4,7 @@ import { Socket } from 'socket.io'
 export interface INetworking {
   listenForConnections()
 
-  private decodeToken(token: string): Promise<DecodedIdToken>
+  decodeToken(token: string): Promise<DecodedIdToken>
 
   private onUserStateChange(socket: Socket)
 
