@@ -7,7 +7,7 @@ export interface INetworking {
 
   onStartPlanetUpgrade()
 
-  fetchLeaderboard()
+  queryPlanets()
 
   resolveUserNames()
 

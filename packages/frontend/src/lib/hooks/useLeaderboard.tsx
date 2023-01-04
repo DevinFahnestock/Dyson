@@ -9,7 +9,7 @@ const useLeaderboard = (socketEmitter: SocketEmitter, offset: number) => {
 
   const getLeaders = (offset: number) => {
     setLoading(true)
-    socketEmitter.FetchLeaderboard(offset)
+    socketEmitter.QueryPlanets(offset)
     socketEmitter.socket.on(Socketcom.leaderboardUpdate, (data: any) => {
       socketEmitter.socket.off(Socketcom.leaderboardUpdate)
       setData(data)

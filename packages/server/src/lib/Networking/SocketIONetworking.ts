@@ -54,7 +54,7 @@ export class SocketIONetworking implements INetworking {
     this.onUpgradePlanet()
     this.onUserStateChange()
     this.onStartPlanetUpgrade()
-    this.fetchLeaderboard()
+    this.queryPlanets()
     this.resolveUserNames()
     this.updateResourceGeneration()
     this.getCounters()
@@ -128,8 +128,8 @@ export class SocketIONetworking implements INetworking {
     })
   }
 
-  async fetchLeaderboard() {
-    this.socket.on(Socketcom.fetchLeaderboard, async (offset) => {
+  async queryPlanets() {
+    this.socket.on(Socketcom.queryPlanets, async (offset) => {
       const planets = await this.planetService.fetchLeaderboard(offset)
       this.socket.emit(Socketcom.leaderboardUpdate, planets)
     })

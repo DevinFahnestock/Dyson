@@ -8,44 +8,44 @@ export class SocketEmitter {
     this.socket = socket
   }
 
-  public FetchLeaderboard(offset: number) {
-    this.socket.emit(Socketcom.fetchLeaderboard, offset)
+  public QueryPlanets(offset: number) {
+    this.socket.emit(Socketcom.queryPlanets, offset)
   }
 
   public ResolveUserNames(userIDs: String[]) {
-    this.socket.emit('resolveUserNames', userIDs)
+    this.socket.emit(Socketcom.resolveUserNames, userIDs)
   }
 
   public CheckCompleteUpgrade(planetID: String, token: String) {
-    this.socket.emit('checkCompleteUpgrade', {
+    this.socket.emit(Socketcom.checkCompleteUpgrade, {
       planetID: planetID,
       token: token,
     })
   }
 
   public UserStateChange(token: string) {
-    this.socket.emit('userStateChanged', token)
+    this.socket.emit(Socketcom.userStateChanged, token)
   }
 
   public UpgradePlanet(planetID: String, token: String) {
-    this.socket.emit('upgradePlanet', {
+    this.socket.emit(Socketcom.upgradePlanet, {
       planetID: planetID,
       token: token,
     })
   }
 
   public UpdateResourceGeneration(planetID: String, token: String) {
-    this.socket.emit('UpdateResourceGeneration', {
+    this.socket.emit(Socketcom.UpdateResourceGeneration, {
       planetID: planetID,
       token: token,
     })
   }
 
   public GetCounters() {
-    this.socket.emit('getCounters')
+    this.socket.emit(Socketcom.getCounters)
   }
 
   public GetUserPage(userID: String) {
-    this.socket.emit('getUser', userID)
+    this.socket.emit(Socketcom.userPageData, userID)
   }
 }
