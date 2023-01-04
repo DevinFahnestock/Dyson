@@ -28,6 +28,7 @@ function App() {
 
   const { token, updateToken }: any = useToken()
 
+  // TODO: Wat...?
   useEffect(() => {
     //clear planets if the user logs out
     if (!token) {
@@ -88,7 +89,6 @@ function App() {
             path='/leaderboard'
             element={socketEmitter.current && <LeaderBoard socketEmitter={socketEmitter.current} />}
           />
-
           <Route
             path='/player/:id'
             element={socketEmitter.current && <Player socketEmitter={socketEmitter.current} />}
