@@ -1,7 +1,7 @@
 export enum Socketcom {
   planetUpdate = 'planetUpdate',
   userStateChanged = 'userStateChanged',
-  updatePlanetsAndWarehouse = 'updateAll',
+  updatePlanetsAndWarehouse = 'updatePlanetsAndWarehouse',
   checkCompleteUpgrade = 'checkCompleteUpgrade',
   upgradePlanet = 'upgradePlanet',
   warehouseUpdate = 'warehouseUpdate',

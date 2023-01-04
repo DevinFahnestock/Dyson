@@ -1,7 +1,7 @@
 import React, { useContext, useState, useCallback } from 'react'
 import { Warehouse } from '@dyson/shared/dist/Warehouse'
 
-export const WarehouseContext = React.createContext({})
+export const WarehouseContext = React.createContext<any>({})
 
 export const WarehouseProvider = ({ children }: any) => {
   const [warehouse, setWarehouse] = useState({})

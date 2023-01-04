@@ -1,11 +1,11 @@
 import React, { useContext, useState, useCallback } from 'react'
 
-export const TokenContext = React.createContext({})
+export const TokenContext = React.createContext<any>({})
 
 export type TokenApi = {
   token: string
   clearToken: () => void
-  updateToken: () => void
+  updateToken: (token: string) => void
 }
 
 export const TokenProvider = ({ children }: any) => {
@@ -22,7 +22,7 @@ export const TokenProvider = ({ children }: any) => {
     [setToken]
   )
 
-  const tokenApi = {
+  const tokenApi: TokenApi = {
     token,
     clearToken,
     updateToken,

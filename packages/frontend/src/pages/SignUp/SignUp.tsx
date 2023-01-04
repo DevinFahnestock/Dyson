@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react'
 import './styles.css'
 
 import { useAuthentication, useSignInWithGoogle } from 'src/lib/firebase'
-import { createUserWithEmailAndPassword, UserCredential } from 'firebase/auth'
+import { createUserWithEmailAndPassword } from 'firebase/auth'
 import { SocketEmitter } from 'src/lib/Networking/SocketEmitter'
 import { useNavigate } from 'react-router-dom'
 import { updateProfile } from 'firebase/auth'

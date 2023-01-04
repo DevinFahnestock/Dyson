@@ -2,13 +2,19 @@ import React, { useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuthentication, useSignInWithGoogle } from 'src/lib/firebase'
 import { signInWithEmailAndPassword } from 'firebase/auth'
+import useToken from 'src/lib/hooks/useToken'
+
 import './styles.css'
 
 const SignIn = () => {
   const navigate = useNavigate()
+
   const { signInWithPopup } = useSignInWithGoogle()
+
   const auth = useAuthentication()
-  let acc = useRef<{ email: string; password: string }>({ email: '', password: '' })
+  const { updateToken }: any = useToken()
+
+  let account = useRef<{ email: string; password: string }>({ email: '', password: '' })
   const [error, setError] = useState<String>()
 
   const trySignIn = () => {
@@ -17,9 +23,10 @@ const SignIn = () => {
       return
     }
 
-    signInWithEmailAndPassword(auth, acc.current.email, acc.current.password)
-      .then(() => {
+    signInWithEmailAndPassword(auth, account.current.email, account.current.password)
+      .then(async (userCredential) => {
         console.log('successfully logged in')
+        await updateToken(await userCredential.user.getIdToken())
         navigate('/')
       })
       .catch(() => console.table(error))
@@ -34,7 +41,7 @@ const SignIn = () => {
             type='text'
             id='email'
             onChange={(e) => {
-              acc.current['email'] = e.target.value
+              account.current['email'] = e.target.value
             }}
           />
           <span className='highlight' />
@@ -46,7 +53,7 @@ const SignIn = () => {
             type='password'
             id='password'
             onChange={(e) => {
-              acc.current['password'] = e.target.value
+              account.current['password'] = e.target.value
             }}
           />
           <span className='highlight' />
@@ -61,6 +68,7 @@ const SignIn = () => {
         <button
           onClick={() => {
             signInWithPopup().then(() => {
+              console.log('successfully logged in')
               navigate('/')
             })
           }}

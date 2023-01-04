@@ -12,61 +12,30 @@ import { useUser } from 'src/lib/firebase'
 import usePlanets from 'src/lib/hooks/usePlanets'
 import useWarehouse from 'src/lib/hooks/useWarehouse'
 
-import { StartAllSocketListeners, disableAllSocketListeners, setupNewSocketRef } from './lib/Networking/SocketListeners'
+import { StartAllSocketListeners, newSocketReference } from './lib/Networking/SocketListeners'
 import { SocketEmitter } from './lib/Networking/SocketEmitter'
 import Player from './pages/Player/Player'
 import SignUp from './pages/SignUp/SignUp'
 import SignIn from './pages/SignIn/SignIn'
-import { useToken } from './lib/hooks/useToken'
+import { User } from 'firebase/auth'
 
 function App() {
-  const user: any = useUser()
-  const { planets, updatePlanet, updateAllPlanets, clearPlanets }: any = usePlanets()
+  const user: User | null = useUser()
+  const { planets, updatePlanet, updateAllPlanets }: any = usePlanets()
   const { warehouse, updateWarehouse }: any = useWarehouse()
 
   const socketEmitter = useRef<SocketEmitter | null>()
 
-  const { token, updateToken }: any = useToken()
-
-  // TODO: Wat...?
-  useEffect(() => {
-    //clear planets if the user logs out
-    if (!token) {
-      console.log('token not found. User not logged in, clearing planets')
-      clearPlanets()
-      if (user) {
-        const setNewToken = async () => {
-          updateToken(await user.getIdToken())
-        }
-        setNewToken()
-      }
-      return
-    }
-
-    // user state has changed
-    token && socketEmitter.current?.UserStateChange(token)
-  }, [user, updateToken, token, clearPlanets])
-
+  // dont think this needed any dependancies..
   useEffect(() => {
     if (!socketEmitter.current?.socket) {
-      socketEmitter.current = new SocketEmitter(setupNewSocketRef())
-    } else {
-      socketEmitter.current.socket = setupNewSocketRef()
-    }
-
-    if (socketEmitter.current.socket) {
-      console.log('starting sockets', socketEmitter.current.socket)
+      socketEmitter.current = new SocketEmitter(newSocketReference())
       StartAllSocketListeners(socketEmitter.current.socket, updateAllPlanets, updateWarehouse, updatePlanet)
     }
+  })
 
-    return () => {
-      if (socketEmitter?.current?.socket) {
-        console.log('closing socket', socketEmitter?.current?.socket)
-        disableAllSocketListeners(socketEmitter.current.socket)
-      }
-    }
-  }, [updateAllPlanets, updatePlanet, updateWarehouse])
-
+  // TODO: move the user, planets, and warehouses from here into the solarsystem component.
+  //       it should be handling its own dependancies to reduce uneccesary calls to the database and the server
   return (
     <Router>
       <NavBar />
@@ -75,7 +44,8 @@ function App() {
           <Route
             path='/'
             element={
-              socketEmitter.current && (
+              socketEmitter.current &&
+              user && (
                 <SolarSystem
                   socketEmitter={socketEmitter?.current}
                   user={user}
