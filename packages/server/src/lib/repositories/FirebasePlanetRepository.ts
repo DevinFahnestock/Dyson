@@ -62,7 +62,6 @@ export class FirebasePlanetRepository implements IPlanetRepository {
     planets.docs.map((doc) => {
       results.push(doc.data())
     })
-
     return results
   }
 

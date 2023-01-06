@@ -1,22 +1,17 @@
 import React, { useEffect } from 'react'
 import SimplePlanetView from 'src/components/SimplePlanetView/SimplePlanetView'
 import useResolveUsernames from 'src/lib/hooks/useResolveUsernames'
-import { SocketEmitter } from 'src/lib/Networking/SocketEmitter'
 
 import './styles.css'
 import useLeaderboard from 'src/lib/hooks/useLeaderboard'
 import useCounters from 'src/lib/hooks/useCounters'
 import useOffset from 'src/lib/hooks/useOffset'
 
-type props = {
-  socketEmitter: SocketEmitter
-}
-
-const LeaderBoard = ({ socketEmitter }: props) => {
+const LeaderBoard = () => {
   const [offset, setOffset] = useOffset(0)
-  const [leaderboard, loading, updateLeaderboardOffset] = useLeaderboard(socketEmitter, offset)
-  const [usernames, usernamesLoading, setUserIDs, clearUsernames] = useResolveUsernames(socketEmitter)
-  const [counters] = useCounters(socketEmitter)
+  const [leaderboard, loading, updateLeaderboardOffset] = useLeaderboard(offset)
+  const [usernames, usernamesLoading, setUserIDs, clearUsernames] = useResolveUsernames()
+  const [counters] = useCounters()
 
   useEffect(() => {
     updateLeaderboardOffset(offset)

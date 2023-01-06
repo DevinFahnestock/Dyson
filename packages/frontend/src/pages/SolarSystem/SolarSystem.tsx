@@ -3,21 +3,13 @@ import ModifiablePlanetView from '../../components/ModifiablePlanetView/Modifiab
 import ResourceDisplay from '../../components/ResourceDisplay/ResourceDisplay'
 
 import './styles.css'
-import { User } from '@firebase/auth'
-import { Warehouse } from '@dyson/shared/dist/Warehouse'
-import { Planet } from '@dyson/shared/dist/Planet'
-import { SocketEmitter } from 'src/lib/Networking/SocketEmitter'
 import { useNavigate } from 'react-router-dom'
+import { useUser } from 'src/lib/firebase'
 
-type props = {
-  user: User
-  warehouse: Warehouse
-  planets: Planet[]
-  socketEmitter: SocketEmitter
-}
-
-export const SolarSystem = ({ user, warehouse, planets, socketEmitter }: props) => {
+export const SolarSystem = () => {
   const navigate = useNavigate()
+  const user = useUser()
+
   if (!user) {
     navigate('/Signin')
   }
@@ -26,8 +18,8 @@ export const SolarSystem = ({ user, warehouse, planets, socketEmitter }: props) 
     <div>
       {user && (
         <div className='UIdisplay'>
-          <ResourceDisplay warehouse={warehouse} />
-          <ModifiablePlanetView planets={planets} socketEmitter={socketEmitter} user={user} />
+          <ResourceDisplay />
+          <ModifiablePlanetView />
         </div>
       )}
     </div>

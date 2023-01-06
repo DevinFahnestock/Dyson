@@ -1,34 +1,29 @@
 import React from 'react'
-import { SocketEmitter } from 'src/lib/Networking/SocketEmitter'
 
 import { useParams } from 'react-router-dom'
 import SimplePlanetView from 'src/components/SimplePlanetView/SimplePlanetView'
 import useResolveUsernames from 'src/lib/hooks/useResolveUsernames'
-import useFetchUserPageData from 'src/lib/hooks/useFetchUserPageData'
+import useFetchUserData from 'src/lib/hooks/useFetchUserData'
 
-type props = {
-  socketEmitter: SocketEmitter
-}
-
-const Player = ({ socketEmitter }: props) => {
+const Player = () => {
   const { id } = useParams()
 
-  let userID: Array<String> = []
+  let userID: Array<string> = []
   if (id) {
     userID.push(id)
   }
 
-  let [usernames, loadingUsernames] = useResolveUsernames(socketEmitter, userID)
+  let [usernames, loadingUsernames] = useResolveUsernames(userID)
 
-  let [userPageData, loading] = useFetchUserPageData(socketEmitter, id)
+  let { user, planets, loading } = useFetchUserData(id)
 
   if (loading || loadingUsernames) {
     return <>Loading...</>
   }
   return (
     <div>
-      {userPageData.user && userPageData.user.displayName}
-      {userPageData.planets && usernames && <SimplePlanetView planets={userPageData.planets} usernames={usernames} />}
+      {user && user.displayName}
+      {planets && usernames && <SimplePlanetView planets={planets} usernames={usernames} />}
     </div>
   )
 }

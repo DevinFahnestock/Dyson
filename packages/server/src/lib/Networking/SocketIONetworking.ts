@@ -52,6 +52,7 @@ export class SocketIONetworking implements INetworking {
 
     // start all listener functions
     this.onUpgradePlanet()
+    this.UpdateUserData()
     this.onUserStateChange()
     this.onStartPlanetUpgrade()
     this.queryPlanets()
@@ -79,6 +80,16 @@ export class SocketIONetworking implements INetworking {
         planets: await this.planetService.getUserPlanets(decodedIDToken.uid),
         resources: await this.warehouseService.getWarehouse(decodedIDToken.uid),
       })
+    })
+  }
+
+  async UpdateUserData() {
+    this.socket.on(Socketcom.fetchUserData, async (userID) => {
+      const userData = await this.userService.fetchUserByID(userID)
+      const planetData = await this.planetService.getUserPlanets(userID)
+      const warehouseData = await this.warehouseService.getWarehouse(userID)
+      const dataToSend = { userData, planetData, warehouseData }
+      this.socket.emit(Socketcom.UpdateUserData, dataToSend)
     })
   }
 
@@ -186,7 +197,7 @@ export class SocketIONetworking implements INetworking {
         user: await this.userService.fetchUserByID(userID),
         planets: await this.planetService.getUserPlanets(userID),
       }
-      this.socket.emit(Socketcom.userPageData, userdata)
+      this.socket.emit(Socketcom.fetchUserData, userdata)
     })
   }
 }

@@ -3,14 +3,13 @@ import './styles.css'
 
 import { useAuthentication, useSignInWithGoogle } from 'src/lib/firebase'
 import { createUserWithEmailAndPassword } from 'firebase/auth'
-import { SocketEmitter } from 'src/lib/Networking/SocketEmitter'
 import { useNavigate } from 'react-router-dom'
 import { updateProfile } from 'firebase/auth'
 import useToken from 'src/lib/hooks/useToken'
 
 import validator from 'validator'
 
-const SignUp = ({ socketEmitter }: { socketEmitter: SocketEmitter }) => {
+const SignUp = () => {
   const { signInWithPopup } = useSignInWithGoogle()
 
   let newAccount = useRef<{

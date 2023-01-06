@@ -14,4 +14,8 @@ export enum Socketcom {
   counters = 'counters',
   getUser = 'getUser',
   userPageData = 'userPageData',
+  GetWarehousesByUserID = 'getWarehouseByUserID',
+  getWarehouseByID = 'getWarehouseByID',
+  UpdateUserData = 'updateUserData',
+  fetchUserData = 'fetchUserData',
 }
