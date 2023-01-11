@@ -1,23 +1,26 @@
 import { Socketcom } from '@dyson/shared/dist/Socketcom'
 import { useEffect, useState } from 'react'
-import { SocketEmitter } from '../Networking/SocketEmitter'
+import { GetCounters } from '../Networking/SocketEmitter'
+import useSocket from './useSocket'
 
-const useCounters = (socketEmitter: SocketEmitter) => {
+const useCounters = () => {
   const [counters, setCounters] = useState<{ planets: number; users: number; warehouses: number }>({
     planets: 0,
     users: 0,
     warehouses: 0,
   })
 
-  useEffect(() => {
-    socketEmitter.GetCounters()
+  const { socket } = useSocket()
 
-    socketEmitter.socket.on(Socketcom.counters, (counters) => {
+  useEffect(() => {
+    GetCounters(socket)
+
+    socket.on(Socketcom.counters, (counters: any) => {
       setCounters(counters)
     })
 
     return () => {
-      socketEmitter.socket.off(Socketcom.counters)
+      socket.off(Socketcom.counters)
     }
   }, [])
 

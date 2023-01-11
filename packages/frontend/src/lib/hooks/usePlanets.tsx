@@ -2,7 +2,7 @@ import type { Planet } from '@dyson/shared/dist/Planet'
 
 import React, { useContext, useState, useCallback } from 'react'
 
-export const PlanetsContext = React.createContext<any>([])
+export const PlanetsContext = React.createContext<any>({})
 
 interface PlanetApi {
   planets: Planet[]

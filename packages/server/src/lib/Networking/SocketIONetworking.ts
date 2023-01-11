@@ -1,5 +1,5 @@
 import { INetworking } from './INetworking'
-import { Server, Socket } from 'socket.io'
+import { Socket } from 'socket.io'
 import { IPlanetService, IUserService, IWarehouseService } from '../service'
 import { PlanetType } from '@dyson/shared/dist/shared'
 import { Socketcom } from '@dyson/shared/dist/Socketcom'
@@ -13,7 +13,7 @@ import { Auth } from '../firebase/auth'
 
 export class SocketIONetworking implements INetworking {
   protected readonly port: number
-  protected readonly server: Server
+
   protected readonly planetService: IPlanetService
   protected readonly userService: IUserService
   protected readonly warehouseService: IWarehouseService
@@ -24,6 +24,8 @@ export class SocketIONetworking implements INetworking {
 
   protected readonly auth: Auth
 
+  protected readonly socket: Socket
+
   constructor(
     port: number,
     planetService: IPlanetService,
@@ -31,10 +33,11 @@ export class SocketIONetworking implements INetworking {
     warehouseService: IWarehouseService,
     counterRepository: ICounterRepository,
     admin: app.App,
-    auth: Auth
+    auth: Auth,
+    socket: Socket
   ) {
     this.port = port
-    this.server = new Server(this.port)
+
     this.planetService = planetService
     this.userService = userService
     this.warehouseService = warehouseService
@@ -44,26 +47,23 @@ export class SocketIONetworking implements INetworking {
     this.admin = admin
 
     this.auth = auth
+
+    this.socket = socket
+
+    // start all listener functions
+    this.onUpgradePlanet()
+    this.UpdateUserData()
+    this.onUserStateChange()
+    this.onStartPlanetUpgrade()
+    this.queryPlanets()
+    this.resolveUserNames()
+    this.updateResourceGeneration()
+    this.getCounters()
+    this.getUser()
   }
 
-  public listenForConnections() {
-    console.log('waiting on connection')
-    this.server.on('connection', (socket) => {
-      console.log('Connection established with socket ID: ', socket.handshake.address)
-
-      this.onUpgradePlanet(socket)
-      this.onUserStateChange(socket)
-      this.onStartPlanetUpgrade(socket)
-      this.fetchLeaderboard(socket)
-      this.resolveUserNames(socket)
-      this.updateResourceGeneration(socket)
-      this.getCounters(socket)
-      this.getUser(socket)
-    })
-  }
-
-  async onUserStateChange(socket: Socket) {
-    socket.on(Socketcom.userStateChanged, async (token: string) => {
+  async onUserStateChange() {
+    this.socket.on(Socketcom.userStateChanged, async (token: string) => {
       // TODO: check if the user is a new user and if so create initial planets and warehouse
 
       const decodedIDToken: DecodedIdToken = await this.auth.decodeToken(token)
@@ -72,30 +72,40 @@ export class SocketIONetworking implements INetworking {
         await this.userService.fetchUserByID(decodedIDToken.uid)
       } catch (error) {
         //user doesnt exist in database, create a new Starting account
-        await this.newUserCreation(socket, decodedIDToken.uid)
+        await this.newUserCreation(decodedIDToken.uid)
       }
 
       //return warehouse and planets if user exists, if not, throw exception
-      socket.emit(Socketcom.updatePlanetsAndWarehouse, {
+      this.socket.emit(Socketcom.updatePlanetsAndWarehouse, {
         planets: await this.planetService.getUserPlanets(decodedIDToken.uid),
         resources: await this.warehouseService.getWarehouse(decodedIDToken.uid),
       })
     })
   }
 
-  async onUpgradePlanet(socket: Socket) {
-    socket.on(Socketcom.checkCompleteUpgrade, async ({ planetID, token }) => {
+  async UpdateUserData() {
+    this.socket.on(Socketcom.fetchUserData, async (userID) => {
+      const userData = await this.userService.fetchUserByID(userID)
+      const planetData = await this.planetService.getUserPlanets(userID)
+      const warehouseData = await this.warehouseService.getWarehouse(userID)
+      const dataToSend = { userData, planetData, warehouseData }
+      this.socket.emit(Socketcom.UpdateUserData, dataToSend)
+    })
+  }
+
+  async onUpgradePlanet() {
+    this.socket.on(Socketcom.checkCompleteUpgrade, async ({ planetID, token }) => {
       const decodedIDToken: DecodedIdToken = await this.auth.decodeToken(token)
 
       const newPlanetData = await this.planetService.checkForUpgradeCompleted(decodedIDToken.uid, planetID)
 
       if (newPlanetData) {
-        socket.emit(Socketcom.planetUpdate, newPlanetData)
+        this.socket.emit(Socketcom.planetUpdate, newPlanetData)
       }
     })
   }
 
-  async newUserCreation(socket: Socket, userID: string) {
+  async newUserCreation(userID: string) {
     // create user database entry
     await this.userService.createNewUser(userID)
 
@@ -109,43 +119,43 @@ export class SocketIONetworking implements INetworking {
     //create warehouse
     const warehouseID = await this.warehouseService.createWarehouse(userID)
 
-    socket.emit(Socketcom.updatePlanetsAndWarehouse, {
+    this.socket.emit(Socketcom.updatePlanetsAndWarehouse, {
       planets: await this.planetService.getUserPlanets(userID),
       resources: await this.warehouseService.getWarehouse(warehouseID, userID),
     })
   }
 
-  async onStartPlanetUpgrade(socket: Socket) {
-    socket.on(Socketcom.upgradePlanet, async ({ planetID, token }) => {
+  async onStartPlanetUpgrade() {
+    this.socket.on(Socketcom.upgradePlanet, async ({ planetID, token }) => {
       const decodedIDToken: DecodedIdToken = await this.auth.decodeToken(token)
 
       const warehouse = await this.warehouseService.getWarehouse(decodedIDToken.uid)
       const data = await this.planetService.startPlanetUpgrade(planetID, warehouse, decodedIDToken.uid, (warehouse) => {
         this.warehouseService.updateResources(warehouse, decodedIDToken.uid)
-        socket.emit(Socketcom.warehouseUpdate, warehouse)
+        this.socket.emit(Socketcom.warehouseUpdate, warehouse)
       })
 
-      socket.emit(Socketcom.planetUpdate, data)
+      this.socket.emit(Socketcom.planetUpdate, data)
     })
   }
 
-  async fetchLeaderboard(socket: Socket) {
-    socket.on(Socketcom.fetchLeaderboard, async (offset) => {
+  async queryPlanets() {
+    this.socket.on(Socketcom.queryPlanets, async (offset) => {
       const planets = await this.planetService.fetchLeaderboard(offset)
-      socket.emit(Socketcom.leaderboardUpdate, planets)
+      this.socket.emit(Socketcom.leaderboardUpdate, planets)
     })
   }
 
-  async resolveUserNames(socket: Socket) {
-    socket.on(Socketcom.resolveUserNames, async (ids) => {
+  async resolveUserNames() {
+    this.socket.on(Socketcom.resolveUserNames, async (ids) => {
       console.log('resolving usernames')
       const names = await this.userService.resolveUserNames(ids)
-      socket.emit(Socketcom.usernamesResolved, names)
+      this.socket.emit(Socketcom.usernamesResolved, names)
     })
   }
 
-  async updateResourceGeneration(socket: Socket) {
-    socket.on(Socketcom.UpdateResourceGeneration, async ({ planetID, token }) => {
+  async updateResourceGeneration() {
+    this.socket.on(Socketcom.UpdateResourceGeneration, async ({ planetID, token }) => {
       const decodedIDToken: DecodedIdToken = await this.auth.decodeToken(token)
       const planet = await this.planetService.getPlanet(planetID)
       if (planet.owner !== decodedIDToken.uid) {
@@ -166,28 +176,28 @@ export class SocketIONetworking implements INetworking {
       }
 
       this.warehouseService.updateResources(warehouse, decodedIDToken.uid)
-      socket.emit(Socketcom.warehouseUpdate, warehouse)
+      this.socket.emit(Socketcom.warehouseUpdate, warehouse)
       planet.LastGeneratedTime = dayjs.utc().toISOString()
       this.planetService.updatePlanet(planet, decodedIDToken.uid)
-      socket.emit(Socketcom.planetUpdate, planet)
+      this.socket.emit(Socketcom.planetUpdate, planet)
     })
   }
 
-  async getCounters(socket: Socket) {
-    socket.on(Socketcom.getCounters, async () => {
+  async getCounters() {
+    this.socket.on(Socketcom.getCounters, async () => {
       const counters = await this.counterRepository.getCounters()
-      socket.emit(Socketcom.counters, counters)
+      this.socket.emit(Socketcom.counters, counters)
     })
   }
 
-  async getUser(socket: Socket) {
-    socket.on(Socketcom.getUser, async (userID) => {
+  async getUser() {
+    this.socket.on(Socketcom.getUser, async (userID) => {
       console.log('getting user for id ', userID)
       const userdata = {
         user: await this.userService.fetchUserByID(userID),
         planets: await this.planetService.getUserPlanets(userID),
       }
-      socket.emit(Socketcom.userPageData, userdata)
+      this.socket.emit(Socketcom.fetchUserData, userdata)
     })
   }
 }

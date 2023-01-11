@@ -1,24 +1,19 @@
-import { DecodedIdToken } from 'firebase-admin/lib/auth/token-verifier'
-import { Socket } from 'socket.io'
-
 export interface INetworking {
-  listenForConnections()
+  onUserStateChange()
 
-  onUserStateChange(socket: Socket)
+  onUpgradePlanet()
 
-  onUpgradePlanet(socket: Socket)
+  newUserCreation(uid: string)
 
-  newUserCreation(socket: Socket, uid: string)
+  onStartPlanetUpgrade()
 
-  onStartPlanetUpgrade(socket: Socket)
+  queryPlanets()
 
-  fetchLeaderboard(socket: Socket)
+  resolveUserNames()
 
-  resolveUserNames(socket: Socket)
+  updateResourceGeneration()
 
-  updateResourceGeneration(socket: Socket)
+  getCounters()
 
-  getCounters(socket: Socket)
-
-  getUser(socket: Socket)
+  getUser()
 }

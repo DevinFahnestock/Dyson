@@ -25,6 +25,7 @@ import { IGalaxyRepository } from './lib/repositories/IGalaxyRepository'
 import { IGalaxyService } from './lib/service/IGalaxyService'
 import { GalaxyService } from './lib/service/GalaxyService'
 import { Auth } from './lib/firebase/auth'
+import { Server, Socket } from 'socket.io'
 
 require('dotenv').config()
 
@@ -55,19 +56,28 @@ const galaxyService: IGalaxyService = new GalaxyService(galaxyRepository, counte
 
 const port = 25145
 
-const network: INetworking = new SocketIONetworking(
-  port,
-  planetService,
-  userService,
-  warehouseService,
-  counterRepository,
-  administrator,
-  auth
-)
+const server: Server = new Server(port)
+
+startServerSocket()
 
 galaxyService.initiateGalaxyCheck()
 
-network.listenForConnections()
+function startServerSocket() {
+  server.on('connection', (socket: Socket) => {
+    console.log('Connection established with socket ID: ', socket.handshake.address)
+
+    new SocketIONetworking(
+      port,
+      planetService,
+      userService,
+      warehouseService,
+      counterRepository,
+      administrator,
+      auth,
+      socket
+    )
+  })
+}
 
 //some quick functions to clean up old users that no longer work, or are outdated beyond the want to migrate data
 

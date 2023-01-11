@@ -11,6 +11,7 @@ import AuthenticationProvider from './lib/firebase/authenticationProvider'
 import { PlanetsProvider } from './lib/hooks/usePlanets'
 import { WarehouseProvider } from './lib/hooks/useWarehouse'
 import { TokenProvider } from './lib/hooks/useToken'
+import { SocketProvider } from './lib/hooks/useSocket'
 
 const firebaseConfig = {
   apiKey: 'AIzaSyCVlFMqt9BuAiu-tX7TFa4x8sUwxqxmc7g',
@@ -31,13 +32,15 @@ if (rootElement) {
   root.render(
     // <React.StrictMode>
     <AuthenticationProvider value={getAuth(firebaseApp)}>
-      <TokenProvider>
-        <PlanetsProvider>
-          <WarehouseProvider>
-            <App />
-          </WarehouseProvider>
-        </PlanetsProvider>
-      </TokenProvider>
+      <SocketProvider>
+        <TokenProvider>
+          <PlanetsProvider>
+            <WarehouseProvider>
+              <App />
+            </WarehouseProvider>
+          </PlanetsProvider>
+        </TokenProvider>
+      </SocketProvider>
     </AuthenticationProvider>
     // </React.StrictMode>
   )

@@ -99,8 +99,8 @@ export class PlanetService implements IPlanetService {
     }
   }
 
-  getUserPlanets(userID: string): Promise<Planet[]> {
-    return this.planetRepository.fetchUserPlanets(userID)
+  async getUserPlanets(userID: string): Promise<Array<Planet>> {
+    return await this.planetRepository.fetchUserPlanets(userID)
   }
 
   getPlanet(planetID: string): Promise<Planet> {

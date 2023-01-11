@@ -1,27 +1,30 @@
 import { Planet } from '@dyson/shared/dist/Planet'
 import { Socketcom } from '@dyson/shared/dist/Socketcom'
 import { useEffect, useState } from 'react'
-import { SocketEmitter } from '../Networking/SocketEmitter'
+import { QueryPlanets } from '../Networking/SocketEmitter'
+import useSocket from './useSocket'
 
-const useLeaderboard = (socketEmitter: SocketEmitter, offset: number) => {
+const useLeaderboard = (offset: number) => {
   const [leaderboard, setData] = useState([])
   const [loading, setLoading] = useState(false)
 
-  const getLeaders = (offset: number) => {
-    setLoading(true)
-    socketEmitter.FetchLeaderboard(offset)
-    socketEmitter.socket.on(Socketcom.leaderboardUpdate, (data: any) => {
-      socketEmitter.socket.off(Socketcom.leaderboardUpdate)
-      setData(data)
-      setLoading(false)
-    })
-  }
+  const { socket } = useSocket()
 
   useEffect(() => {
     getLeaders(offset)
   }, [])
 
-  const updateLeaderboardOffset = (offset: number) => {
+  function getLeaders(offset: number) {
+    setLoading(true)
+    QueryPlanets(socket, offset)
+    socket.on(Socketcom.leaderboardUpdate, (data: any) => {
+      socket.off(Socketcom.leaderboardUpdate)
+      setData(data)
+      setLoading(false)
+    })
+  }
+
+  function updateLeaderboardOffset(offset: number) {
     getLeaders(offset)
   }
 

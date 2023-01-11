@@ -3,14 +3,13 @@ import './styles.css'
 
 import { useAuthentication, useSignInWithGoogle } from 'src/lib/firebase'
 import { createUserWithEmailAndPassword } from 'firebase/auth'
-import { SocketEmitter } from 'src/lib/Networking/SocketEmitter'
 import { useNavigate } from 'react-router-dom'
 import { updateProfile } from 'firebase/auth'
 import useToken from 'src/lib/hooks/useToken'
 
 import validator from 'validator'
 
-const SignUp = ({ socketEmitter }: { socketEmitter: SocketEmitter }) => {
+const SignUp = () => {
   const { signInWithPopup } = useSignInWithGoogle()
 
   let newAccount = useRef<{
@@ -27,51 +26,34 @@ const SignUp = ({ socketEmitter }: { socketEmitter: SocketEmitter }) => {
   const auth = useAuthentication()
   const { updateToken }: any = useToken()
 
-  const verifyCreation = () => {
-    let acc = newAccount.current
+  async function verifyCreation() {
     if (!auth) {
       setError('Error with authentification Provider, please contact the server administrator')
       return
     }
-
-    if (!validator.isLength(acc.displayName, { min: 5 })) {
-      setError('Username must be at least 5 characters long')
+    if (!validateInput(newAccount.current, setError)) {
       return
     }
 
-    if (acc.password !== acc.passwordVerify) {
-      setError('Passwords do not match!')
-      return
-    }
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      newAccount.current.email,
+      newAccount.current.password
+    ).catch((error) => {
+      setError(error)
+    })
 
-    if (!validator.isStrongPassword(acc.password)) {
-      setError('Password must be at least 8 characters long, contain 1 uppercase, 1 lowercase, 1 number, and 1 symbol')
-      return
-    }
-
-    if (!validator.isEmail(acc.email)) {
-      setError('Please enter a valid email')
-      return
-    }
-
-    createUserWithEmailAndPassword(auth, acc.email, acc.password)
-      .then(async (userCredential) => {
-        if (auth.currentUser) {
-          console.log('updating username')
-          await updateProfile(auth.currentUser, {
-            displayName: acc.displayName,
-          })
-
-          await updateToken(await auth.currentUser.getIdToken())
-        }
-
-        console.log('account created successfully', userCredential)
-        navigate('/')
+    // set the new display name for the newly created user
+    if (auth.currentUser) {
+      await updateProfile(auth.currentUser, {
+        displayName: newAccount.current.displayName,
       })
-      .catch((error) => {
-        console.table(error)
-        //setError(error)
-      })
+
+      // new user is now logged in and updated, Now set the ID token to the newly generated token
+      await updateToken(await auth.currentUser.getIdToken())
+      console.log('account created successfully', userCredential)
+      navigate('/')
+    }
   }
 
   return (
@@ -153,3 +135,27 @@ const SignUp = ({ socketEmitter }: { socketEmitter: SocketEmitter }) => {
 }
 
 export default SignUp
+
+function validateInput(account: any, setError: (error: string) => void): boolean {
+  if (!validator.isLength(account.displayName, { min: 5 })) {
+    setError('Username must be at least 5 characters long')
+    return false
+  }
+
+  if (account.password !== account.passwordVerify) {
+    setError('Passwords do not match!')
+    return false
+  }
+
+  if (!validator.isStrongPassword(account.password)) {
+    setError('Password must be at least 8 characters long, contain 1 uppercase, 1 lowercase, 1 number, and 1 symbol')
+    return false
+  }
+
+  if (!validator.isEmail(account.email)) {
+    setError('Please enter a valid email')
+    return false
+  }
+
+  return true
+}

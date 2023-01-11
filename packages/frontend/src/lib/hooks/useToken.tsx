@@ -1,15 +1,24 @@
-import React, { useContext, useState, useCallback } from 'react'
+import React, { useContext, useState, useCallback, useEffect } from 'react'
+import { useUser } from '../firebase'
 
-export const TokenContext = React.createContext({})
+export const TokenContext = React.createContext<any>({})
 
 export type TokenApi = {
   token: string
   clearToken: () => void
-  updateToken: () => void
+  updateToken: (token: string) => void
 }
 
 export const TokenProvider = ({ children }: any) => {
   const [token, setToken] = useState('')
+
+  const user = useUser()
+
+  useEffect(() => {
+    user?.getIdToken().then((token) => {
+      setToken(token)
+    })
+  }, [user])
 
   const clearToken = useCallback(() => {
     setToken('')
@@ -22,7 +31,7 @@ export const TokenProvider = ({ children }: any) => {
     [setToken]
   )
 
-  const tokenApi = {
+  const tokenApi: TokenApi = {
     token,
     clearToken,
     updateToken,
