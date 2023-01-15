@@ -31,7 +31,7 @@ export class FirebaseUserRepository implements IUserRepository {
     if (userDocSnapshot.exists) {
       throw new Error(`User with ID ${userID} already exists. Cannot create new user`)
     } else {
-      await userDocumentReference.set({ newAccount: false })
+      await userDocumentReference.create({ uid: userID })
       await this.counterRepository.incrementCounter('users', 1)
     }
   }

@@ -4,11 +4,18 @@ import { newSocketReference } from '../Networking/SocketListener'
 
 export const SocketContext = React.createContext<any>({})
 
+type SocketApiType = {
+  socket: Socket
+  setSocket: any
+}
+
 export const SocketProvider = ({ children }: any) => {
   const newSocket = newSocketReference()
   const [socket, setSocket] = useState<Socket>(newSocket)
 
-  return <SocketContext.Provider value={{ socket, setSocket }}>{children}</SocketContext.Provider>
+  const SocketApi: SocketApiType = { socket, setSocket }
+
+  return <SocketContext.Provider value={SocketApi}>{children}</SocketContext.Provider>
 }
 
 export const useSocket = () => {

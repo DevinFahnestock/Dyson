@@ -18,4 +18,7 @@ export enum Socketcom {
   getWarehouseByID = 'getWarehouseByID',
   UpdateUserData = 'updateUserData',
   fetchUserData = 'fetchUserData',
+  userExistsCheck = 'userExistsCheck',
+  userExistsResult = 'userExistsResult',
+  createNewUser = 'createNewUser',
 }

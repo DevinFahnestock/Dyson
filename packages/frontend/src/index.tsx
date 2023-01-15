@@ -8,9 +8,6 @@ import { initializeApp } from 'firebase/app'
 import { connectAuthEmulator, getAuth } from 'firebase/auth'
 
 import AuthenticationProvider from './lib/firebase/authenticationProvider'
-import { PlanetsProvider } from './lib/hooks/usePlanets'
-import { WarehouseProvider } from './lib/hooks/useWarehouse'
-import { TokenProvider } from './lib/hooks/useToken'
 import { SocketProvider } from './lib/hooks/useSocket'
 
 const firebaseConfig = {
@@ -36,13 +33,7 @@ if (rootElement) {
     // <React.StrictMode>
     <AuthenticationProvider value={auth}>
       <SocketProvider>
-        <TokenProvider>
-          <PlanetsProvider>
-            <WarehouseProvider>
-              <App />
-            </WarehouseProvider>
-          </PlanetsProvider>
-        </TokenProvider>
+        <App />
       </SocketProvider>
     </AuthenticationProvider>
     // </React.StrictMode>

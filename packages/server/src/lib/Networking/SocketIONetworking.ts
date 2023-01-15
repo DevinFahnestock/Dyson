@@ -60,6 +60,8 @@ export class SocketIONetworking implements INetworking {
     this.updateResourceGeneration()
     this.getCounters()
     this.getUser()
+    //this.userExistsCheck()
+    this.createUser()
   }
 
   async onUserStateChange() {
@@ -80,6 +82,37 @@ export class SocketIONetworking implements INetworking {
         planets: await this.planetService.getUserPlanets(decodedIDToken.uid),
         resources: await this.warehouseService.getWarehouse(decodedIDToken.uid),
       })
+    })
+  }
+
+  async userExistsCheck() {
+    this.socket.on(Socketcom.userExistsCheck, async (userID, callback) => {
+      try {
+        console.log(await this.userService.fetchUserByID(userID))
+        callback(true)
+      } catch (error) {
+        callback(false)
+      }
+    })
+  }
+
+  async createUser() {
+    this.socket.on(Socketcom.createNewUser, async (userID, token, callback) => {
+      try {
+        await this.userService.fetchUserByID(userID)
+        callback({ error: 'UserAlreadyExists' })
+        return
+      } catch (error) {
+        //user doesnt exist, create it after verifying token
+        const decodedToken = await this.auth.decodeToken(token)
+        if (decodedToken) {
+          await this.newUserCreation(decodedToken.uid)
+          callback({
+            status: 'User Created Successfully',
+            userID: decodedToken.uid,
+          })
+        }
+      }
     })
   }
 
@@ -117,12 +150,12 @@ export class SocketIONetworking implements INetworking {
     await this.planetService.createPlanet(userID, PlanetType.Lava)
 
     //create warehouse
-    const warehouseID = await this.warehouseService.createWarehouse(userID)
+    await this.warehouseService.createWarehouse(userID)
 
-    this.socket.emit(Socketcom.updatePlanetsAndWarehouse, {
-      planets: await this.planetService.getUserPlanets(userID),
-      resources: await this.warehouseService.getWarehouse(warehouseID, userID),
-    })
+    // this.socket.emit(Socketcom.updatePlanetsAndWarehouse, {
+    //   planets: await this.planetService.getUserPlanets(userID),
+    //   resources: await this.warehouseService.getWarehouse(warehouseID, userID),
+    // })
   }
 
   async onStartPlanetUpgrade() {

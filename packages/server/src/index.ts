@@ -30,7 +30,7 @@ import { Server, Socket } from 'socket.io'
 require('dotenv').config()
 
 process.env.FIRESTORE_EMULATOR_HOST = 'localhost:8080'
-
+process.env.FIREBASE_AUTH_EMULATOR_HOST = 'localhost:9099'
 let administrator = admin.initializeApp({ projectId: 'dyson-game' })
 
 // let administrator = admin.initializeApp({

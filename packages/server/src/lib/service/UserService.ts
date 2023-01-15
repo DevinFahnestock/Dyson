@@ -41,13 +41,7 @@ export class UserService implements IUserService {
   }
 
   async fetchUserByID(userID: string): Promise<any> {
-    let userData: any
-    try {
-      userData = await this.repository.fetchDatabaseUserData(userID)
-    } catch (err) {
-      throw new Error(`User Not Found by ID: ${userID}`)
-    }
-    return userData
+    return await this.repository.fetchDatabaseUserData(userID)
   }
 
   async resolveUserNames(ids: string[]): Promise<Object> {

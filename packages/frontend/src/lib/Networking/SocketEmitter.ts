@@ -4,6 +4,18 @@ import { Socket } from 'socket.io-client'
 export function QueryPlanets(socket: Socket, offset: number) {
   socket.emit(Socketcom.queryPlanets, offset)
 }
+export async function checkUserExists(socket: Socket, userID: string, token: string): Promise<boolean> {
+  return new Promise((resolve, reject) => {
+    socket.emit(Socketcom.createNewUser, userID, token, (response: any) => {
+      console.log(response)
+      if (response.error) {
+        reject('Error creating user')
+      } else {
+        resolve(response.status)
+      }
+    })
+  })
+}
 
 export function ResolveUserNames(socket: Socket, userIDs: string[]) {
   socket.emit(Socketcom.resolveUserNames, userIDs)
