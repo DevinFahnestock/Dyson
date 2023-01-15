@@ -18,7 +18,7 @@ export class FirebaseGalaxyRepository implements IGalaxyRepository {
   async AddPlanetsToGalaxy(numberOfPlanetsToAdd: number) {
     let planets: Array<Planet> = []
 
-    for (let i = 0; i < numberOfPlanetsToAdd - 1; i++) {
+    for (let i = 0; i < numberOfPlanetsToAdd; i++) {
       planets[i] = {
         level: 0,
         owner: null,

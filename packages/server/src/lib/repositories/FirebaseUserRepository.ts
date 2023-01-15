@@ -12,7 +12,7 @@ export class FirebaseUserRepository implements IUserRepository {
   }
 
   async queryUsers(limit: number, offset: number): Promise<any[]> {
-    const usersRef = this.admin.firestore().collection('admin').doc('gameData').collection('userData')
+    const usersRef = this._getUsersDocumentReference()
 
     const usersQuery = await usersRef.limit(limit).offset(offset).get()
     let users = []
@@ -24,7 +24,7 @@ export class FirebaseUserRepository implements IUserRepository {
   }
 
   async createNewDatabaseUser(userID: string): Promise<void> {
-    const userDocumentReference = await this._getUserDocumentReference(userID)
+    const userDocumentReference = this._getUserDocumentReference(userID)
 
     const userDocSnapshot = await userDocumentReference.get()
 
@@ -37,7 +37,7 @@ export class FirebaseUserRepository implements IUserRepository {
   }
 
   async fetchDatabaseUserData(userID: string): Promise<any> {
-    const userDocumentReference = await this._getUserDocumentReference(userID)
+    const userDocumentReference = this._getUserDocumentReference(userID)
 
     const userDocSnapshot = await userDocumentReference.get()
 
@@ -49,19 +49,23 @@ export class FirebaseUserRepository implements IUserRepository {
   }
 
   async resolveUserNameByID(userID: string): Promise<string> {
-    const userDocumentReference = await this._getUserDocumentReference(userID)
+    const userDocumentReference = this._getUserDocumentReference(userID)
 
     const userDocSnapshot = await userDocumentReference.get()
     const displayName = await userDocSnapshot.data().displayName
     return displayName
   }
 
-  private async _getUserDocumentReference(userID: string) {
-    return await this.admin.firestore().collection('admin').doc('gameData').collection('userData').doc(userID)
+  private _getUserDocumentReference(userID: string) {
+    return this.admin.firestore().collection('admin').doc('gameData').collection('userData').doc(userID)
+  }
+
+  private _getUsersDocumentReference() {
+    return this.admin.firestore().collection('admin').doc('gameData').collection('userData')
   }
 
   async deleteUserDatabaseEntries(userID: string): Promise<void> {
-    const userDocumentReference = await this._getUserDocumentReference(userID)
+    const userDocumentReference = this._getUserDocumentReference(userID)
     userDocumentReference.delete()
     await this.counterRepository.incrementCounter('users', -1)
   }

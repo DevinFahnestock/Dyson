@@ -16,8 +16,6 @@ import { User } from 'firebase/auth'
 function App() {
   const user: User | null = useUser()
 
-  // TODO: move the user, planets, and warehouses from here into the solarsystem component.
-  //       it should be handling its own dependancies to reduce uneccesary calls to the database and the server
   return (
     <Router>
       <NavBar />

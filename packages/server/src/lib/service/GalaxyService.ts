@@ -11,14 +11,13 @@ export class GalaxyService implements IGalaxyService {
     this.counterRepository = counterRepository
   }
 
-  async initiateGalaxyCheck() {
-    console.log('Initializing server. Checking for galaxy planets')
+  async initiateGalaxyCheck(planetsInGalaxy?: number) {
     const galaxyCount = await this.counterRepository.getCounter('galaxyPlanets')
     if (galaxyCount < 20) {
-      console.log('No planets found in galaxy, Creating new Galaxy...')
-      await this.galaxyRepository.AddPlanetsToGalaxy(20 - galaxyCount)
+      console.log(`Filling Galaxy to ${planetsInGalaxy || 20} planets`)
+      await this.galaxyRepository.AddPlanetsToGalaxy((planetsInGalaxy || 20) - galaxyCount)
     } else {
-      console.log('Galaxy exists, skipping galaxy creation')
+      console.log('Galaxy is full, skipping galaxy planet creation')
     }
   }
 }

@@ -5,7 +5,7 @@ import App from './App'
 import reportWebVitals from './reportWebVitals'
 
 import { initializeApp } from 'firebase/app'
-import { getAuth } from 'firebase/auth'
+import { connectAuthEmulator, getAuth } from 'firebase/auth'
 
 import AuthenticationProvider from './lib/firebase/authenticationProvider'
 import { PlanetsProvider } from './lib/hooks/usePlanets'
@@ -29,9 +29,12 @@ if (rootElement) {
   const root = ReactDOM.createRoot(rootElement)
   const firebaseApp = initializeApp(firebaseConfig)
 
+  const auth = getAuth(firebaseApp)
+  connectAuthEmulator(auth, 'http://localhost:9099')
+
   root.render(
     // <React.StrictMode>
-    <AuthenticationProvider value={getAuth(firebaseApp)}>
+    <AuthenticationProvider value={auth}>
       <SocketProvider>
         <TokenProvider>
           <PlanetsProvider>
