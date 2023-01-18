@@ -52,39 +52,16 @@ export class SocketIONetworking implements INetworking {
 
     // start all listener functions
     this.onUpgradePlanet()
-    this.UpdateUserData()
-    this.onUserStateChange()
+    this.fetchGameDataByUserID()
     this.onStartPlanetUpgrade()
     this.queryPlanets()
     this.resolveUserNames()
     this.updateResourceGeneration()
     this.getCounters()
-    this.getUser()
-    //this.userExistsCheck()
-    this.createUser()
+    this.createNewUser()
   }
 
-  async onUserStateChange() {
-    this.socket.on(Socketcom.userStateChanged, async (token: string) => {
-      // TODO: check if the user is a new user and if so create initial planets and warehouse
-
-      const decodedIDToken: DecodedIdToken = await this.auth.decodeToken(token)
-
-      try {
-        await this.userService.fetchUserByID(decodedIDToken.uid)
-      } catch (error) {
-        //user doesnt exist in database, create a new Starting account
-        await this.newUserCreation(decodedIDToken.uid)
-      }
-
-      //return warehouse and planets if user exists, if not, throw exception
-      this.socket.emit(Socketcom.updatePlanetsAndWarehouse, {
-        planets: await this.planetService.getUserPlanets(decodedIDToken.uid),
-        resources: await this.warehouseService.getWarehouse(decodedIDToken.uid),
-      })
-    })
-  }
-
+  // returns: boolean. true if user exists
   async userExistsCheck() {
     this.socket.on(Socketcom.userExistsCheck, async (userID, callback) => {
       try {
@@ -96,17 +73,18 @@ export class SocketIONetworking implements INetworking {
     })
   }
 
-  async createUser() {
+  // returns: userID status
+  async createNewUser() {
     this.socket.on(Socketcom.createNewUser, async (userID, token, callback) => {
       try {
         await this.userService.fetchUserByID(userID)
-        callback({ error: 'UserAlreadyExists' })
+        callback({ error: `User already exists with id: ${userID}` })
         return
       } catch (error) {
         //user doesnt exist, create it after verifying token
         const decodedToken = await this.auth.decodeToken(token)
         if (decodedToken) {
-          await this.newUserCreation(decodedToken.uid)
+          await this._createNewUserDatabaseEntry(decodedToken.uid)
           callback({
             status: 'User Created Successfully',
             userID: decodedToken.uid,
@@ -116,46 +94,34 @@ export class SocketIONetworking implements INetworking {
     })
   }
 
-  async UpdateUserData() {
-    this.socket.on(Socketcom.fetchUserData, async (userID) => {
-      const userData = await this.userService.fetchUserByID(userID)
-      const planetData = await this.planetService.getUserPlanets(userID)
-      const warehouseData = await this.warehouseService.getWarehouse(userID)
-      const dataToSend = { userData, planetData, warehouseData }
-      this.socket.emit(Socketcom.UpdateUserData, dataToSend)
-    })
-  }
-
-  async onUpgradePlanet() {
-    this.socket.on(Socketcom.checkCompleteUpgrade, async ({ planetID, token }) => {
-      const decodedIDToken: DecodedIdToken = await this.auth.decodeToken(token)
-
-      const newPlanetData = await this.planetService.checkForUpgradeCompleted(decodedIDToken.uid, planetID)
-
-      if (newPlanetData) {
-        this.socket.emit(Socketcom.planetUpdate, newPlanetData)
+  // returns: user, warehouse, planets
+  async fetchGameDataByUserID() {
+    this.socket.on(Socketcom.fetchAllUserData, async (userID, token, callback) => {
+      const decodedIDToken = this.auth.decodeToken(token)
+      if (decodedIDToken) {
+        const userData = await this.userService.fetchUserByID(userID)
+        const planetData = await this.planetService.getUserPlanets(userID)
+        const warehouseData = await this.warehouseService.getWarehouse(userID)
+        const allUserDataPackage = { userData, planetData, warehouseData }
+        callback(allUserDataPackage)
+      } else {
+        callback({ error: 'could not verify token' })
       }
     })
   }
 
-  async newUserCreation(userID: string) {
-    // create user database entry
-    await this.userService.createNewUser(userID)
+  // returns: the new planet data (can maybe change this to only update the planets last update time)
+  async onUpgradePlanet() {
+    this.socket.on(Socketcom.checkCompleteUpgrade, async (planetID, token, callback) => {
+      try {
+        const decodedIDToken: DecodedIdToken = await this.auth.decodeToken(token)
+        const newPlanetData = await this.planetService.checkForUpgradeCompleted(decodedIDToken.uid, planetID)
 
-    //create starter planets
-
-    await this.planetService.createPlanet(userID, PlanetType.Lava)
-    await this.planetService.createPlanet(userID, PlanetType.Wet)
-    await this.planetService.createPlanet(userID, PlanetType.NoAtmosphere)
-    await this.planetService.createPlanet(userID, PlanetType.Lava)
-
-    //create warehouse
-    await this.warehouseService.createWarehouse(userID)
-
-    // this.socket.emit(Socketcom.updatePlanetsAndWarehouse, {
-    //   planets: await this.planetService.getUserPlanets(userID),
-    //   resources: await this.warehouseService.getWarehouse(warehouseID, userID),
-    // })
+        callback(newPlanetData)
+      } catch (error) {
+        callback({ error: error })
+      }
+    })
   }
 
   async onStartPlanetUpgrade() {
@@ -173,64 +139,77 @@ export class SocketIONetworking implements INetworking {
   }
 
   async queryPlanets() {
-    this.socket.on(Socketcom.queryPlanets, async (offset) => {
-      const planets = await this.planetService.fetchLeaderboard(offset)
-      this.socket.emit(Socketcom.leaderboardUpdate, planets)
+    this.socket.on(Socketcom.queryPlanets, async (offset, callback) => {
+      try {
+        const planets = await this.planetService.fetchLeaderboard(offset)
+        callback(planets)
+      } catch (error) {
+        callback({ error: error })
+      }
     })
   }
 
   async resolveUserNames() {
-    this.socket.on(Socketcom.resolveUserNames, async (ids) => {
-      console.log('resolving usernames')
-      const names = await this.userService.resolveUserNames(ids)
-      this.socket.emit(Socketcom.usernamesResolved, names)
+    this.socket.on(Socketcom.resolveUserNames, async (ids, callback) => {
+      try {
+        const userNames = await this.userService.resolveUserNames(ids)
+        callback(userNames)
+      } catch (error) {
+        callback({ error: error })
+      }
     })
   }
 
   async updateResourceGeneration() {
-    this.socket.on(Socketcom.UpdateResourceGeneration, async ({ planetID, token }) => {
-      const decodedIDToken: DecodedIdToken = await this.auth.decodeToken(token)
-      const planet = await this.planetService.getPlanet(planetID)
-      if (planet.owner !== decodedIDToken.uid) {
-        console.log('not the owner of the planet. cant generate resources.')
-        return null
-      }
-      if (!planet.LastGeneratedTime) {
+    this.socket.on(Socketcom.UpdateResourceGeneration, async (planetID, token, callback) => {
+      try {
+        const decodedIDToken: DecodedIdToken = await this.auth.decodeToken(token)
+        const planet = await this.planetService.getPlanet(planetID)
+        if (planet.owner !== decodedIDToken.uid) {
+          callback({ error: 'Authenticated user did not match the owner of the planet' })
+          return
+        }
+        const warehouse = await this.warehouseService.getWarehouse(decodedIDToken.uid)
+
+        const generated = getResourcesGenerated(planet.level, planet.LastGeneratedTime)
+
+        for (const [resource, amount] of Object.entries(generated)) {
+          warehouse[resource] += amount
+        }
+
+        this.warehouseService.updateResources(warehouse, decodedIDToken.uid)
         planet.LastGeneratedTime = dayjs.utc().toISOString()
-        console.log('migrating planet. [adding LastGeneratedTime]')
+        this.planetService.updatePlanet(planet, decodedIDToken.uid)
+        callback(planet, warehouse)
+      } catch (error) {
+        callback({ error: error })
       }
-
-      const warehouse = await this.warehouseService.getWarehouse(decodedIDToken.uid)
-
-      const generated = getResourcesGenerated(planet)
-
-      for (const [resource, amount] of Object.entries(generated)) {
-        warehouse[resource] += amount
-      }
-
-      this.warehouseService.updateResources(warehouse, decodedIDToken.uid)
-      this.socket.emit(Socketcom.warehouseUpdate, warehouse)
-      planet.LastGeneratedTime = dayjs.utc().toISOString()
-      this.planetService.updatePlanet(planet, decodedIDToken.uid)
-      this.socket.emit(Socketcom.planetUpdate, planet)
     })
   }
 
   async getCounters() {
-    this.socket.on(Socketcom.getCounters, async () => {
-      const counters = await this.counterRepository.getCounters()
-      this.socket.emit(Socketcom.counters, counters)
+    this.socket.on(Socketcom.getCounters, async (callback) => {
+      try {
+        const counters = await this.counterRepository.getCounters()
+        callback(counters)
+      } catch (error) {
+        callback({ error: error })
+      }
     })
   }
 
-  async getUser() {
-    this.socket.on(Socketcom.getUser, async (userID) => {
-      console.log('getting user for id ', userID)
-      const userdata = {
-        user: await this.userService.fetchUserByID(userID),
-        planets: await this.planetService.getUserPlanets(userID),
-      }
-      this.socket.emit(Socketcom.fetchUserData, userdata)
-    })
+  async _createNewUserDatabaseEntry(userID: string) {
+    // create user database entry
+    await this.userService.createNewUser(userID)
+
+    //create starter planets
+
+    await this.planetService.createPlanet(userID, PlanetType.Lava)
+    await this.planetService.createPlanet(userID, PlanetType.Wet)
+    await this.planetService.createPlanet(userID, PlanetType.NoAtmosphere)
+    await this.planetService.createPlanet(userID, PlanetType.Lava)
+
+    //create warehouse
+    await this.warehouseService.createWarehouse(userID)
   }
 }

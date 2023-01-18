@@ -14,13 +14,13 @@ const GeneratableInfoPanel = ({ planet }: props) => {
     organic: number
     metal: number
     food: number
-  }>(getResourcesGenerated(planet))
+  }>(getResourcesGenerated(planet.level, planet.LastGeneratedTime))
 
   useEffect(() => {
     let timer: null | NodeJS.Timer = null
 
     timer = setInterval(() => {
-      setGen(getResourcesGenerated(planet))
+      setGen(getResourcesGenerated(planet.level, planet.LastGeneratedTime))
     }, 2000)
 
     return () => {

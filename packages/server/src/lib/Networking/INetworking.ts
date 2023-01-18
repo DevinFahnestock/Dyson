@@ -1,9 +1,5 @@
 export interface INetworking {
-  onUserStateChange()
-
   onUpgradePlanet()
-
-  newUserCreation(uid: string)
 
   onStartPlanetUpgrade()
 
@@ -14,6 +10,4 @@ export interface INetworking {
   updateResourceGeneration()
 
   getCounters()
-
-  getUser()
 }
