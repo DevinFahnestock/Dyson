@@ -1,18 +1,10 @@
 import { useEffect, useState } from 'react'
 
-import { Socketcom } from '@dyson/shared/dist/Socketcom'
-
-import { GetUserData } from '../Networking/SocketEmitter'
+import { fetchPlanetData, fetchUserData, fetchWarehouseData } from '../Networking/SocketEmitter'
 import useSocket from './useSocket'
 import { useUser } from '../firebase'
 
-type UpdateUserDataTypes = {
-  userData: any
-  planetData: Array<any>
-  warehouseData: any
-}
-
-const useFetchUserData = (id?: string) => {
+const useFetchUserData = () => {
   const user = useUser()
   const [userData, setUser] = useState<any>(null)
   const [planets, setPlanets] = useState<Array<any>>([])
@@ -22,25 +14,54 @@ const useFetchUserData = (id?: string) => {
   const { socket } = useSocket()
 
   useEffect(() => {
-    const idToUse = id || user?.uid
-    if (idToUse) {
-      setLoading(true)
-      GetUserData(socket, idToUse)
-      socket.on(Socketcom.UpdateUserData, ({ userData, planetData, warehouseData }: UpdateUserDataTypes) => {
-        socket.off(Socketcom.UpdateUserData)
-        setUser(userData)
-        setPlanets(planetData)
-        setWarehouse(warehouseData)
-        setLoading(false)
+    if (user) {
+      user?.getIdToken().then((token) => {
+        getAllData(token)
       })
     }
   }, [user])
 
-  return { user: userData, planets: planets, warehouse: warehouse, loading: loading } as {
-    user: any
-    planets: Array<any>
-    warehouse: any
-    loading: boolean
+  async function getAllData(token: string) {
+    setLoading(true)
+    const dataPromises = [
+      fetchUserData(socket, token),
+      fetchPlanetData(socket, token),
+      fetchWarehouseData(socket, token),
+    ]
+    const data = await Promise.all(dataPromises)
+    console.log(data)
+    setUser(data[0])
+    setPlanets(data[1])
+    setWarehouse(data[2])
+    setLoading(false)
+  }
+
+  async function fetchUser(token: string) {
+    setLoading(true)
+    setUser(await fetchUserData(socket, token))
+    setLoading(false)
+  }
+
+  async function fetchPlanets(token: string) {
+    setLoading(true)
+    setPlanets(await fetchPlanetData(socket, token))
+    setLoading(false)
+  }
+
+  async function fetchWarehouse(token: string) {
+    setLoading(true)
+    setWarehouse(await fetchWarehouseData(socket, token))
+    setLoading(false)
+  }
+
+  return {
+    user: userData,
+    planets: planets,
+    warehouse: warehouse,
+    loading: loading,
+    fetchUser: fetchUser,
+    fetchPlanets: fetchPlanets,
+    fetchWarehouse: fetchWarehouse,
   }
 }
 

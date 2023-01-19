@@ -1,7 +1,9 @@
 export enum Socketcom {
   userExistsCheck = 'userExistsCheck',
   createNewUser = 'createNewUser',
-  fetchAllUserData = 'fetchAllUserData',
+  fetchUserData = 'fetchUserData',
+  fetchPlanetData = 'fetchPlanetData',
+  fetchWarehouseData = 'fetchWarehouseData',
   checkCompleteUpgrade = 'checkCompleteUpgrade',
   upgradePlanet = 'upgradePlanet',
   queryPlanets = 'queryPlanets',

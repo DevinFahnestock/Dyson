@@ -1,4 +1,3 @@
-import { Socketcom } from '@dyson/shared/dist/Socketcom'
 import { useEffect, useState } from 'react'
 import { GetCounters } from '../Networking/SocketEmitter'
 import useSocket from './useSocket'
@@ -13,14 +12,10 @@ const useCounters = () => {
   const { socket } = useSocket()
 
   useEffect(() => {
-    GetCounters(socket)
+    getCounterData()
 
-    socket.on(Socketcom.counters, (counters: any) => {
-      setCounters(counters)
-    })
-
-    return () => {
-      socket.off(Socketcom.counters)
+    async function getCounterData() {
+      setCounters(await GetCounters(socket))
     }
   }, [])
 

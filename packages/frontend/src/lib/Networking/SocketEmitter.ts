@@ -7,7 +7,7 @@ export async function checkUserExists(socket: Socket, userID: string, token: str
       if (response.error) {
         reject(response.error)
       } else {
-        resolve(response.status)
+        resolve(response)
       }
     })
   })
@@ -19,7 +19,7 @@ export function QueryPlanets(socket: Socket, offset: number): Promise<any> {
       if (response.error) {
         reject(response.error)
       } else {
-        resolve(response.status)
+        resolve(response)
       }
     })
   })
@@ -49,9 +49,33 @@ export function CheckCompleteUpgrade(socket: Socket, planetID: string, token: st
   })
 }
 
-export function UserStateChange(socket: Socket, token: string): Promise<any> {
+export function fetchUserData(socket: Socket, token: string): Promise<any> {
   return new Promise((resolve, reject) => {
-    socket.emit(Socketcom.userStateChanged, token, (response: any) => {
+    socket.emit(Socketcom.fetchUserData, token, (response: any) => {
+      if (response.error) {
+        reject(response.error)
+      } else {
+        resolve(response)
+      }
+    })
+  })
+}
+
+export function fetchPlanetData(socket: Socket, token: string): Promise<any> {
+  return new Promise((resolve, reject) => {
+    socket.emit(Socketcom.fetchPlanetData, token, (response: any) => {
+      if (response.error) {
+        reject(response.error)
+      } else {
+        resolve(response)
+      }
+    })
+  })
+}
+
+export function fetchWarehouseData(socket: Socket, token: string): Promise<any> {
+  return new Promise((resolve, reject) => {
+    socket.emit(Socketcom.fetchWarehouseData, token, (response: any) => {
       if (response.error) {
         reject(response.error)
       } else {
@@ -88,42 +112,6 @@ export function UpdateResourceGeneration(socket: Socket, planetID: string, token
 export function GetCounters(socket: Socket): Promise<any> {
   return new Promise((resolve, reject) => {
     socket.emit(Socketcom.getCounters, (response: any) => {
-      if (response.error) {
-        reject(response.error)
-      } else {
-        resolve(response)
-      }
-    })
-  })
-}
-
-export function GetUserData(socket: Socket, userID: string): Promise<any> {
-  return new Promise((resolve, reject) => {
-    socket.emit(Socketcom.fetchUserData, userID, (response: any) => {
-      if (response.error) {
-        reject(response.error)
-      } else {
-        resolve(response)
-      }
-    })
-  })
-}
-
-export function GetWarehousesByUserID(socket: Socket, userID: string, token: string): Promise<any> {
-  return new Promise((resolve, reject) => {
-    socket.emit(Socketcom.GetWarehousesByUserID, userID, token, (response: any) => {
-      if (response.error) {
-        reject(response.error)
-      } else {
-        resolve(response)
-      }
-    })
-  })
-}
-
-export function GetWarehouseByID(socket: Socket, warehouseID: string, token: string): Promise<any> {
-  return new Promise((resolve, reject) => {
-    socket.emit(Socketcom.getWarehouseByID, warehouseID, token, (response: any) => {
       if (response.error) {
         reject(response.error)
       } else {

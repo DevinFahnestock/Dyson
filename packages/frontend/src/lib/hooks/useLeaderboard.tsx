@@ -1,5 +1,5 @@
 import { Planet } from '@dyson/shared/dist/Planet'
-import { Socketcom } from '@dyson/shared/dist/Socketcom'
+//import { Socketcom } from '@dyson/shared/dist/Socketcom'
 import { useEffect, useState } from 'react'
 import { QueryPlanets } from '../Networking/SocketEmitter'
 import useSocket from './useSocket'
@@ -17,11 +17,12 @@ const useLeaderboard = (offset: number) => {
   function getLeaders(offset: number) {
     setLoading(true)
     QueryPlanets(socket, offset)
-    socket.on(Socketcom.leaderboardUpdate, (data: any) => {
-      socket.off(Socketcom.leaderboardUpdate)
-      setData(data)
-      setLoading(false)
-    })
+    setData([])
+    // socket.on(Socketcom.leaderboardUpdate, (data: any) => {
+    //   socket.off(Socketcom.leaderboardUpdate)
+    //   setData(data)
+    //   setLoading(false)
+    // })
   }
 
   function updateLeaderboardOffset(offset: number) {

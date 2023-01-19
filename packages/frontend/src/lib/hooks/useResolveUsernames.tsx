@@ -1,4 +1,4 @@
-import { Socketcom } from '@dyson/shared/dist/Socketcom'
+//import { Socketcom } from '@dyson/shared/dist/Socketcom'
 import { useEffect, useState } from 'react'
 import { ResolveUserNames } from '../Networking/SocketEmitter'
 
@@ -17,11 +17,11 @@ const useResolveUsernames = (userIDs?: Array<string>) => {
   const getNames = (ids: Array<string>) => {
     setLoading(true)
     ResolveUserNames(socket, ids)
-    socket.on(Socketcom.usernamesResolved, (data: Array<Object>) => {
-      setUsernames(data)
-      socket.off(Socketcom.usernamesResolved)
-      setLoading(false)
-    })
+    // socket.on(Socketcom.usernamesResolved, (data: Array<Object>) => {
+    //   setUsernames(data)
+    //   socket.off(Socketcom.usernamesResolved)
+    //   setLoading(false)
+    // })
   }
 
   useEffect(() => {

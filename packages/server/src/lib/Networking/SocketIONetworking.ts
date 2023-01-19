@@ -52,7 +52,9 @@ export class SocketIONetworking implements INetworking {
 
     // start all listener functions
     this.onUpgradePlanet()
-    this.fetchGameDataByUserID()
+    this.fetchUserData()
+    this.fetchPlanetData()
+    this.fetchWarehouseData()
     this.onStartPlanetUpgrade()
     this.queryPlanets()
     this.resolveUserNames()
@@ -65,7 +67,7 @@ export class SocketIONetworking implements INetworking {
   async userExistsCheck() {
     this.socket.on(Socketcom.userExistsCheck, async (userID, callback) => {
       try {
-        console.log(await this.userService.fetchUserByID(userID))
+        await this.userService.fetchUserByID(userID)
         callback(true)
       } catch (error) {
         callback(false)
@@ -94,16 +96,48 @@ export class SocketIONetworking implements INetworking {
     })
   }
 
-  // returns: user, warehouse, planets
-  async fetchGameDataByUserID() {
-    this.socket.on(Socketcom.fetchAllUserData, async (userID, token, callback) => {
-      const decodedIDToken = this.auth.decodeToken(token)
+  async fetchUserData() {
+    this.socket.on(Socketcom.fetchUserData, async (token, callback) => {
+      const decodedIDToken = await this.auth.decodeToken(token)
       if (decodedIDToken) {
-        const userData = await this.userService.fetchUserByID(userID)
-        const planetData = await this.planetService.getUserPlanets(userID)
-        const warehouseData = await this.warehouseService.getWarehouse(userID)
-        const allUserDataPackage = { userData, planetData, warehouseData }
-        callback(allUserDataPackage)
+        try {
+          const userData = await this.userService.fetchUserByID(decodedIDToken.uid)
+          callback(userData)
+        } catch (error) {
+          callback({ error: error })
+        }
+      } else {
+        callback({ error: 'could not verify token' })
+      }
+    })
+  }
+
+  async fetchPlanetData() {
+    this.socket.on(Socketcom.fetchPlanetData, async (token, callback) => {
+      const decodedIDToken = await this.auth.decodeToken(token)
+      if (decodedIDToken) {
+        try {
+          const planetData = await this.planetService.getUserPlanets(decodedIDToken.uid)
+          callback(planetData)
+        } catch (error) {
+          callback({ error: error })
+        }
+      } else {
+        callback({ error: 'could not verify token' })
+      }
+    })
+  }
+
+  async fetchWarehouseData() {
+    this.socket.on(Socketcom.fetchWarehouseData, async (token, callback) => {
+      const decodedIDToken = await this.auth.decodeToken(token)
+      if (decodedIDToken) {
+        try {
+          const warehouseData = await this.warehouseService.getWarehouse(decodedIDToken.uid)
+          callback(warehouseData)
+        } catch (error) {
+          callback({ error: error })
+        }
       } else {
         callback({ error: 'could not verify token' })
       }
@@ -131,10 +165,8 @@ export class SocketIONetworking implements INetworking {
       const warehouse = await this.warehouseService.getWarehouse(decodedIDToken.uid)
       const data = await this.planetService.startPlanetUpgrade(planetID, warehouse, decodedIDToken.uid, (warehouse) => {
         this.warehouseService.updateResources(warehouse, decodedIDToken.uid)
-        this.socket.emit(Socketcom.warehouseUpdate, warehouse)
+        //make a callback
       })
-
-      this.socket.emit(Socketcom.planetUpdate, data)
     })
   }
 

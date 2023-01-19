@@ -7,12 +7,12 @@ import relativeTime from 'dayjs/plugin/relativeTime'
 import dayjs from 'dayjs'
 
 import { PlanetResourceUpgradeCost } from '@dyson/shared/dist/ResourceCost'
-import useWarehouse from 'src/lib/hooks/useWarehouse'
 
 import { resourcesMet, isUpgrading } from '../../../lib/helpers/UpgradeValidations'
 
 import UpgradeCostInfoPanel from './UpgradeCostInfoPanel'
 import ReactTooltip from 'react-tooltip'
+import useFetchUserData from 'src/lib/hooks/useFetchUserData'
 
 dayjs.extend(duration)
 dayjs.extend(utc)
@@ -22,7 +22,7 @@ const UpgradeButton = ({ onClick, planet, onUpgradeTimeComplete }: any) => {
   const upgradeFinishedTime = dayjs.utc(planet.upgradeFinishedTime)
   const [upgradeTimeLeft, setUpgradeTimeLeft] = useState<string>()
 
-  const { warehouse }: any = useWarehouse()
+  const { warehouse } = useFetchUserData() // }: any = useWarehouse()
 
   const nextLevelReq = PlanetResourceUpgradeCost(planet.level + 1)
 
@@ -85,7 +85,7 @@ const UpgradeButton = ({ onClick, planet, onUpgradeTimeComplete }: any) => {
         className='UpgradeButton'
         onClick={onClick}
         data-upgrading={isUpgrading(planet)}
-        data-upgradeable={nextLevelReq && resourcesMet(nextLevelReq, warehouse)}
+        data-upgradeable={nextLevelReq && warehouse && resourcesMet(nextLevelReq, warehouse)}
       >
         {!planet.upgradeFinishedTime ? 'Upgrade' : upgradeTimeLeft}
       </button>
