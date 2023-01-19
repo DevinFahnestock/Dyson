@@ -1,9 +1,9 @@
 import React from 'react'
-import useFetchUserData from 'src/lib/hooks/useFetchUserData'
+import useUserData from 'src/lib/hooks/useFetchUserData'
 import ResourceTile from './ResourceTile'
 import './styles.css'
 const ResourceDisplay = () => {
-  const { warehouse } = useFetchUserData()
+  const { warehouse } = useUserData()
 
   return (
     <div className='ResourceDisplay'>

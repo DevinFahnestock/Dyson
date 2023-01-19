@@ -1,5 +1,5 @@
 import React from 'react'
-import useFetchUserData from 'src/lib/hooks/useFetchUserData'
+import useUserData from 'src/lib/hooks/useFetchUserData'
 import useSocket from 'src/lib/hooks/useSocket'
 import useToken from 'src/lib/hooks/useToken'
 import { CheckCompleteUpgrade, UpdateResourceGeneration, UpgradePlanet } from 'src/lib/Networking/SocketEmitter'
@@ -8,7 +8,7 @@ import ModifiablePlanetTile from '../PlanetTile/ModifiablePlanetTile'
 import './styles.css'
 
 const ModifiablePlanetView = () => {
-  const { planets } = useFetchUserData()
+  const { planets } = useUserData()
   const { socket } = useSocket()
   const { token }: any = useToken()
 

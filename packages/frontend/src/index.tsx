@@ -9,6 +9,7 @@ import { connectAuthEmulator, getAuth } from 'firebase/auth'
 
 import AuthenticationProvider from './lib/firebase/authenticationProvider'
 import { SocketProvider } from './lib/hooks/useSocket'
+import { DataProvider } from './lib/hooks/useFetchUserData'
 
 const firebaseConfig = {
   apiKey: 'AIzaSyCVlFMqt9BuAiu-tX7TFa4x8sUwxqxmc7g',
@@ -33,7 +34,9 @@ if (rootElement) {
     // <React.StrictMode>
     <AuthenticationProvider value={auth}>
       <SocketProvider>
-        <App />
+        <DataProvider>
+          <App />
+        </DataProvider>
       </SocketProvider>
     </AuthenticationProvider>
     // </React.StrictMode>

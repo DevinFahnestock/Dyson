@@ -12,7 +12,7 @@ import { resourcesMet, isUpgrading } from '../../../lib/helpers/UpgradeValidatio
 
 import UpgradeCostInfoPanel from './UpgradeCostInfoPanel'
 import ReactTooltip from 'react-tooltip'
-import useFetchUserData from 'src/lib/hooks/useFetchUserData'
+import useUserData from 'src/lib/hooks/useFetchUserData'
 
 dayjs.extend(duration)
 dayjs.extend(utc)
@@ -22,7 +22,7 @@ const UpgradeButton = ({ onClick, planet, onUpgradeTimeComplete }: any) => {
   const upgradeFinishedTime = dayjs.utc(planet.upgradeFinishedTime)
   const [upgradeTimeLeft, setUpgradeTimeLeft] = useState<string>()
 
-  const { warehouse } = useFetchUserData() // }: any = useWarehouse()
+  const { warehouse } = useUserData() // }: any = useWarehouse()
 
   const nextLevelReq = PlanetResourceUpgradeCost(planet.level + 1)
 

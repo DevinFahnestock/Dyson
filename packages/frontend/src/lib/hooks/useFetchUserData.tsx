@@ -1,10 +1,13 @@
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 
 import { fetchPlanetData, fetchUserData, fetchWarehouseData } from '../Networking/SocketEmitter'
 import useSocket from './useSocket'
 import { useUser } from '../firebase'
+import React from 'react'
 
-const useFetchUserData = () => {
+export const DataContext = React.createContext<any>({})
+
+export const DataProvider = ({ children }: any) => {
   const user = useUser()
   const [userData, setUser] = useState<any>(null)
   const [planets, setPlanets] = useState<Array<any>>([])
@@ -54,7 +57,7 @@ const useFetchUserData = () => {
     setLoading(false)
   }
 
-  return {
+  const dataApi = {
     user: userData,
     planets: planets,
     warehouse: warehouse,
@@ -63,6 +66,12 @@ const useFetchUserData = () => {
     fetchPlanets: fetchPlanets,
     fetchWarehouse: fetchWarehouse,
   }
+
+  return <DataContext.Provider value={dataApi}>{children}</DataContext.Provider>
 }
 
-export default useFetchUserData
+export const useUserData = () => {
+  return useContext(DataContext)
+}
+
+export default useUserData
